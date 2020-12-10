@@ -27,16 +27,20 @@ public class Album {
         this.releaseDate = releaseDate;
         id = UUID.randomUUID();
     }
-    
+
     public void setSongs(Song[] songs) {
-        if (songs == null) return;
-        if (this.songs != null) totalDuration = 0;
+        if (songs == null)
+            return;
+        if (this.songs != null)
+            totalDuration = 0;
         this.songs = songs;
         ArrayList<Genre> genresTmp = new ArrayList<>();
         for (Song song : songs) {
-            if (song == null) continue;
+            if (song == null)
+                continue;
             totalDuration += song.getDuration();
-            if (!genresTmp.contains(song.getGenre())) genresTmp.add(song.getGenre());
+            if (!genresTmp.contains(song.getGenre()))
+                genresTmp.add(song.getGenre());
         }
         genres = genresTmp.toArray(new Genre[0]);
     }

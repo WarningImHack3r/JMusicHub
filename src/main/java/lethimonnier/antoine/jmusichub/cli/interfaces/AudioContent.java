@@ -6,13 +6,13 @@ import java.util.UUID;
  * MusicalContent
  */
 public abstract class AudioContent {
-    
+
     private String title;
     private String[] authors;
     private long duration;
     private UUID id;
     private Object content = null;
-    
+
     protected AudioContent(String title, String[] authors, int duration) {
         setTitle(title);
         setAuthors(authors);

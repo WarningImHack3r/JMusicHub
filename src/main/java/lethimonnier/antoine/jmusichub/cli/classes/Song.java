@@ -11,7 +11,7 @@ public class Song extends AudioContent {
     private Genre genre;
 
     public Song(String title, String author, int duration, Genre genre) {
-        this(title, new String[] {author}, duration, genre);
+        this(title, new String[] { author }, duration, genre);
     }
 
     public Song(String title, String[] authors, int duration, Genre genre) {

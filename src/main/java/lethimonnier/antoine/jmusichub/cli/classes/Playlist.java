@@ -29,13 +29,15 @@ public class Playlist {
         lastModifiedDate = creationDate;
         id = UUID.randomUUID();
     }
-    
+
     public void setContent(List<AudioContent> content) {
-        if (content == null) return;
+        if (content == null)
+            return;
         this.content = new ArrayList<>(content);
         totalDuration = 0;
         for (AudioContent audioContent : this.content) {
-            if (audioContent != null) totalDuration += audioContent.getDuration();
+            if (audioContent != null)
+                totalDuration += audioContent.getDuration();
         }
         lastModifiedDate = new Date();
     }
