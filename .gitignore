@@ -25,5 +25,5 @@ hs_err_pid*
 # Folders and .files
 .classpath
 .project
-.*/
-target/
+.vscode/
+.settings/
