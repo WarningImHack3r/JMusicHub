@@ -49,7 +49,7 @@ public final class MusicHub {
                     // creates a new song
                     log.info("New song creation.");
                     innerSc = new Scanner(System.in);
-                    createNewSong(sc);
+                    createNewSongFromUserInput(sc);
                     innerSc.close();
                     break;
 
@@ -57,7 +57,7 @@ public final class MusicHub {
                     // creates a new album
                     log.info("Album creation.");
                     innerSc = new Scanner(System.in);
-                    Album createdAlbum = createBlankAlbum(innerSc);
+                    Album createdAlbum = createBlankAlbumFromUserInput(innerSc);
                     Scanner nextOrNot = new Scanner(System.in);
                     log.log(Level.INFO, "Add songs to newly created album {0}? [yes/no]", createdAlbum.getTitle());
                     if (nextOrNot.nextLine().contains("y"))
@@ -77,7 +77,7 @@ public final class MusicHub {
                     // creates a new audio book
                     log.info("Audio book creation.");
                     innerSc = new Scanner(System.in);
-                    createAudioBook(innerSc);
+                    createAudioBookFromUserInput(innerSc);
                     innerSc.close();
                     break;
 
@@ -85,7 +85,7 @@ public final class MusicHub {
                     // creates a new playlist from existing songs/audio books
                     log.info("Playlist creation.");
                     innerSc = new Scanner(System.in);
-                    createPlaylist(innerSc);
+                    createPlaylistFromUserInput(innerSc);
                     innerSc.close();
                     break;
 
@@ -93,7 +93,7 @@ public final class MusicHub {
                     // deletes a playlist
                     log.info("Playlist deletion.");
                     innerSc = new Scanner(System.in);
-                    deletePlaylist(innerSc);
+                    deletePlaylistFromUserInput(innerSc);
                     innerSc.close();
                     break;
 
@@ -137,7 +137,13 @@ public final class MusicHub {
         }
     }
 
-    private void createNewSong(Scanner scanner) {
+    /**
+     * Creates a <code>Song</code> from user inputs in console, and adds it to the
+     * <code>Library</code>.
+     * 
+     * @param scanner the <code>Scanner</code> to use
+     */
+    private void createNewSongFromUserInput(Scanner scanner) {
         log.info("Song title?");
         String songTitle = scanner.nextLine();
         log.info("Song author(s)? (separated with spaces)");
@@ -154,7 +160,14 @@ public final class MusicHub {
         }
     }
 
-    private Album createBlankAlbum(Scanner scanner) {
+    /**
+     * Creates a blank album from user inputs in console, and adds it to the
+     * <code>Library</code>.
+     * 
+     * @param scanner the <code>Scanner</code> to use
+     * @return the created <code>Album</code>
+     */
+    private Album createBlankAlbumFromUserInput(Scanner scanner) {
         log.info("Album title?");
         String albumTitle = scanner.nextLine();
         log.info("Album author?");
@@ -175,6 +188,16 @@ public final class MusicHub {
         return album;
     }
 
+    /**
+     * Add songs to an album. Asks for a <code>Song</code> among every existing
+     * <code>Song</code>s in the <code>Library</code>.
+     * 
+     * If <code>targetAlbum</code> is <code>null</code>, also asks among every
+     * existing <code>Album</code> in the <code>Library</code>.
+     * 
+     * @param scanner     the <code>Scanner</code> to use
+     * @param targetAlbum the album to add songs in. Can be <code>null</code>
+     */
     private void addSongToAlbum(Scanner scanner, Album targetAlbum) {
         Album albumToAddIn = targetAlbum;
         if (albumToAddIn == null) {
@@ -191,7 +214,7 @@ public final class MusicHub {
                 albumToAddIn = library.getStoredAlbums().get(Integer.parseInt(line) - 1);
             } catch (NumberFormatException e) {
                 // Text input
-                Album functionResult = parseAlbumFromStringInput(line);
+                Album functionResult = getAlbumFromStringInput(line);
                 if (functionResult == null)
                     return;
                 albumToAddIn = functionResult;
@@ -214,14 +237,21 @@ public final class MusicHub {
                 albumToAddIn.addSong(library.getStoredSongs().get(Integer.parseInt(songLine) - 1));
             } catch (NumberFormatException e) {
                 // Text input
-                albumToAddIn.addSong(parseSongFromStringInput(songLine));
+                albumToAddIn.addSong(getSongFromStringInput(songLine));
             }
             log.info("Add another song? [yes/no]");
         } while (anotherSong.nextLine().contains("y"));
         anotherSong.close();
     }
 
-    private Album parseAlbumFromStringInput(String input) {
+    /**
+     * Returns an <code>Album</code> from a <code>String</code> containing its
+     * author or its title.
+     * 
+     * @param input the <code>String</code> to parse
+     * @return the matched <code>Album</code>, or <code>null</code> if not found
+     */
+    private Album getAlbumFromStringInput(String input) {
         Album toReturn = null;
         List<Album> libraryAlbums = library.getStoredAlbums();
         for (Album a : libraryAlbums) {
@@ -238,7 +268,13 @@ public final class MusicHub {
         return toReturn;
     }
 
-    private Song parseSongFromStringInput(String input) {
+    /**
+     * Returns a <code>Song</code> from a <code>String</code> containing its title.
+     * 
+     * @param input the <code>String</code> to parse
+     * @return the matched <code>Song</code>, or <code>null</code> if not found
+     */
+    private Song getSongFromStringInput(String input) {
         Song toReturn = null;
         List<Song> librarySongs = library.getStoredSongs();
         for (Song s : librarySongs) {
@@ -254,7 +290,13 @@ public final class MusicHub {
         return toReturn;
     }
 
-    private void createAudioBook(Scanner scanner) {
+    /**
+     * Creates an <code>AudioBook</code> from user inputs in console, and adds it to
+     * the <code>Library</code>.
+     * 
+     * @param scanner the <code>Scanner</code> to use
+     */
+    private void createAudioBookFromUserInput(Scanner scanner) {
         log.info("Audiobook title?");
         String audiobookTitle = scanner.nextLine();
         log.info("Audiobook author?");
@@ -289,7 +331,14 @@ public final class MusicHub {
                 new AudioBook(audiobookTitle, audiobookAuthor, audiobookDuration, language, category));
     }
 
-    private void createPlaylist(Scanner scanner) {
+    /**
+     * Creates a <code>Playlist</code> from user inputs in console, and adds it to
+     * the <code>Library</code>. Allows to add <code>Song</code>s among existing
+     * <code>Song</code>s in the <code>Library</code>.
+     * 
+     * @param scanner the <code>Scanner</code> to use
+     */
+    private void createPlaylistFromUserInput(Scanner scanner) {
         // From existing sources
         log.info("Playlist title?");
         String playlistTitle = scanner.nextLine();
@@ -320,24 +369,35 @@ public final class MusicHub {
             } else {
                 log.warning("Error parsing content. Please try again.");
             }
-            if (inputContent != null) {
-                toAddIn.add(parseAudioContentFromInput(inputContent, contentType));
-            }
+            if (inputContent != null)
+                toAddIn.add(getAudioContentFromInput(inputContent, contentType));
             playlistScanner.close();
             log.info("Add another content? [yes/no]");
         } while (anotherContent.nextLine().contains("y"));
         anotherContent.close();
-        library.addToPlaylistsLibrary(new Playlist(playlistTitle, null));
+        library.addToPlaylistsLibrary(new Playlist(playlistTitle, toAddIn));
     }
 
-    private AudioContent parseAudioContentFromInput(String input, String listToParse) {
+    /**
+     * Returns the matching <code>AudioContent</code> from the <code>Library</code>
+     * from an user input (index or text). Used by
+     * <code>createPlaylistFromUserInput(Scanner)</code>.
+     * 
+     * @param input       the index or text user input
+     * @param listToParse the list to search in (<code>Song</code> or
+     *                    <code>AudioBook</code>). Can be exactly "song" or
+     *                    "audiobook".
+     * @return the matched <code>AudioContent</code>, or <code>null</code> if not
+     *         found
+     */
+    private AudioContent getAudioContentFromInput(String input, String listToParse) {
         if (listToParse.equals("song")) {
             try {
                 // Number input
                 return library.getStoredSongs().get(Integer.parseInt(input) - 1);
             } catch (NumberFormatException e) {
                 // Text input
-                return parseSongFromStringInput(input);
+                return getSongFromStringInput(input);
             }
         } else if (listToParse.equals("audiobook")) {
             try {
@@ -345,13 +405,20 @@ public final class MusicHub {
                 return library.getStoredAudioBooks().get(Integer.parseInt(input) - 1);
             } catch (NumberFormatException e) {
                 // Text input
-                return parseAudiobookFromStringInput(input);
+                return getAudiobookFromStringInput(input);
             }
         }
         return null;
     }
-    
-    private AudioBook parseAudiobookFromStringInput(String input) {
+
+    /**
+     * Returns an <code>AudioBook</code> from a <code>String</code> containing its
+     * title. Used by <code>getAudioContentFromInput(String, String)</code>
+     * 
+     * @param input the <code>String</code> to parse
+     * @return the matched <code>AudioBook</code>
+     */
+    private AudioBook getAudiobookFromStringInput(String input) {
         AudioBook toReturn = null;
         List<AudioBook> libraryAudioBooks = library.getStoredAudioBooks();
         for (AudioBook ab : libraryAudioBooks) {
@@ -367,7 +434,13 @@ public final class MusicHub {
         return toReturn;
     }
 
-    private void deletePlaylist(Scanner scanner) {
+    /**
+     * Deletes a <code>Playlist</code> from user inputs in console. Prompt existing
+     * <code>Playlist</code>s, and searches for a match in index or name.
+     * 
+     * @param scanner the <code>Scanner</code> to use
+     */
+    private void deletePlaylistFromUserInput(Scanner scanner) {
         StringBuilder sb = new StringBuilder();
         for (Playlist playlist : library.getStoredPlaylists()) {
             sb.append((library.getStoredPlaylists().indexOf(playlist) + 1) + ") " + playlist.getName() + "\n");
