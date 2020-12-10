@@ -12,9 +12,8 @@ public class AudioBook extends AudioContent {
     private Language language;
     private Category category;
 
-    public AudioBook(String title, String author, int duration,
-            Language language, Category category) {
-        super(title, new String[] {author}, duration);
+    public AudioBook(String title, String author, int duration, Language language, Category category) {
+        super(title, new String[] { author }, duration);
         this.language = language;
         this.category = category;
     }

@@ -4,9 +4,8 @@ package lethimonnier.antoine.jmusichub.cli.enums;
  * Category
  */
 public enum Category {
-    
-    YOUTH("Youth"), NOVEL("Novel"), THEATER("Theater"), SPEECH("Speech"),
-    DOCUMENTARY("Documentary");
+
+    YOUTH("Youth"), NOVEL("Novel"), THEATER("Theater"), SPEECH("Speech"), DOCUMENTARY("Documentary");
 
     private String name;
 
