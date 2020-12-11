@@ -1,5 +1,8 @@
 package lethimonnier.antoine.jmusichub.cli.classes.parsing;
 
+import java.util.logging.Logger;
+
+import lethimonnier.antoine.jmusichub.cli.Library;
 import lethimonnier.antoine.jmusichub.cli.classes.music.Album;
 import lethimonnier.antoine.jmusichub.cli.classes.music.AudioBook;
 import lethimonnier.antoine.jmusichub.cli.classes.music.Playlist;
@@ -8,23 +11,25 @@ import lethimonnier.antoine.jmusichub.cli.interfaces.Parser;
 
 public class CSVParser implements Parser {
 
+    Logger log = Logger.getGlobal();
+
     @Override
-    public Song getSongFromStringMatch(String match) {
+    public Song getSongFromString(String match, Library library) {
         return null;
     }
 
     @Override
-    public Playlist getPlaylistFromStringMatch(String match) {
+    public Playlist getPlaylistFromString(String match, Library library) {
         return null;
     }
 
     @Override
-    public Album getAlbumFromStringMatch(String match) {
+    public Album getAlbumFromString(String match, Library library) {
         return null;
     }
 
     @Override
-    public AudioBook getAudioBookFromStringMatch(String match) {
+    public AudioBook getAudioBookFromString(String match, Library library) {
         return null;
     }
 }
