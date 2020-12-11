@@ -1,0 +1,17 @@
+ALBUMS;;;;
+Titre;Auteur;10/12/2020;Songs;
+American Teen;Khalid;16/02/2017;;
+Revolver;The Beatles;05/08/1966;Taxman - 158 - Pop;
+;;;;
+;;;;
+PLAYLISTS;;;;
+Titre;AudioContent;;;
+playlistTitle1;;;;
+;;;;
+SONGS;;;;
+Titre;Auteur(s);Durée;Genre;
+songTitle;songAuthor;123;Pop;
+;;;;
+AUDIOBOOKS;;;;
+Titre;Auteur;Durée;Langue;Catégorie
+abTitle;abAuthor;246;english;NOVEL

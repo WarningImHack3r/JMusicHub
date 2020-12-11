@@ -1,7 +1,10 @@
 package lethimonnier.antoine.jmusichub.cli;
 
 import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -11,7 +14,12 @@ import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import javax.swing.JFileChooser;
 import javax.swing.SwingUtilities;
+import javax.swing.filechooser.FileFilter;
+
+import com.opencsv.CSVReader;
+import com.opencsv.exceptions.CsvValidationException;
 
 import lethimonnier.antoine.jmusichub.cli.classes.Album;
 import lethimonnier.antoine.jmusichub.cli.classes.AudioBook;
@@ -36,8 +44,13 @@ public final class MusicHub {
         library = new Library();
         try {
             currentFile = openFileFromChooser();
-            importSavedContentFromFile(currentFile);
-        } catch (IOException e) {
+            if (currentFile == null) {
+                log.warning("No input file found.");
+            } else {
+                int imported = importSavedContentFromFile(currentFile);
+                log.log(Level.INFO, "Successfully imported {0} elements", imported);
+            }
+        } catch (IOException | CsvValidationException e) {
             e.printStackTrace();
         }
         log.info("What do you want to do?");
@@ -470,19 +483,166 @@ public final class MusicHub {
         scanner.close();
     }
 
+    /**
+     * Returns an <code>AudioContent</code> based on the csv line parameter
+     * 
+     * @param input the line to parse (with delimiters)
+     * @return the created <code>AudioContent</code>
+     */
+    private AudioContent createAudioContentFromCsvLine(String input) {
+        return null;
+    }
+
+    /**
+     * Returns a <code>Song</code> based on the csv line parameter
+     * 
+     * @param input the line to parse (with parameters)
+     * @return the created <code>Song</code>
+     */
+    private Song createSongFromCsvLine(String input) {
+        return null;
+    }
+
+    /**
+     * Returns a <code>AudioBook</code> based on the csv line parameter
+     * 
+     * @param input the line to parse (with parameters)
+     * @return the created <code>AudioBook</code>
+     */
+    private AudioBook createAudioBookFromCsvLine(String input) {
+        return null;
+    }
+
+    private Date getDateFromString(String dateToParse) {
+        return java.sql.Date.valueOf(LocalDate.parse(dateToParse, DateTimeFormatter.ofPattern("dd/MM/yyyy")));
+    }
+
+    /**
+     * Prompts a <code>JFileChooser</code> to choose a .csv file to import.
+     * 
+     * @return the chosen <code>File</code>
+     * @throws IOException if an error occurs
+     */
     private File openFileFromChooser() throws IOException {
         // Import file and read it
-        log.info("Please choose your input .xls/.xlsx/.csv file.");
-        // TODO
-        throw new IOException();
+        log.info("Please choose your input .csv file.");
+        JFileChooser dialog = new JFileChooser();
+        dialog.setFileFilter(new FileFilter() {
+
+            @Override
+            public boolean accept(File f) {
+                return !f.isDirectory() && f.getName().toLowerCase().endsWith(".csv");
+            }
+
+            @Override
+            public String getDescription() {
+                return "CSV file (*.csv)";
+            }
+        });
+        switch (dialog.showOpenDialog(null)) {
+            case JFileChooser.APPROVE_OPTION:
+                return dialog.getSelectedFile();
+
+            case JFileChooser.ERROR_OPTION:
+                throw new IOException("An error occurred selecting file.");
+
+            case JFileChooser.CANCEL_OPTION:
+            default:
+                return null;
+        }
     }
 
-    private void importSavedContentFromFile(File file) {
+    /**
+     * Imports the content of a csv file into the libray. Can parse
+     * <code>Album</code>s, <code>Playlist</code>s, <code>AudioBook</code>s and
+     * <code>Song</code>s.
+     * <hr>
+     * <strong>Parsing rules</strong> (delimited by ',', [] means optional):
+     * <ul>
+     * <li><em>Album:</em> title, author, creation date (dd/MM/yyyy) [, songs]</li>
+     * <li><em>Playlist:</em> title[, audiocontents]</li>
+     * <li><em>Song:</em> title, author(s), duration (in seconds), genre</li>
+     * <li><em>AudioBook:</em> title, author, duration (in seconds), language,
+     * category</li>
+     * </ul>
+     * Please refer to the corresponding classes for more info.
+     * <hr>
+     * 
+     * @param file the csv file to import
+     * @return the number of inputs added into the <code>Library</code>
+     * @throws IOException            if an input error occurs
+     * @throws CsvValidationException if the file cannot be parsed
+     */
+    private int importSavedContentFromFile(File file) throws IOException, CsvValidationException {
         // Instantiate Albums, Playlists, AudioBooks and Songs
-        // Throws exception if an error occurred
-        // TODO
+        int state = 0; // 0 = idle, 1 = alb, 2 = playl, 3 = ab, 4 = song
+        int importsCount = 0;
+
+        try (CSVReader csvReader = new CSVReader(new FileReader(file))) {
+            String[] line;
+            while ((line = csvReader.readNext()) != null) {
+                String firstCell = line[0];
+                switch (firstCell) {
+                    case "ALBUMS":
+                        state = 1;
+                        break;
+
+                    case "PLAYLISTS":
+                        state = 2;
+                        break;
+
+                    case "AUDIOBOOKS":
+                        state = 3;
+                        break;
+
+                    case "SONGS":
+                        state = 4;
+                        break;
+
+                    default:
+                        break;
+                }
+                if (firstCell.isEmpty() || state > 0)
+                    continue;
+                switch (state) {
+                    case 1: // Album
+                        Song[] songs = null;
+                        if (line.length > 2) {
+                            songs = new Song[line.length - 3];
+                            for (int i = 3; i < line.length; i++) {
+                                songs[i - 3] = createSongFromCsvLine(line[i]);
+                            }
+                        }
+                        library.addToAlbumsLibrary(new Album(songs, firstCell, line[1], getDateFromString(line[2])));
+                        importsCount++;
+                        break;
+
+                    case 2: // Playlist
+                        importsCount++;
+                        break;
+
+                    case 3: // AudioBook
+                        importsCount++;
+                        break;
+
+                    case 4: // Song
+                        importsCount++;
+                        break;
+
+                    default:
+                        break;
+                }
+            }
+        }
+
+        return importsCount;
     }
 
+    /**
+     * Saves the content of the <code>Library</code> into a csv file.
+     * 
+     * @param file the file to export in
+     */
     private void saveLibaryToFile(File file) {
         // TODO
     }
