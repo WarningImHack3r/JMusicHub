@@ -21,10 +21,10 @@ import javax.swing.filechooser.FileFilter;
 import com.opencsv.CSVReader;
 import com.opencsv.exceptions.CsvValidationException;
 
-import lethimonnier.antoine.jmusichub.cli.classes.Album;
-import lethimonnier.antoine.jmusichub.cli.classes.AudioBook;
-import lethimonnier.antoine.jmusichub.cli.classes.Playlist;
-import lethimonnier.antoine.jmusichub.cli.classes.Song;
+import lethimonnier.antoine.jmusichub.cli.classes.music.Album;
+import lethimonnier.antoine.jmusichub.cli.classes.music.AudioBook;
+import lethimonnier.antoine.jmusichub.cli.classes.music.Playlist;
+import lethimonnier.antoine.jmusichub.cli.classes.music.Song;
 import lethimonnier.antoine.jmusichub.cli.enums.Category;
 import lethimonnier.antoine.jmusichub.cli.enums.Genre;
 import lethimonnier.antoine.jmusichub.cli.enums.Language;

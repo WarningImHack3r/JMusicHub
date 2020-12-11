@@ -7,10 +7,10 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import lethimonnier.antoine.jmusichub.cli.classes.Album;
-import lethimonnier.antoine.jmusichub.cli.classes.AudioBook;
-import lethimonnier.antoine.jmusichub.cli.classes.Playlist;
-import lethimonnier.antoine.jmusichub.cli.classes.Song;
+import lethimonnier.antoine.jmusichub.cli.classes.music.Album;
+import lethimonnier.antoine.jmusichub.cli.classes.music.AudioBook;
+import lethimonnier.antoine.jmusichub.cli.classes.music.Playlist;
+import lethimonnier.antoine.jmusichub.cli.classes.music.Song;
 import lethimonnier.antoine.jmusichub.cli.enums.Genre;
 
 /**
