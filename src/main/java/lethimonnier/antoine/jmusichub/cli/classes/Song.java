@@ -10,6 +10,10 @@ public class Song extends AudioContent {
 
     private Genre genre;
 
+    public Song(AudioContent content, Genre genre) {
+        this(content.getTitle(), content.getAuthors(), content.getDuration(), genre);
+    }
+
     public Song(String title, String author, int duration, Genre genre) {
         this(title, new String[] { author }, duration, genre);
     }

@@ -3,13 +3,13 @@ package lethimonnier.antoine.jmusichub.cli.interfaces;
 import java.util.UUID;
 
 /**
- * MusicalContent
+ * AudioContent
  */
 public abstract class AudioContent {
 
     private String title;
     private String[] authors;
-    private long duration;
+    private int duration;
     private UUID id;
     private Object content = null;
 
@@ -28,7 +28,7 @@ public abstract class AudioContent {
         this.authors = authors;
     }
 
-    public void setDuration(long duration) {
+    public void setDuration(int duration) {
         this.duration = duration;
     }
 
@@ -40,7 +40,7 @@ public abstract class AudioContent {
         return authors;
     }
 
-    public long getDuration() {
+    public int getDuration() {
         return duration;
     }
 
