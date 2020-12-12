@@ -1,11 +1,11 @@
 package lethimonnier.antoine.jmusichub.cli.classes.music;
 
+import lethimonnier.antoine.jmusichub.cli.interfaces.AudioContent;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
-
-import lethimonnier.antoine.jmusichub.cli.interfaces.AudioContent;
 
 /**
  * Playlist
@@ -15,9 +15,9 @@ public class Playlist {
     private ArrayList<AudioContent> content;
     private String name;
     private long totalDuration = 0;
-    private Date creationDate;
+    private final Date creationDate;
     private Date lastModifiedDate;
-    private UUID id;
+    private final UUID id;
 
     public Playlist(String name, List<AudioContent> content) {
         this.content = new ArrayList<>(content);
@@ -72,11 +72,16 @@ public class Playlist {
 
     @Override
     public String toString() {
-        StringBuilder printableContent = new StringBuilder();
-        int i = 0;
-        for (AudioContent audioContent : content) {
-            printableContent.append(++i + " - " + audioContent.getTitle());
+        StringBuilder audioContent = new StringBuilder();
+        for (AudioContent ac : content) {
+            if (ac.getClass().isAssignableFrom(Song.class)) {
+                Song song = (Song) ac;
+                audioContent.append(";").append(song.toString());
+            } else {
+                AudioBook audioBook = (AudioBook) ac;
+                audioContent.append(";").append(audioBook.toString());
+            }
         }
-        return "Playlist: " + name + "\n" + printableContent;
+        return getName() + ";" + audioContent;
     }
 }

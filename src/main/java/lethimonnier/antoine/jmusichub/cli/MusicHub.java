@@ -1,28 +1,8 @@
 package lethimonnier.antoine.jmusichub.cli;
 
-import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
-import java.util.Scanner;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
-import javax.swing.JFileChooser;
-import javax.swing.SwingUtilities;
-import javax.swing.filechooser.FileFilter;
-
 import com.opencsv.CSVReader;
 import com.opencsv.CSVWriter;
 import com.opencsv.exceptions.CsvValidationException;
-
 import lethimonnier.antoine.jmusichub.cli.classes.music.Album;
 import lethimonnier.antoine.jmusichub.cli.classes.music.AudioBook;
 import lethimonnier.antoine.jmusichub.cli.classes.music.Playlist;
@@ -34,15 +14,30 @@ import lethimonnier.antoine.jmusichub.cli.enums.Genre;
 import lethimonnier.antoine.jmusichub.cli.enums.Language;
 import lethimonnier.antoine.jmusichub.cli.interfaces.AudioContent;
 
+import javax.swing.*;
+import javax.swing.filechooser.FileFilter;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 /**
  * MusicHub
  */
 public final class MusicHub {
 
+    public final static String dateFormat = "dd/MM/yyyy";
+
     private final Logger log = Logger.getGlobal();
-    private Library library;
-    private ConsoleParser console;
-    private CSVParser csv;
+    private final Library library;
+    private final ConsoleParser console = new ConsoleParser();
+    private final CSVParser csv = new CSVParser();
+
     private File currentFile;
 
     private MusicHub() {
@@ -140,11 +135,18 @@ public final class MusicHub {
 
                 case 'h':
                     // shows help
-                    log.info("MusicHub help - available options\n" + "c: creates a song from user input\n"
-                            + "a: creates an album without songs\n" + "+: add (an) existing song(s) to an album\n"
-                            + "l: creates a new audiobook\n" + "p: creates a playlist with existing audio contents\n"
-                            + "-: deletes a playlist\n" + "s: exports the whole database\n"
-                            + "t: additional option that shows stats of the database\n" + "h: shows this help menu\n");
+                    log.info("""
+                            MusicHub help - available options
+                            c: creates a song from user input
+                            a: creates an album without songs
+                            +: add (an) existing song(s) to an album
+                            l: creates a new audiobook
+                            p: creates a playlist with existing audio contents
+                            -: deletes a playlist
+                            s: exports the whole database
+                            t: additional option that shows stats of the database
+                            h: shows this help menu
+                            """);
                     break;
 
                 case 'q':
@@ -159,9 +161,18 @@ public final class MusicHub {
     }
 
     /**
+     * Starts the MusicHub.
+     *
+     * @param args The arguments of the program.
+     */
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(MusicHub::new);
+    }
+
+    /**
      * Creates a <code>Song</code> from user inputs in console, and adds it to the
      * <code>Library</code>.
-     * 
+     *
      * @param scanner the <code>Scanner</code> to use
      */
     private void createNewSongFromUserInput(Scanner scanner) {
@@ -184,7 +195,7 @@ public final class MusicHub {
     /**
      * Creates a blank album from user inputs in console, and adds it to the
      * <code>Library</code>.
-     * 
+     *
      * @param scanner the <code>Scanner</code> to use
      * @return the created <code>Album</code>
      */
@@ -212,10 +223,10 @@ public final class MusicHub {
     /**
      * Add songs to an album. Asks for a <code>Song</code> among every existing
      * <code>Song</code>s in the <code>Library</code>.
-     * 
+     *
      * If <code>targetAlbum</code> is <code>null</code>, also asks among every
      * existing <code>Album</code> in the <code>Library</code>.
-     * 
+     *
      * @param scanner     the <code>Scanner</code> to use
      * @param targetAlbum the album to add songs in. Can be <code>null</code>
      */
@@ -225,8 +236,7 @@ public final class MusicHub {
             // Prompt albums to choose among them
             StringBuilder albumSb = new StringBuilder();
             for (Album a : library.getStoredAlbums()) {
-                albumSb.append((library.getStoredAlbums().indexOf(a) + 1) + ") " + a.getTitle() + " - " + a.getAuthor()
-                        + "\n");
+                albumSb.append(library.getStoredAlbums().indexOf(a) + 1).append(") ").append(a.getTitle()).append(" - ").append(a.getAuthor()).append("\n");
             }
             log.log(Level.INFO, "Choose your album to add songs in:\n{0}", albumSb);
             String line = scanner.nextLine();
@@ -247,8 +257,7 @@ public final class MusicHub {
             StringBuilder songSb = new StringBuilder();
             int i = 0;
             for (Song s : library.getStoredSongs()) {
-                songSb.append(
-                        ++i + " - " + s.getTitle() + "(" + s.getDuration() / 60 + ":" + s.getDuration() % 60 + ")\n");
+                songSb.append(++i).append(" - ").append(s.getTitle()).append("(").append(s.getDuration() / 60).append(":").append(s.getDuration() % 60).append(")\n");
             }
             log.log(Level.INFO, "Choose the song to add in the album \"{0}\":\n{1}",
                     new Object[] { albumToAddIn.getTitle(), songSb });
@@ -268,7 +277,7 @@ public final class MusicHub {
     /**
      * Creates an <code>AudioBook</code> from user inputs in console, and adds it to
      * the <code>Library</code>.
-     * 
+     *
      * @param scanner the <code>Scanner</code> to use
      */
     private void createAudioBookFromUserInput(Scanner scanner) {
@@ -310,7 +319,7 @@ public final class MusicHub {
      * Creates a <code>Playlist</code> from user inputs in console, and adds it to
      * the <code>Library</code>. Allows to add <code>Song</code>s among existing
      * <code>Song</code>s in the <code>Library</code>.
-     * 
+     *
      * @param scanner the <code>Scanner</code> to use
      */
     private void createPlaylistFromUserInput(Scanner scanner) {
@@ -327,8 +336,7 @@ public final class MusicHub {
             if (contentType.toLowerCase().startsWith("a") || contentType.toLowerCase().startsWith("b")) {
                 StringBuilder audiobookSb = new StringBuilder();
                 for (AudioBook ab : library.getStoredAudioBooks()) {
-                    audiobookSb.append((library.getStoredAudioBooks().indexOf(ab) + 1) + ") " + ab.getAuthor() + " - "
-                            + ab.getTitle() + "\n");
+                    audiobookSb.append(library.getStoredAudioBooks().indexOf(ab) + 1).append(") ").append(ab.getAuthor()).append(" - ").append(ab.getTitle()).append("\n");
                 }
                 log.log(Level.INFO, "Which audiobook to add?\n{0}", audiobookSb);
                 inputContent = playlistScanner.nextLine();
@@ -336,7 +344,8 @@ public final class MusicHub {
             } else if (contentType.toLowerCase().startsWith("s")) {
                 StringBuilder songSb = new StringBuilder();
                 for (Song s : library.getStoredSongs()) {
-                    songSb.append((library.getStoredSongs().indexOf(s) + 1) + " - " + s.getTitle() + "\n");
+                    songSb.append(library.getStoredSongs().indexOf(s) + 1).append(" - ").append(s.getTitle()).append(
+                            "\n");
                 }
                 log.log(Level.INFO, "Which song to add?\n{0}", songSb);
                 inputContent = playlistScanner.nextLine();
@@ -357,7 +366,7 @@ public final class MusicHub {
      * Returns the matching <code>AudioContent</code> from the <code>Library</code>
      * from an user input (index or text). Used by
      * <code>createPlaylistFromUserInput(Scanner)</code>.
-     * 
+     *
      * @param input       the index or text user input
      * @param listToParse the list to search in (<code>Song</code> or
      *                    <code>AudioBook</code>). Can be exactly "song" or
@@ -389,13 +398,13 @@ public final class MusicHub {
     /**
      * Deletes a <code>Playlist</code> from user inputs in console. Prompt existing
      * <code>Playlist</code>s, and searches for a match in index or name.
-     * 
+     *
      * @param scanner the <code>Scanner</code> to use
      */
     private void deletePlaylistFromUserInput(Scanner scanner) {
         StringBuilder sb = new StringBuilder();
         for (Playlist playlist : library.getStoredPlaylists()) {
-            sb.append((library.getStoredPlaylists().indexOf(playlist) + 1) + ") " + playlist.getName() + "\n");
+            sb.append(library.getStoredPlaylists().indexOf(playlist) + 1).append(") ").append(playlist.getName()).append("\n");
         }
         log.log(Level.INFO, "Which playlist do you want to delete?\n{0}", sb);
         String albumToParse = scanner.nextLine();
@@ -424,17 +433,17 @@ public final class MusicHub {
 
     /**
      * Returns a <code>Date</code> object from a <code>String</code> input.
-     * 
+     *
      * @param dateToParse the <code>String</code> date to parse
      * @return the parsed <code>Date</code>
      */
     private Date getDateFromString(String dateToParse) {
-        return java.sql.Date.valueOf(LocalDate.parse(dateToParse, DateTimeFormatter.ofPattern("dd/MM/yyyy")));
+        return java.sql.Date.valueOf(LocalDate.parse(dateToParse, DateTimeFormatter.ofPattern(dateFormat)));
     }
 
     /**
      * Prompts a <code>JFileChooser</code> to choose a .csv file to import.
-     * 
+     *
      * @return the chosen <code>File</code>
      * @throws IOException if an error occurs
      */
@@ -454,17 +463,11 @@ public final class MusicHub {
                 return "CSV file (*.csv)";
             }
         });
-        switch (dialog.showOpenDialog(null)) {
-            case JFileChooser.APPROVE_OPTION:
-                return dialog.getSelectedFile();
-
-            case JFileChooser.ERROR_OPTION:
-                throw new IOException("An error occurred selecting file.");
-
-            case JFileChooser.CANCEL_OPTION:
-            default:
-                return null;
-        }
+        return switch (dialog.showOpenDialog(null)) {
+            case JFileChooser.APPROVE_OPTION -> dialog.getSelectedFile();
+            case JFileChooser.ERROR_OPTION -> throw new IOException("An error occurred selecting file.");
+            default -> null;
+        };
     }
 
     /**
@@ -482,7 +485,7 @@ public final class MusicHub {
      * </ul>
      * Please refer to the corresponding classes for more info.
      * <hr>
-     * 
+     *
      * @param file the csv file to import
      * @return the number of inputs added into the <code>Library</code>
      * @throws IOException            if an input error occurs
@@ -555,8 +558,7 @@ public final class MusicHub {
 
     /**
      * Saves the content of the <code>Library</code> into a csv file.
-     * 
-     * @param file the file to export in
+     *
      */
     private void saveLibaryToFile() throws IOException  {
         // TODO
@@ -587,22 +589,7 @@ public final class MusicHub {
             default:
             break;
         }
-        
-        
-        CSVWriter writer = new CSVWriter(new FileWriter(f), ';', '0', '0', null);
-        
-        
-        
-        
-        
-    }
 
-    /**
-     * Starts the MusicHub.
-     * 
-     * @param args The arguments of the program.
-     */
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(MusicHub::new);
+        CSVWriter writer = new CSVWriter(new FileWriter(f), ';', '0', '0', null);
     }
 }

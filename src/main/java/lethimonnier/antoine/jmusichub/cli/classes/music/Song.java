@@ -8,7 +8,7 @@ import lethimonnier.antoine.jmusichub.cli.interfaces.AudioContent;
  */
 public class Song extends AudioContent {
 
-    private Genre genre;
+    private final Genre genre;
 
     public Song(AudioContent content, Genre genre) {
         this(content.getTitle(), content.getAuthors(), content.getDuration(), genre);
