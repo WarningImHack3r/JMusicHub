@@ -2,6 +2,7 @@ package lethimonnier.antoine.jmusichub.cli;
 
 import java.io.File;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -19,6 +20,7 @@ import javax.swing.SwingUtilities;
 import javax.swing.filechooser.FileFilter;
 
 import com.opencsv.CSVReader;
+import com.opencsv.CSVWriter;
 import com.opencsv.exceptions.CsvValidationException;
 
 import lethimonnier.antoine.jmusichub.cli.classes.music.Album;
@@ -115,11 +117,9 @@ public final class MusicHub {
                     break;
 
                 case 's':
-                    // saves everything in a csv/xls/xlsx file
+                    // saves everything in a csv file
                     log.info("Saving library.");
-                    innerSc = new Scanner(System.in);
-                    saveLibaryToFile(currentFile);
-                    innerSc.close();
+                    saveLibaryToFile();
                     break;
 
                 case 't':
@@ -554,8 +554,43 @@ public final class MusicHub {
      * 
      * @param file the file to export in
      */
-    private void saveLibaryToFile(File file) {
+    private void saveLibaryToFile() throws IOException  {
         // TODO
+        File f = null;
+        log.info("Please choose your input .csv file.");
+        JFileChooser dialog = new JFileChooser();
+        dialog.setFileFilter(new FileFilter() {
+
+            @Override
+            public boolean accept(File f) {
+                return !f.isDirectory() && f.getName().toLowerCase().endsWith(".csv");
+            }
+
+            @Override
+            public String getDescription() {
+                return "CSV file (*.csv)";
+            }
+        });
+        switch (dialog.showOpenDialog(null)) {
+            case JFileChooser.APPROVE_OPTION:
+                f = dialog.getSelectedFile();
+                break;
+
+            case JFileChooser.ERROR_OPTION:
+                throw new IOException("An error occurred selecting file.");
+
+            case JFileChooser.CANCEL_OPTION:
+            default:
+            break;
+        }
+        
+        
+        CSVWriter writer = new CSVWriter(new FileWriter(f), ';', '0', '0', null);
+        
+        
+        
+        
+        
     }
 
     /**
