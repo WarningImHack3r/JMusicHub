@@ -119,7 +119,11 @@ public final class MusicHub {
                 case 's':
                     // saves everything in a csv file
                     log.info("Saving library.");
-                    saveLibaryToFile();
+                    try {
+                        saveLibaryToFile();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                     break;
 
                 case 't':
