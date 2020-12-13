@@ -15,6 +15,8 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Logger;
 
 public class CSVImporter {
@@ -134,8 +136,9 @@ public class CSVImporter {
 
 	/**
 	 * Saves the content of the <code>Library</code> into a csv file.
+	 * @param library Library to save on the .csv file
 	 */
-	public void saveLibaryToFile() throws IOException {
+	public void saveLibaryToFile(Library library) throws IOException {
 		log.info("Please choose your output .csv file.");
 		JFileChooser dialog = new JFileChooser();
 		dialog.setFileFilter(new FileFilter() {
@@ -151,7 +154,7 @@ public class CSVImporter {
 			}
 		});
 		File f;
-		switch (dialog.showOpenDialog(null)) {
+		switch (dialog.showSaveDialog(null)) {
 			case JFileChooser.APPROVE_OPTION:
 				f = dialog.getSelectedFile();
 				break;
@@ -164,7 +167,26 @@ public class CSVImporter {
 				return;
 		}
 
-		CSVWriter writer = new CSVWriter(new FileWriter(f), ';', '0', '0', null);
-		writer.close(); // juste pour enlever le warning
+		CSVWriter writer = new CSVWriter(new FileWriter(f), ';', '"', '\\', null);
+		
+		List<String[]> tosave = new ArrayList<>();
+		tosave.add(new String[] {"SONGS"});
+        for (Song s : library.getStoredSongs()) {
+			tosave.add(s.toString().split(";"));
+		}
+		tosave.add(new String[] {"PLAYLISTS"});
+		for (Playlist s : library.getStoredPlaylists()) {
+			tosave.add(s.toString().split(";"));
+		}
+		tosave.add(new String[] {"AUDIOBOOKS"});
+		for (AudioBook s : library.getStoredAudioBooks()) {
+			tosave.add(s.toString().split(";"));
+		}
+		tosave.add(new String[] {"ALBUMS"});
+		for (Album s : library.getStoredAlbums()) {
+			tosave.add(s.toString().split(";"));
+		}
+		writer.writeAll(tosave);
+		writer.close();
 	}
 }
