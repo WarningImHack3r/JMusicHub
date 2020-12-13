@@ -1,13 +1,10 @@
 package lethimonnier.antoine.jmusichub.cli;
 
-import com.opencsv.CSVReader;
-import com.opencsv.CSVWriter;
 import com.opencsv.exceptions.CsvValidationException;
 import lethimonnier.antoine.jmusichub.cli.classes.music.Album;
 import lethimonnier.antoine.jmusichub.cli.classes.music.AudioBook;
 import lethimonnier.antoine.jmusichub.cli.classes.music.Playlist;
 import lethimonnier.antoine.jmusichub.cli.classes.music.Song;
-import lethimonnier.antoine.jmusichub.cli.classes.parsing.CSVParser;
 import lethimonnier.antoine.jmusichub.cli.classes.parsing.ConsoleParser;
 import lethimonnier.antoine.jmusichub.cli.enums.Category;
 import lethimonnier.antoine.jmusichub.cli.enums.Genre;
@@ -15,11 +12,9 @@ import lethimonnier.antoine.jmusichub.cli.enums.Language;
 import lethimonnier.antoine.jmusichub.cli.interfaces.AudioContent;
 
 import javax.swing.*;
-import javax.swing.filechooser.FileFilter;
 import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
@@ -36,19 +31,17 @@ public final class MusicHub {
     private final Logger log = Logger.getGlobal();
     private final Library library;
     private final ConsoleParser console = new ConsoleParser();
-    private final CSVParser csv = new CSVParser();
-
-    private File currentFile;
 
     private MusicHub() {
         log.info("Welcome to the MusicHub!");
         library = new Library();
+        CSVImporter csv = new CSVImporter();
         try {
-            currentFile = openFileFromChooser();
+            File currentFile = csv.openFileFromChooser();
             if (currentFile == null) {
                 log.warning("No input file found.");
             } else {
-                int imported = importSavedContentFromFile(currentFile);
+                int imported = csv.importSavedContentFromFile(currentFile, library);
                 log.log(Level.INFO, "Successfully imported {0} elements", imported);
             }
         } catch (IOException | CsvValidationException e) {
@@ -115,7 +108,7 @@ public final class MusicHub {
                     // saves everything in a csv file
                     log.info("Saving library.");
                     try {
-                        saveLibaryToFile();
+                        csv.saveLibaryToFile();
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
@@ -158,15 +151,6 @@ public final class MusicHub {
                     break;
             }
         }
-    }
-
-    /**
-     * Starts the MusicHub.
-     *
-     * @param args The arguments of the program.
-     */
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(MusicHub::new);
     }
 
     /**
@@ -432,164 +416,31 @@ public final class MusicHub {
     }
 
     /**
+     * Returns a formatted <code>Date</code> as a <code>String</code>
+     *
+     * @param date the <code>Date</code> to format
+     * @return the formatted <code>Date</code> as a <code>String</code>
+     */
+    public static String getFormattedDate(Date date) {
+        return new SimpleDateFormat(dateFormat).format(date);
+    }
+
+    /**
      * Returns a <code>Date</code> object from a <code>String</code> input.
      *
      * @param dateToParse the <code>String</code> date to parse
      * @return the parsed <code>Date</code>
      */
-    private Date getDateFromString(String dateToParse) {
+    public static Date getDateFromString(String dateToParse) {
         return java.sql.Date.valueOf(LocalDate.parse(dateToParse, DateTimeFormatter.ofPattern(dateFormat)));
     }
 
     /**
-     * Prompts a <code>JFileChooser</code> to choose a .csv file to import.
+     * Starts the MusicHub.
      *
-     * @return the chosen <code>File</code>
-     * @throws IOException if an error occurs
+     * @param args The arguments of the program.
      */
-    private File openFileFromChooser() throws IOException {
-        // Import file and read it
-        log.info("Please choose your input .csv file.");
-        JFileChooser dialog = new JFileChooser();
-        dialog.setFileFilter(new FileFilter() {
-
-            @Override
-            public boolean accept(File f) {
-                return !f.isDirectory() && f.getName().toLowerCase().endsWith(".csv");
-            }
-
-            @Override
-            public String getDescription() {
-                return "CSV file (*.csv)";
-            }
-        });
-        return switch (dialog.showOpenDialog(null)) {
-            case JFileChooser.APPROVE_OPTION -> dialog.getSelectedFile();
-            case JFileChooser.ERROR_OPTION -> throw new IOException("An error occurred selecting file.");
-            default -> null;
-        };
-    }
-
-    /**
-     * Imports the content of a csv file into the libray. Can parse
-     * <code>Album</code>s, <code>Playlist</code>s, <code>AudioBook</code>s and
-     * <code>Song</code>s.
-     * <hr>
-     * <strong>Parsing rules</strong> (delimited by ',', [] means optional):
-     * <ul>
-     * <li><em>Album:</em> title, author, creation date (dd/MM/yyyy) [, songs]</li>
-     * <li><em>Playlist:</em> title[, audiocontents]</li>
-     * <li><em>Song:</em> title, author(s), duration (in seconds), genre</li>
-     * <li><em>AudioBook:</em> title, author, duration (in seconds), language,
-     * category</li>
-     * </ul>
-     * Please refer to the corresponding classes for more info.
-     * <hr>
-     *
-     * @param file the csv file to import
-     * @return the number of inputs added into the <code>Library</code>
-     * @throws IOException            if an input error occurs
-     * @throws CsvValidationException if the file cannot be parsed
-     */
-    private int importSavedContentFromFile(File file) throws IOException, CsvValidationException {
-        // Instantiate Albums, Playlists, AudioBooks and Songs
-        int state = 0; // 0 = idle, 1 = alb, 2 = playl, 3 = ab, 4 = song
-        int importsCount = 0;
-
-        try (CSVReader csvReader = new CSVReader(new FileReader(file))) {
-            String[] line;
-            while ((line = csvReader.readNext()) != null) {
-                String firstCell = line[0];
-                switch (firstCell) {
-                    case "ALBUMS":
-                        state = 1;
-                        break;
-
-                    case "PLAYLISTS":
-                        state = 2;
-                        break;
-
-                    case "AUDIOBOOKS":
-                        state = 3;
-                        break;
-
-                    case "SONGS":
-                        state = 4;
-                        break;
-
-                    default:
-                        break;
-                }
-                if (firstCell.isEmpty() || state > 0)
-                    continue;
-                switch (state) {
-                    case 1: // Album
-                        Song[] songs = null;
-                        if (line.length > 2) {
-                            songs = new Song[line.length - 3];
-                            for (int i = 3; i < line.length; i++) {
-                                songs[i - 3] = csv.getSongFromString(line[i], null);
-                            }
-                        }
-                        library.addToAlbumsLibrary(new Album(songs, firstCell, line[1], getDateFromString(line[2])));
-                        importsCount++;
-                        break;
-
-                    case 2: // Playlist
-                        importsCount++;
-                        break;
-
-                    case 3: // AudioBook
-                        importsCount++;
-                        break;
-
-                    case 4: // Song
-                        importsCount++;
-                        break;
-
-                    default:
-                        break;
-                }
-            }
-        }
-
-        return importsCount;
-    }
-
-    /**
-     * Saves the content of the <code>Library</code> into a csv file.
-     *
-     */
-    private void saveLibaryToFile() throws IOException  {
-        // TODO
-        File f = null;
-        log.info("Please choose your input .csv file.");
-        JFileChooser dialog = new JFileChooser();
-        dialog.setFileFilter(new FileFilter() {
-
-            @Override
-            public boolean accept(File f) {
-                return !f.isDirectory() && f.getName().toLowerCase().endsWith(".csv");
-            }
-
-            @Override
-            public String getDescription() {
-                return "CSV file (*.csv)";
-            }
-        });
-        switch (dialog.showOpenDialog(null)) {
-            case JFileChooser.APPROVE_OPTION:
-                f = dialog.getSelectedFile();
-                break;
-
-            case JFileChooser.ERROR_OPTION:
-                throw new IOException("An error occurred selecting file.");
-
-            case JFileChooser.CANCEL_OPTION:
-            default:
-            break;
-        }
-
-        CSVWriter writer = new CSVWriter(new FileWriter(f), ';', '0', '0', null);
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(MusicHub::new);
     }
 }

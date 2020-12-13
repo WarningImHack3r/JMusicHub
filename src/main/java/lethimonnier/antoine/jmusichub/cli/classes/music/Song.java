@@ -10,14 +10,6 @@ public class Song extends AudioContent {
 
     private final Genre genre;
 
-    public Song(AudioContent content, Genre genre) {
-        this(content.getTitle(), content.getAuthors(), content.getDuration(), genre);
-    }
-
-    public Song(String title, String author, int duration, Genre genre) {
-        this(title, new String[] { author }, duration, genre);
-    }
-
     public Song(String title, String[] authors, int duration, Genre genre) {
         super(title, authors, duration);
         this.genre = genre;
@@ -25,5 +17,10 @@ public class Song extends AudioContent {
 
     public Genre getGenre() {
         return genre;
+    }
+
+    @Override
+    public String toString() {
+        return getTitle() + ";" + String.join("/", getAuthors()) + ";" + getDuration() + ";" + genre.getName();
     }
 }

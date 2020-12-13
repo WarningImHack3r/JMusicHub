@@ -7,9 +7,9 @@ public enum Category {
 
     YOUTH("Youth"), NOVEL("Novel"), THEATER("Theater"), SPEECH("Speech"), DOCUMENTARY("Documentary");
 
-    private String name;
+    private final String name;
 
-    private Category(String name) {
+    Category(String name) {
         this.name = name;
     }
 

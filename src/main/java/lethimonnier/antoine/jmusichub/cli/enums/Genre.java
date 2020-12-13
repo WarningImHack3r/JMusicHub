@@ -7,9 +7,9 @@ public enum Genre {
 
     JAZZ("Jazz"), CLASSICAL("Classical"), HIPHOP("Hip-Hop"), ROCK("Rock"), POP("Pop"), RAP("Rap");
 
-    private String name;
+    private final String name;
 
-    private Genre(String name) {
+    Genre(String name) {
         this.name = name;
     }
 

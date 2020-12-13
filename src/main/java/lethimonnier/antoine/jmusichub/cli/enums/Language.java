@@ -7,9 +7,9 @@ public enum Language {
 
     FRENCH("French"), ENGLISH("English"), ITALIAN("Italian"), SPANISH("Spanish"), DEUTSCH("Deutsch");
 
-    private String name;
+    private final String name;
 
-    private Language(String name) {
+    Language(String name) {
         this.name = name;
     }
 

@@ -5,7 +5,6 @@ Projet JMusicHub - POO
 - compléter tout
 - faire la javadoc (+ exporter le html)
 - générer UML
-- ajouter la sérialisation
 - ajouter 20 musiques, 3 albums et 2 playlists
 - faire le rapport
     - sans code

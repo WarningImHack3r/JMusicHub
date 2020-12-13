@@ -3,6 +3,7 @@ package lethimonnier.antoine.jmusichub.cli.classes.music;
 import lethimonnier.antoine.jmusichub.cli.MusicHub;
 import lethimonnier.antoine.jmusichub.cli.enums.Genre;
 
+import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -12,20 +13,20 @@ import java.util.UUID;
 /**
  * Album
  */
-public class Album {
+public class Album implements Serializable {
 
 	private final String title;
 	private final String author;
 	private final Date releaseDate;
 	private final UUID id;
-	private Song[] songs;
+	private transient Song[] songs;
 	private Genre[] genres;
 	private long totalDuration = 0;
 
 	public Album(Song[] songs, String title, String author, Date releaseDate) {
 		setSongs(songs);
-		this.title = title;
-		this.author = author;
+		this.title = title.trim();
+		this.author = author.trim();
 		this.releaseDate = releaseDate;
 		id = UUID.randomUUID();
 	}
@@ -41,52 +42,48 @@ public class Album {
 			if (song == null)
 				continue;
 			totalDuration += song.getDuration();
-            if (!genresTmp.contains(song.getGenre()))
-                genresTmp.add(song.getGenre());
-        }
-        genres = genresTmp.toArray(new Genre[0]);
-    }
+			if (!genresTmp.contains(song.getGenre()))
+				genresTmp.add(song.getGenre());
+		}
+		genres = genresTmp.toArray(new Genre[0]);
+	}
 
-    public void addSong(Song song) {
-        Song[] newSongs = Arrays.copyOf(songs, songs.length + 1);
-        newSongs[newSongs.length - 1] = song;
-        setSongs(newSongs);
-    }
+	public void addSong(Song song) {
+		Song[] newSongs = Arrays.copyOf(songs, songs.length + 1);
+		newSongs[newSongs.length - 1] = song;
+		setSongs(newSongs);
+	}
 
-    public Song[] getSongs() {
-        return songs;
-    }
+	public Genre[] getGenres() {
+		return genres;
+	}
 
-    public Genre[] getGenres() {
-        return genres;
-    }
+	public String getTitle() {
+		return title;
+	}
 
-    public String getTitle() {
-        return title;
-    }
+	public String getAuthor() {
+		return author;
+	}
 
-    public String getAuthor() {
-        return author;
-    }
+	public Date getReleaseDate() {
+		return releaseDate;
+	}
 
-    public long getTotalDuration() {
-        return totalDuration;
-    }
+	public UUID getId() {
+		return id;
+	}
 
-    public Date getReleaseDate() {
-        return releaseDate;
-    }
+	public long getTotalDuration() {
+		return totalDuration;
+	}
 
-    public UUID getId() {
-        return id;
-    }
-
-    @Override
-    public String toString() {
-	    StringBuilder printableSongs = new StringBuilder();
-	    for (Song song : songs) {
-		    printableSongs.append(";").append(song.toString());
-	    }
-	    return title + ";" + author + ";" + new SimpleDateFormat(MusicHub.dateFormat).format(releaseDate) + printableSongs;
-    }
+	@Override
+	public String toString() {
+		StringBuilder printableSongs = new StringBuilder();
+		for (Song song : songs) {
+			printableSongs.append(";").append(song.toString());
+		}
+		return title + ";" + author + ";" + new SimpleDateFormat(MusicHub.dateFormat).format(releaseDate) + printableSongs;
+	}
 }

@@ -2,6 +2,7 @@ package lethimonnier.antoine.jmusichub.cli.classes.music;
 
 import lethimonnier.antoine.jmusichub.cli.interfaces.AudioContent;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -10,9 +11,9 @@ import java.util.UUID;
 /**
  * Playlist
  */
-public class Playlist {
+public class Playlist implements Serializable {
 
-    private ArrayList<AudioContent> content;
+    private transient ArrayList<AudioContent> content;
     private String name;
     private long totalDuration = 0;
     private final Date creationDate;
@@ -20,11 +21,8 @@ public class Playlist {
     private final UUID id;
 
     public Playlist(String name, List<AudioContent> content) {
-        this.content = new ArrayList<>(content);
-        this.name = name;
-        for (AudioContent audioContent : this.content) {
-            totalDuration += audioContent.getDuration();
-        }
+        this.name = name.trim();
+        setContent(content);
         creationDate = new Date();
         lastModifiedDate = creationDate;
         id = UUID.randomUUID();
@@ -43,7 +41,7 @@ public class Playlist {
     }
 
     public void setName(String name) {
-        this.name = name;
+        this.name = name.trim();
     }
 
     public List<AudioContent> getContent() {
