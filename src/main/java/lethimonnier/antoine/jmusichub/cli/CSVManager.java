@@ -17,9 +17,10 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class CSVImporter {
+public class CSVManager {
 
 	private final Logger log = Logger.getGlobal();
 	private final CSVParser csv = new CSVParser();
@@ -27,18 +28,23 @@ public class CSVImporter {
 	/**
 	 * Prompts a <code>JFileChooser</code> to choose a .csv file to import.
 	 *
+	 * @param path the optional path to open file chooser in
 	 * @return the chosen <code>File</code>
 	 * @throws IOException if an error occurs
 	 */
-	public File openFileFromChooser() throws IOException {
+	public File openFileFromChooser(String path) throws IOException {
 		// Import file and read it
 		log.info("Please choose your input .csv file.");
-		JFileChooser dialog = new JFileChooser();
+		JFileChooser dialog;
+		if (path == null || path.equals(""))
+			dialog = new JFileChooser();
+		else
+			dialog = new JFileChooser(path);
 		dialog.setFileFilter(new FileFilter() {
 
 			@Override
 			public boolean accept(File f) {
-				return !f.isDirectory() && f.getName().toLowerCase().endsWith(".csv");
+				return f.isDirectory() || f.getName().toLowerCase().endsWith(".csv");
 			}
 
 			@Override
@@ -76,23 +82,30 @@ public class CSVImporter {
 	 */
 	public int importSavedContentFromFile(File file, Library library) throws IOException, CsvValidationException {
 		// Instantiate Albums, Playlists, AudioBooks and Songs
-		int state; // 0 = idle, 1 = alb, 2 = playl, 3 = ab, 4 = song
+		int lineState = 0; // 0 = idle, 1 = alb, 2 = playl, 3 = ab, 4 = song
+		int section = lineState;
 		int importsCount = 0;
 
 		try (CSVReader csvReader = new CSVReader(new FileReader(file))) {
 			String[] line;
 			while ((line = csvReader.readNext()) != null) {
+				line = String.join(",", line).split(";");
+				if (line.length <= 0)
+					continue;
 				String firstCell = line[0];
-				state = switch (firstCell) {
+				section = lineState > 0 ? lineState : section;
+				lineState = switch (firstCell) {
 					case "ALBUMS" -> 1;
 					case "PLAYLISTS" -> 2;
 					case "AUDIOBOOKS" -> 3;
 					case "SONGS" -> 4;
 					default -> 0;
 				};
-				if (state == 0)
+				if (lineState > 0)
 					continue;
-				switch (state) {
+				log.log(Level.INFO, "firstCell = {0} -> lineState = {1}, section = {2}", new Object[] { firstCell,
+						lineState, section });
+				switch (section) {
 					case 1: // Album
 						Album album = csv.getAlbumFromString(String.join(";", line), null);
 						if (album == null)
@@ -136,16 +149,22 @@ public class CSVImporter {
 
 	/**
 	 * Saves the content of the <code>Library</code> into a csv file.
-	 * @param library Library to save on the .csv file
+	 *
+	 * @param library the <code>Library</code> to save on the csv file
+	 * @param path    the path to open the chooser in
 	 */
-	public void saveLibaryToFile(Library library) throws IOException {
+	public void saveLibaryToFile(Library library, String path) throws IOException {
 		log.info("Please choose your output .csv file.");
-		JFileChooser dialog = new JFileChooser();
+		JFileChooser dialog;
+		if (path == null || path.equals(""))
+			dialog = new JFileChooser();
+		else
+			dialog = new JFileChooser(path);
 		dialog.setFileFilter(new FileFilter() {
 
 			@Override
 			public boolean accept(File f) {
-				return !f.isDirectory() && f.getName().toLowerCase().endsWith(".csv");
+				return f.isDirectory() || f.getName().toLowerCase().endsWith(".csv");
 			}
 
 			@Override
@@ -168,7 +187,7 @@ public class CSVImporter {
 		}
 
 		CSVWriter writer = new CSVWriter(new FileWriter(f), ';', '"', '\\', null);
-		
+
 		List<String[]> tosave = new ArrayList<>();
 		tosave.add(new String[] {"SONGS"});
         for (Song s : library.getStoredSongs()) {

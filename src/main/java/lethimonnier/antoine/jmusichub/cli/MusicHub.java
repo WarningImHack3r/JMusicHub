@@ -31,20 +31,23 @@ public final class MusicHub {
     private final Logger log = Logger.getGlobal();
     private final Library library;
     private final ConsoleParser console = new ConsoleParser();
+    private String filePath;
 
     private MusicHub() {
         log.info("Welcome to the MusicHub!");
         library = new Library();
-        CSVImporter csv = new CSVImporter();
+        CSVManager csv = new CSVManager();
         try {
-            File currentFile = csv.openFileFromChooser();
+            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+            File currentFile = csv.openFileFromChooser(null);
             if (currentFile == null) {
                 log.warning("No input file found.");
             } else {
+                filePath = currentFile.getAbsolutePath();
                 int imported = csv.importSavedContentFromFile(currentFile, library);
                 log.log(Level.INFO, "Successfully imported {0} elements", imported);
             }
-        } catch (IOException | CsvValidationException e) {
+        } catch (IOException | CsvValidationException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException | ClassNotFoundException e) {
             e.printStackTrace();
         }
         log.info("What do you want to do?");
@@ -108,7 +111,7 @@ public final class MusicHub {
                     // saves everything in a csv file
                     log.info("Saving library.");
                     try {
-                        csv.saveLibaryToFile();
+                        csv.saveLibaryToFile(library, filePath);
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
@@ -166,7 +169,8 @@ public final class MusicHub {
         String[] songAuthors = scanner.nextLine().split(" ");
         log.info("Song duration? (in seconds)");
         int songDuration = scanner.nextInt();
-        log.log(Level.INFO, "Song genre? {0}", Arrays.toString(Genre.values()).replace("[", "(").replace("]", ")"));
+        log.log(Level.INFO, "Song genre? {0}", Arrays.toString(Genre.getStringValues()).replace("[", "(").replace("]"
+                , ")"));
         String songGenre = scanner.nextLine();
         for (Genre genreItem : Genre.values()) {
             if (genreItem.getName().toLowerCase().contains(songGenre.toLowerCase())) {
@@ -195,7 +199,7 @@ public final class MusicHub {
             log.log(Level.INFO, "{0}: ", toPrint[i]);
             fields[i] = scanner.nextInt();
         }
-        scanner.nextLine();
+        scanner.next();
         Calendar c = Calendar.getInstance();
         c.set(fields[0], fields[1] - 1 /* Calendar.JANUARY = 0 */, fields[2]);
         Date albumParsedDate = c.getTime();
@@ -272,7 +276,7 @@ public final class MusicHub {
         log.info("Audiobook duration? (in seconds)");
         int audiobookDuration = scanner.nextInt();
         log.log(Level.INFO, "Audiobook language? {0}",
-                Arrays.toString(Language.values()).replace("[", "(").replace("]", ")"));
+                Arrays.toString(Language.getStringValues()).replace("[", "(").replace("]", ")"));
         Language language = null;
         String audiobookLanguage = scanner.nextLine();
         for (Language languageItem : Language.values()) {
@@ -284,7 +288,7 @@ public final class MusicHub {
         if (language == null)
             log.warning("Error: language not found. Please try again.");
         log.log(Level.INFO, "Audiobook category? {0}",
-                Arrays.toString(Category.values()).replace("[", "(").replace("]", ")"));
+                Arrays.toString(Category.getStringValues()).replace("[", "(").replace("]", ")"));
         Category category = null;
         String audiobookCategory = scanner.nextLine();
         for (Category categoryItem : Category.values()) {

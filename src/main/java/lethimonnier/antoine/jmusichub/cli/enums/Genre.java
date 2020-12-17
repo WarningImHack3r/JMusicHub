@@ -16,4 +16,12 @@ public enum Genre {
     public String getName() {
         return name;
     }
+
+    public static String[] getStringValues() {
+        String[] vals = new String[values().length];
+        for (int i = 0; i < values().length; i++) {
+            vals[i] = values()[i].getName();
+        }
+        return vals;
+    }
 }
