@@ -11,8 +11,14 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+/**
+ * The type Console parser.
+ */
 public class ConsoleParser implements Parser {
 
+	/**
+	 * The Log.
+	 */
 	Logger log = Logger.getGlobal();
 
 	/**
@@ -29,7 +35,7 @@ public class ConsoleParser implements Parser {
 		for (Song s : librarySongs) {
 			if (s.getTitle().toLowerCase().contains(match.toLowerCase())) {
 				toReturn = s;
-				log.log(Level.INFO, "Match found: {0}", s.getTitle());
+				log.log(Level.INFO, "Song match found: {0}", s.getTitle());
 				break;
 			}
 			if (librarySongs.indexOf(s) == librarySongs.size() - 1) {

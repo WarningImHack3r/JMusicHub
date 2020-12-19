@@ -5,7 +5,26 @@ package lethimonnier.antoine.jmusichub.cli.enums;
  */
 public enum Category {
 
-    YOUTH("Youth"), NOVEL("Novel"), THEATER("Theater"), SPEECH("Speech"), DOCUMENTARY("Documentary");
+	/**
+	 * Youth category.
+	 */
+	YOUTH("Youth"),
+	/**
+	 * Novel category.
+	 */
+	NOVEL("Novel"),
+	/**
+	 * Theater category.
+	 */
+	THEATER("Theater"),
+	/**
+	 * Speech category.
+	 */
+	SPEECH("Speech"),
+	/**
+	 * Documentary category.
+	 */
+	DOCUMENTARY("Documentary");
 
     private final String name;
 
@@ -13,11 +32,21 @@ public enum Category {
         this.name = name;
     }
 
-    public String getName() {
+	/**
+	 * Gets name.
+	 *
+	 * @return the name
+	 */
+	public String getName() {
         return name;
     }
 
-    public static String[] getStringValues() {
+	/**
+	 * Get string values string [ ].
+	 *
+	 * @return the string [ ]
+	 */
+	public static String[] getStringValues() {
         String[] vals = new String[values().length];
         for (int i = 0; i < values().length; i++) {
             vals[i] = values()[i].getName();

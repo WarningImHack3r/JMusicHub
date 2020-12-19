@@ -17,8 +17,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
+/**
+ * The type Csv parser.
+ */
 public class CSVParser implements Parser {
 
+	/**
+	 * The Log.
+	 */
 	Logger log = Logger.getGlobal();
 
 	/**
@@ -29,10 +35,10 @@ public class CSVParser implements Parser {
 	 */
 	private boolean isSong(String audioContent) throws IOException {
 		String[] splitted = audioContent.contains("-") ? audioContent.split("-") : audioContent.split(";");
-		if (splitted.length < 3)
+		if (splitted.length < 4)
 			throw new IOException("Error parsing audiocontent");
 		for (Genre genre : Genre.values()) {
-			if (genre.getName().toLowerCase().contains(splitted[3].toLowerCase())) {
+			if (genre.getName().toLowerCase().contains(splitted[3].toLowerCase().trim())) {
 				return true;
 			}
 		}
@@ -48,6 +54,7 @@ public class CSVParser implements Parser {
 	 */
 	@Override
 	public Song getSongFromString(String str, Library library) {
+		str = str.replace("\"", "");
 		String[] splitted = str.split(";");
 		if (splitted.length != 4) {
 			log.warning("Incorrect argument length");
@@ -55,14 +62,14 @@ public class CSVParser implements Parser {
 		}
 		int duration;
 		try {
-			duration = Integer.parseInt(splitted[2]);
+			duration = Integer.parseInt(splitted[2].trim());
 		} catch (NumberFormatException e) {
 			log.warning("Can't fetch duration from input");
 			return null;
 		}
 		Genre genre = null;
 		for (Genre g : Genre.values()) {
-			if (g.getName().toLowerCase().contains(splitted[3].toLowerCase())) {
+			if (g.getName().toLowerCase().contains(splitted[3].toLowerCase().trim())) {
 				genre = g;
 				break;
 			}
@@ -96,9 +103,9 @@ public class CSVParser implements Parser {
 					continue;
 				}
 				if (isASong) {
-					content.add(getSongFromString(splitted[i], library));
+					content.add(getSongFromString(splitted[i].replace("-", ";"), library));
 				} else {
-					content.add(getAudioBookFromString(splitted[i], library));
+					content.add(getAudioBookFromString(splitted[i].replace("-", ";"), library));
 				}
 			}
 		}
@@ -134,6 +141,7 @@ public class CSVParser implements Parser {
 	 */
 	@Override
 	public AudioBook getAudioBookFromString(String str, Library library) {
+		str = str.replace("\"", "");
 		String[] splitted = str.split(";");
 		if (splitted.length != 5) {
 			log.warning("Incorrect argument length");
@@ -141,14 +149,14 @@ public class CSVParser implements Parser {
 		}
 		int duration;
 		try {
-			duration = Integer.parseInt(splitted[2]);
+			duration = Integer.parseInt(splitted[2].trim());
 		} catch (NumberFormatException e) {
 			log.warning("Can't fetch duration from input");
 			return null;
 		}
 		Language language = null;
 		for (Language l : Language.values()) {
-			if (l.getName().toLowerCase().contains(splitted[3].toLowerCase())) {
+			if (l.getName().toLowerCase().contains(splitted[3].toLowerCase().trim())) {
 				language = l;
 				break;
 			}
@@ -159,7 +167,7 @@ public class CSVParser implements Parser {
 		}
 		Category category = null;
 		for (Category c : Category.values()) {
-			if (c.getName().toLowerCase().contains(splitted[4].toLowerCase())) {
+			if (c.getName().toLowerCase().contains(splitted[4].toLowerCase().trim())) {
 				category = c;
 				break;
 			}

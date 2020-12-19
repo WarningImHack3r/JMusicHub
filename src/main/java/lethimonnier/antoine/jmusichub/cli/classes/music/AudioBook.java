@@ -12,12 +12,26 @@ public class AudioBook extends AudioContent {
 	private final Language language;
 	private final Category category;
 
+	/**
+	 * Instantiates a new Audio book.
+	 *
+	 * @param title    the title
+	 * @param author   the author
+	 * @param duration the duration
+	 * @param language the language
+	 * @param category the category
+	 */
 	public AudioBook(String title, String author, int duration, Language language, Category category) {
 		super(title, new String[] { author }, duration);
 		this.language = language;
 		this.category = category;
 	}
 
+	/**
+	 * Gets author.
+	 *
+	 * @return the author
+	 */
 	public String getAuthor() {
 		return getAuthors()[0];
 	}

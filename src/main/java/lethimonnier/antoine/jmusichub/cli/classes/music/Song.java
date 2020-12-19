@@ -10,12 +10,25 @@ public class Song extends AudioContent {
 
     private final Genre genre;
 
-    public Song(String title, String[] authors, int duration, Genre genre) {
+	/**
+	 * Instantiates a new Song.
+	 *
+	 * @param title    the title
+	 * @param authors  the authors
+	 * @param duration the duration
+	 * @param genre    the genre
+	 */
+	public Song(String title, String[] authors, int duration, Genre genre) {
         super(title, authors, duration);
         this.genre = genre;
     }
 
-    public Genre getGenre() {
+	/**
+	 * Gets genre.
+	 *
+	 * @return the genre
+	 */
+	public Genre getGenre() {
         return genre;
     }
 

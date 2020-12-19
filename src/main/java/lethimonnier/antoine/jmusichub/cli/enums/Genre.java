@@ -5,7 +5,30 @@ package lethimonnier.antoine.jmusichub.cli.enums;
  */
 public enum Genre {
 
-    JAZZ("Jazz"), CLASSICAL("Classical"), HIPHOP("Hip-Hop"), ROCK("Rock"), POP("Pop"), RAP("Rap");
+	/**
+	 * Jazz genre.
+	 */
+	JAZZ("Jazz"),
+	/**
+	 * Classical genre.
+	 */
+	CLASSICAL("Classical"),
+	/**
+	 * Hiphop genre.
+	 */
+	HIPHOP("Hip-Hop"),
+	/**
+	 * Rock genre.
+	 */
+	ROCK("Rock"),
+	/**
+	 * Pop genre.
+	 */
+	POP("Pop"),
+	/**
+	 * Rap genre.
+	 */
+	RAP("Rap");
 
     private final String name;
 
@@ -13,11 +36,21 @@ public enum Genre {
         this.name = name;
     }
 
-    public String getName() {
+	/**
+	 * Gets name.
+	 *
+	 * @return the name
+	 */
+	public String getName() {
         return name;
     }
 
-    public static String[] getStringValues() {
+	/**
+	 * Get string values string [ ].
+	 *
+	 * @return the string [ ]
+	 */
+	public static String[] getStringValues() {
         String[] vals = new String[values().length];
         for (int i = 0; i < values().length; i++) {
             vals[i] = values()[i].getName();

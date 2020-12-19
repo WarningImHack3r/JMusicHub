@@ -5,7 +5,26 @@ package lethimonnier.antoine.jmusichub.cli.enums;
  */
 public enum Language {
 
-    FRENCH("French"), ENGLISH("English"), ITALIAN("Italian"), SPANISH("Spanish"), DEUTSCH("Deutsch");
+	/**
+	 * French language.
+	 */
+	FRENCH("French"),
+	/**
+	 * English language.
+	 */
+	ENGLISH("English"),
+	/**
+	 * Italian language.
+	 */
+	ITALIAN("Italian"),
+	/**
+	 * Spanish language.
+	 */
+	SPANISH("Spanish"),
+	/**
+	 * Deutsch language.
+	 */
+	DEUTSCH("Deutsch");
 
     private final String name;
 
@@ -13,11 +32,21 @@ public enum Language {
         this.name = name;
     }
 
-    public String getName() {
+	/**
+	 * Gets name.
+	 *
+	 * @return the name
+	 */
+	public String getName() {
         return name;
     }
 
-    public static String[] getStringValues() {
+	/**
+	 * Get string values string [ ].
+	 *
+	 * @return the string [ ]
+	 */
+	public static String[] getStringValues() {
         String[] vals = new String[values().length];
         for (int i = 0; i < values().length; i++) {
             vals[i] = values()[i].getName();

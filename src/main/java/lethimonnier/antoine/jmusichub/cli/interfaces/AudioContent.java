@@ -13,7 +13,14 @@ public abstract class AudioContent implements Serializable {
     private int duration;
     private final UUID id;
 
-    protected AudioContent(String title, String[] authors, int duration) {
+	/**
+	 * Instantiates a new Audio content.
+	 *
+	 * @param title    the title
+	 * @param authors  the authors
+	 * @param duration the duration
+	 */
+	protected AudioContent(String title, String[] authors, int duration) {
         setTitle(title.trim());
         for (int i = 0; i < authors.length; i++) {
             authors[i] = authors[i].trim();
@@ -23,42 +30,82 @@ public abstract class AudioContent implements Serializable {
         id = UUID.randomUUID();
     }
 
-    public static String getFormattedDuration(long duration) {
+	/**
+	 * Gets formatted duration.
+	 *
+	 * @param duration the duration
+	 * @return the formatted duration
+	 */
+	public static String getFormattedDuration(long duration) {
         if (duration < 60)
             return duration + "s";
         if (duration < 3600)
             return (duration / 60) + "m " + (duration % 60) + "s";
         if (duration < 24 * 3600)
             return (duration / 3600) + "h " + ((duration % 3600) / 60) + "m " + ((duration % 3600) % 60) + "s";
-        return (duration / 86400) + "d " + ((duration % 86400) / 3600) + "h " + (((duration % 86400) % 3600) / 60) +
-		               "m " + (((duration % 86400) % 3600) % 60) + "s";
+        return (duration / 86400) + "d " + ((duration % 86400) / 3600) + "h " + (((duration % 86400) % 3600) / 60) + "m " + (((duration % 86400) % 3600) % 60) + "s";
     }
 
-    public void setTitle(String title) {
+	/**
+	 * Sets title.
+	 *
+	 * @param title the title
+	 */
+	public void setTitle(String title) {
         this.title = title.trim();
     }
 
-    public void setDuration(int duration) {
+	/**
+	 * Sets duration.
+	 *
+	 * @param duration the duration
+	 */
+	public void setDuration(int duration) {
         this.duration = duration;
     }
 
-    public String getTitle() {
+	/**
+	 * Gets title.
+	 *
+	 * @return the title
+	 */
+	public String getTitle() {
         return title;
     }
 
-    public String[] getAuthors() {
+	/**
+	 * Get authors string [ ].
+	 *
+	 * @return the string [ ]
+	 */
+	public String[] getAuthors() {
         return authors;
     }
 
-    public int getDuration() {
+	/**
+	 * Gets duration.
+	 *
+	 * @return the duration
+	 */
+	public int getDuration() {
         return duration;
     }
 
-    public UUID getId() {
+	/**
+	 * Gets id.
+	 *
+	 * @return the id
+	 */
+	public UUID getId() {
         return id;
     }
 
-    public void setAuthors(String[] authors) {
+	/**
+	 * Sets authors.
+	 *
+	 * @param authors the authors
+	 */
+	public void setAuthors(String[] authors) {
         for (int i = 0; i < authors.length; i++) {
             authors[i] = authors[i].trim();
         }

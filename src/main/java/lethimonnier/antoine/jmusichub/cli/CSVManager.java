@@ -17,9 +17,11 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
+/**
+ * The type Csv manager.
+ */
 public class CSVManager {
 
 	private final Logger log = Logger.getGlobal();
@@ -75,7 +77,8 @@ public class CSVManager {
 	 * Please refer to the corresponding classes for more info.
 	 * <hr>
 	 *
-	 * @param file the csv file to import
+	 * @param file    the csv file to import
+	 * @param library the library
 	 * @return the number of inputs added into the <code>Library</code>
 	 * @throws IOException            if an input error occurs
 	 * @throws CsvValidationException if the file cannot be parsed
@@ -103,8 +106,6 @@ public class CSVManager {
 				};
 				if (lineState > 0)
 					continue;
-				log.log(Level.INFO, "firstCell = {0} -> lineState = {1}, section = {2}", new Object[] { firstCell,
-						lineState, section });
 				switch (section) {
 					case 1: // Album
 						Album album = csv.getAlbumFromString(String.join(";", line), null);
@@ -152,6 +153,7 @@ public class CSVManager {
 	 *
 	 * @param library the <code>Library</code> to save on the csv file
 	 * @param path    the path to open the chooser in
+	 * @throws IOException the io exception
 	 */
 	public void saveLibaryToFile(Library library, String path) throws IOException {
 		log.info("Please choose your output .csv file.");

@@ -4,6 +4,9 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.logging.Logger;
 
+/**
+ * The type Music hub gui.
+ */
 public class MusicHubGUI extends JFrame {
 
     private MusicHubGUI(String title) {
@@ -21,7 +24,12 @@ public class MusicHubGUI extends JFrame {
         setVisible(true);
     }
 
-    public static void main(String[] args) {
+	/**
+	 * The entry point of application.
+	 *
+	 * @param args the input arguments
+	 */
+	public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> new MusicHubGUI(""));
     }
 

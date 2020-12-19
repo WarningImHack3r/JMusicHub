@@ -20,7 +20,13 @@ public class Playlist implements Serializable {
     private Date lastModifiedDate;
     private final UUID id;
 
-    public Playlist(String name, List<AudioContent> content) {
+	/**
+	 * Instantiates a new Playlist.
+	 *
+	 * @param name    the name
+	 * @param content the content
+	 */
+	public Playlist(String name, List<AudioContent> content) {
         this.name = name.trim();
         setContent(content);
         creationDate = new Date();
@@ -28,7 +34,12 @@ public class Playlist implements Serializable {
         id = UUID.randomUUID();
     }
 
-    public void setContent(List<AudioContent> content) {
+	/**
+	 * Sets content.
+	 *
+	 * @param content the content
+	 */
+	public void setContent(List<AudioContent> content) {
         if (content == null)
             return;
         this.content = new ArrayList<>(content);
@@ -40,46 +51,83 @@ public class Playlist implements Serializable {
         lastModifiedDate = new Date();
     }
 
-    public void setName(String name) {
+	/**
+	 * Sets name.
+	 *
+	 * @param name the name
+	 */
+	public void setName(String name) {
         this.name = name.trim();
     }
 
-    public List<AudioContent> getContent() {
+	/**
+	 * Gets content.
+	 *
+	 * @return the content
+	 */
+	public List<AudioContent> getContent() {
         return content;
     }
 
-    public String getName() {
+	/**
+	 * Gets name.
+	 *
+	 * @return the name
+	 */
+	public String getName() {
         return name;
     }
 
-    public long getTotalDuration() {
+	/**
+	 * Gets total duration.
+	 *
+	 * @return the total duration
+	 */
+	public long getTotalDuration() {
         return totalDuration;
     }
 
-    public Date getCreationDate() {
+	/**
+	 * Gets creation date.
+	 *
+	 * @return the creation date
+	 */
+	public Date getCreationDate() {
         return creationDate;
     }
 
-    public Date getLastModifiedDate() {
+	/**
+	 * Gets last modified date.
+	 *
+	 * @return the last modified date
+	 */
+	public Date getLastModifiedDate() {
         return lastModifiedDate;
     }
 
-    public UUID getId() {
+	/**
+	 * Gets id.
+	 *
+	 * @return the id
+	 */
+	public UUID getId() {
         return id;
     }
 
     @Override
     public String toString() {
         StringBuilder audioContent = new StringBuilder();
-        for (AudioContent ac : content) {
-            if (ac.getClass().isAssignableFrom(Song.class)) {
-                Song song = (Song) ac;
-                audioContent.append(";").append(song.toString());
-            } else {
-                AudioBook audioBook = (AudioBook) ac;
-                audioContent.append(";").append(audioBook.toString());
+        if (content != null) {
+            for (AudioContent ac : content) {
+                if (ac.getClass().isAssignableFrom(Song.class)) {
+                    Song song = (Song) ac;
+                    audioContent.append(";").append(song.toString());
+                } else {
+                    AudioBook audioBook = (AudioBook) ac;
+                    audioContent.append(";").append(audioBook.toString());
+                }
             }
         }
-        return getName() + ";" + audioContent;
+        return getName() + audioContent;
     }
 }

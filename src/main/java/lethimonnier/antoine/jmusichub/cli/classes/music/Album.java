@@ -23,6 +23,14 @@ public class Album implements Serializable {
 	private Genre[] genres;
 	private long totalDuration = 0;
 
+	/**
+	 * Instantiates a new Album.
+	 *
+	 * @param songs       the songs
+	 * @param title       the title
+	 * @param author      the author
+	 * @param releaseDate the release date
+	 */
 	public Album(Song[] songs, String title, String author, Date releaseDate) {
 		setSongs(songs);
 		this.title = title.trim();
@@ -31,6 +39,11 @@ public class Album implements Serializable {
 		id = UUID.randomUUID();
 	}
 
+	/**
+	 * Sets songs.
+	 *
+	 * @param songs the songs
+	 */
 	public void setSongs(Song[] songs) {
 		if (songs == null)
 			return;
@@ -48,32 +61,67 @@ public class Album implements Serializable {
 		genres = genresTmp.toArray(new Genre[0]);
 	}
 
+	/**
+	 * Add song.
+	 *
+	 * @param song the song
+	 */
 	public void addSong(Song song) {
-		Song[] newSongs = Arrays.copyOf(songs, songs.length + 1);
+		Song[] newSongs = songs != null ? Arrays.copyOf(songs, songs.length + 1) : new Song[1];
 		newSongs[newSongs.length - 1] = song;
 		setSongs(newSongs);
 	}
 
+	/**
+	 * Get genres genre [ ].
+	 *
+	 * @return the genre [ ]
+	 */
 	public Genre[] getGenres() {
 		return genres;
 	}
 
+	/**
+	 * Gets title.
+	 *
+	 * @return the title
+	 */
 	public String getTitle() {
 		return title;
 	}
 
+	/**
+	 * Gets author.
+	 *
+	 * @return the author
+	 */
 	public String getAuthor() {
 		return author;
 	}
 
+	/**
+	 * Gets release date.
+	 *
+	 * @return the release date
+	 */
 	public Date getReleaseDate() {
 		return releaseDate;
 	}
 
+	/**
+	 * Gets id.
+	 *
+	 * @return the id
+	 */
 	public UUID getId() {
 		return id;
 	}
 
+	/**
+	 * Gets total duration.
+	 *
+	 * @return the total duration
+	 */
 	public long getTotalDuration() {
 		return totalDuration;
 	}
@@ -81,9 +129,11 @@ public class Album implements Serializable {
 	@Override
 	public String toString() {
 		StringBuilder printableSongs = new StringBuilder();
-		for (Song song : songs) {
-			printableSongs.append(";").append(song.toString());
+		if (songs != null) {
+			for (Song song : songs) {
+				printableSongs.append(";").append(song.toString());
+			}
 		}
-		return title + ";" + author + ";" + new SimpleDateFormat(MusicHub.dateFormat).format(releaseDate) + printableSongs;
+		return title + ";" + author + ";" + new SimpleDateFormat(MusicHub.DATE_FORMAT).format(releaseDate) + printableSongs;
 	}
 }
