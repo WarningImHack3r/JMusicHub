@@ -187,13 +187,17 @@ public class CSVManager {
 			default:
 				return;
 		}
-
-		CSVWriter writer = new CSVWriter(new FileWriter(f), ';', '"', '\\', null);
+		String st = ";\n";
+		CSVWriter writer = new CSVWriter(new FileWriter(f), ';', '"', '\\', st);
 
 		List<String[]> tosave = new ArrayList<>();
 		tosave.add(new String[] {"SONGS"});
+		//tosave.add(new String[] {st});
         for (Song s : library.getStoredSongs()) {
+			//System.out.println(s.toString());
 			tosave.add(s.toString().split(";"));
+			//tosave.add(new String[] {"\n"});
+			//tosave.add(new String[] {st});
 		}
 		tosave.add(new String[] {"PLAYLISTS"});
 		for (Playlist s : library.getStoredPlaylists()) {
@@ -207,7 +211,12 @@ public class CSVManager {
 		for (Album s : library.getStoredAlbums()) {
 			tosave.add(s.toString().split(";"));
 		}
-		writer.writeAll(tosave);
+		System.out.println(tosave.toString()); 
+		for (String[] strings : tosave) {
+			writer.writeNext(strings);
+			
+		}
+		//writer.writeAll(tosave);
 		writer.close();
 	}
 }
