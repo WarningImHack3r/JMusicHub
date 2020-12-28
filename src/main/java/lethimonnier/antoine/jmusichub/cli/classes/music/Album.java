@@ -15,6 +15,7 @@ import java.util.UUID;
  */
 public class Album implements Serializable {
 
+	private static final long serialVersionUID = -6929217727508986261L;
 	private final String title;
 	private final String author;
 	private final Date releaseDate;
@@ -131,7 +132,7 @@ public class Album implements Serializable {
 		StringBuilder printableSongs = new StringBuilder();
 		if (songs != null) {
 			for (Song song : songs) {
-				printableSongs.append(";").append(song.toString());
+				printableSongs.append(";").append(song.toString().replace(";", "-"));
 			}
 		}
 		return title + ";" + author + ";" + new SimpleDateFormat(MusicHub.DATE_FORMAT).format(releaseDate) + printableSongs;

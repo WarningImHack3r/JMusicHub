@@ -9,6 +9,7 @@ import lethimonnier.antoine.jmusichub.cli.interfaces.AudioContent;
  */
 public class AudioBook extends AudioContent {
 
+	private static final long serialVersionUID = 4664945769348239740L;
 	private final Language language;
 	private final Category category;
 

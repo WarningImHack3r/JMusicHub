@@ -92,7 +92,7 @@ public class CSVManager {
 		try (CSVReader csvReader = new CSVReader(new FileReader(file))) {
 			String[] line;
 			while ((line = csvReader.readNext()) != null) {
-				line = String.join(",", line).split(";");
+				line = String.join(",", line).replace("\"", "").split(";");
 				if (line.length <= 0)
 					continue;
 				String firstCell = line[0];
@@ -191,32 +191,33 @@ public class CSVManager {
 		CSVWriter writer = new CSVWriter(new FileWriter(f), ';', '"', '\\', st);
 
 		List<String[]> tosave = new ArrayList<>();
-		tosave.add(new String[] {"SONGS"});
-		//tosave.add(new String[] {st});
-        for (Song s : library.getStoredSongs()) {
-			//System.out.println(s.toString());
-			tosave.add(s.toString().split(";"));
-			//tosave.add(new String[] {"\n"});
-			//tosave.add(new String[] {st});
-		}
-		tosave.add(new String[] {"PLAYLISTS"});
-		for (Playlist s : library.getStoredPlaylists()) {
+		tosave.add(new String[] { "SONGS" });
+		for (Song s : library.getStoredSongs()) {
+			if (s == null)
+				continue;
 			tosave.add(s.toString().split(";"));
 		}
-		tosave.add(new String[] {"AUDIOBOOKS"});
-		for (AudioBook s : library.getStoredAudioBooks()) {
-			tosave.add(s.toString().split(";"));
+		tosave.add(new String[] { "PLAYLISTS" });
+		for (Playlist p : library.getStoredPlaylists()) {
+			if (p == null)
+				continue;
+			tosave.add(p.toString().split(";"));
 		}
-		tosave.add(new String[] {"ALBUMS"});
-		for (Album s : library.getStoredAlbums()) {
-			tosave.add(s.toString().split(";"));
+		tosave.add(new String[] { "AUDIOBOOKS" });
+		for (AudioBook ab : library.getStoredAudioBooks()) {
+			if (ab == null)
+				continue;
+			tosave.add(ab.toString().split(";"));
 		}
-		System.out.println(tosave.toString()); 
+		tosave.add(new String[] { "ALBUMS" });
+		for (Album a : library.getStoredAlbums()) {
+			if (a == null)
+				continue;
+			tosave.add(a.toString().split(";"));
+		}
 		for (String[] strings : tosave) {
 			writer.writeNext(strings);
-			
 		}
-		//writer.writeAll(tosave);
 		writer.close();
 	}
 }

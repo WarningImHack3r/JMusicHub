@@ -13,7 +13,8 @@ import java.util.UUID;
  */
 public class Playlist implements Serializable {
 
-    private transient ArrayList<AudioContent> content;
+    private static final long serialVersionUID = 6521686263527169809L;
+	private transient ArrayList<AudioContent> content;
     private String name;
     private long totalDuration = 0;
     private final Date creationDate;
@@ -121,10 +122,10 @@ public class Playlist implements Serializable {
             for (AudioContent ac : content) {
                 if (ac.getClass().isAssignableFrom(Song.class)) {
                     Song song = (Song) ac;
-                    audioContent.append(";").append(song.toString());
+                    audioContent.append(";").append(song.toString().replace(";", "-"));
                 } else {
                     AudioBook audioBook = (AudioBook) ac;
-                    audioContent.append(";").append(audioBook.toString());
+                    audioContent.append(";").append(audioBook.toString().replace(";", "-"));
                 }
             }
         }
