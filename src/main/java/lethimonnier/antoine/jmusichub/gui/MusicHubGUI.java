@@ -24,7 +24,8 @@ import java.util.logging.Logger;
 public class MusicHubGUI extends JFrame {
 
     private static final long serialVersionUID = 5930451128361756517L;
-
+    private static final Dimension DEF_TEXT_FIELD_DIM = new Dimension(200, 20);
+    private static final Dimension DEF_COMBO_BOX_DIM = new Dimension(150, 20);
     private static final String ADD_LABEL = "Add";
     private static final String REMOVE_LABEL = "Remove";
     private static final String VIEW_LABEL = "View";
@@ -139,10 +140,13 @@ public class MusicHubGUI extends JFrame {
 
     private JPanel addPanelForType(Class<?> type) {
         JPanel panel = new JPanel();
+        JButton addItem = new JButton("Ajouter");
         // layout: (grid avec 2 lignes ?)
         // text | text | text | text
         // -----------------------------------
         // field | field | field | field
+        addItem.addActionListener(e -> {
+        });
         for (Field field : type.getFields()) {
             // Label
             // String cap = str.substring(0, 1).toUpperCase() + str.substring(1);
@@ -161,16 +165,19 @@ public class MusicHubGUI extends JFrame {
                     continue;
                 }
                 combo.setFocusable(false);
+                combo.setPreferredSize(DEF_COMBO_BOX_DIM);
                 panel.add(combo);
             } else if (fieldType.equals(Long.TYPE) || fieldType.equals(Integer.TYPE)) {
                 // stepper
                 panel.add(new JSpinner(new SpinnerNumberModel(0, 0, 9999, 1)));
             } else if (fieldType.equals(Date.class)) {
                 // calendar
-                panel.add(new DatePicker());
+                //panel.add(new DatePicker());
             } else {
                 // normal
-                panel.add(new JTextField(field.getName()));
+                JTextField jTextGetNameField = new JTextField(field.getName());
+                jTextGetNameField.setPreferredSize(DEF_TEXT_FIELD_DIM);
+                panel.add(jTextGetNameField);
             }
         }
         return panel;
