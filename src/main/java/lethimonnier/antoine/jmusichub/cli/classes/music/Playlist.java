@@ -14,8 +14,8 @@ import java.util.UUID;
 public class Playlist implements Serializable {
 
     private static final long serialVersionUID = 6521686263527169809L;
-	private transient ArrayList<AudioContent> content;
-    private String name;
+	public transient ArrayList<AudioContent> content;
+    public String name;
     private long totalDuration = 0;
     private final Date creationDate;
     private Date lastModifiedDate;
@@ -120,7 +120,7 @@ public class Playlist implements Serializable {
         StringBuilder audioContent = new StringBuilder();
         if (content != null) {
             for (AudioContent ac : content) {
-                if (ac.getClass().isAssignableFrom(Song.class)) {
+                if (ac instanceof Song) {
                     Song song = (Song) ac;
                     audioContent.append(";").append(song.toString().replace(";", "-"));
                 } else {

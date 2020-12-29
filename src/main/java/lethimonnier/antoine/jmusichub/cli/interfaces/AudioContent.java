@@ -9,9 +9,9 @@ import java.util.UUID;
 public abstract class AudioContent implements Serializable {
 
 	private static final long serialVersionUID = 1948714750895464113L;
-	private String title;
-    private String[] authors;
-    private int duration;
+	public String title;
+    public String[] authors;
+    public int duration;
     private final UUID id;
 
 	/**

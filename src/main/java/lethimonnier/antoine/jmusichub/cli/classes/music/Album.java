@@ -16,11 +16,11 @@ import java.util.UUID;
 public class Album implements Serializable {
 
 	private static final long serialVersionUID = -6929217727508986261L;
-	private final String title;
-	private final String author;
-	private final Date releaseDate;
+	public final String title;
+	public final String author;
+	public final Date releaseDate;
 	private final UUID id;
-	private transient Song[] songs;
+	public transient Song[] songs;
 	private Genre[] genres;
 	private long totalDuration = 0;
 

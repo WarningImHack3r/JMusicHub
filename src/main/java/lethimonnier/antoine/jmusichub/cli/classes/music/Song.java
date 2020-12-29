@@ -9,7 +9,7 @@ import lethimonnier.antoine.jmusichub.cli.interfaces.AudioContent;
 public class Song extends AudioContent {
 
     private static final long serialVersionUID = -2212993214794023637L;
-	private final Genre genre;
+	public final Genre genre;
 
 	/**
 	 * Instantiates a new Song.
