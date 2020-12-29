@@ -14,8 +14,8 @@ import java.util.UUID;
 public class Playlist implements Serializable {
 
     private static final long serialVersionUID = 6521686263527169809L;
-	public transient ArrayList<AudioContent> content;
     public String name;
+	public transient List<AudioContent> content;
     private long totalDuration = 0;
     private final Date creationDate;
     private Date lastModifiedDate;
