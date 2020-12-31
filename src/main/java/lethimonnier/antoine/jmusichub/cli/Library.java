@@ -50,7 +50,8 @@ public class Library {
         albums.sort(Comparator.comparing(Album::getReleaseDate));
         StringBuilder sb = new StringBuilder();
         for (Album album : albums) {
-            sb.append(album.getTitle()).append(" (").append(AudioContent.getFormattedDuration(album.getTotalDuration())).append(" - ").append(album.getReleaseDate()).append(")\n");
+            sb.append(album.getTitle()).append(" (").append(AudioContent.getFormattedDuration(album.getTotalDuration()))
+                    .append(" - ").append(album.getReleaseDate()).append(")\n");
         }
         if (sb.isEmpty()) {
             log.info("Album list is empty");
@@ -75,7 +76,7 @@ public class Library {
             genreSb = new StringBuilder();
             for (Album album : albums) {
                 if (album.getGenres() != null && Arrays.asList(album.getGenres()).contains(genre)) {
-                    genreSb.append(album.getTitle()).append("\n");
+                    genreSb.append(album.getTitle()).append(System.getProperty("line.separator"));
                 }
             }
             if (!genreSb.isEmpty()) {
@@ -102,7 +103,10 @@ public class Library {
         playlists.sort(Comparator.comparing(Playlist::getName));
         StringBuilder sb = new StringBuilder();
         for (Playlist playlist : playlists) {
-            sb.append(playlists.indexOf(playlist) + 1).append(" - ").append(playlist.getName()).append(" (").append(AudioContent.getFormattedDuration(playlist.getTotalDuration())).append(" - ").append(MusicHub.getFormattedDate(playlist.getLastModifiedDate())).append(")").append("\n");
+            sb.append(playlists.indexOf(playlist) + 1).append(" - ").append(playlist.getName()).append(" (")
+                    .append(AudioContent.getFormattedDuration(playlist.getTotalDuration())).append(" - ")
+                    .append(MusicHub.getFormattedDate(playlist.getLastModifiedDate())).append(")")
+                    .append(System.getProperty("line.separator"));
         }
         if (sb.isEmpty()) {
             log.info("Playlists list is empty");
@@ -124,7 +128,8 @@ public class Library {
         audioBooks.sort(Comparator.comparing(AudioBook::getAuthor));
         StringBuilder sb = new StringBuilder();
         for (AudioBook audioBook : audioBooks) {
-            sb.append(audioBook.getAuthor()).append(" - ").append(audioBook.getTitle()).append("\n");
+            sb.append(audioBook.getAuthor()).append(" - ").append(audioBook.getTitle())
+                    .append(System.getProperty("line.separator"));
         }
         if (sb.isEmpty()) {
             log.info("Audiobooks list is empty");
@@ -140,8 +145,8 @@ public class Library {
      */
     public static void printAllSongs(List<Song> storedSongs) {
         StringBuilder sb = new StringBuilder();
-        for (Song song: storedSongs) {
-            sb.append(song.toString().replace(";", " - ")).append("\n");
+        for (Song song : storedSongs) {
+            sb.append(song.toString().replace(";", " - ")).append(System.getProperty("line.separator"));
         }
         if (sb.isEmpty()) {
             log.info("Songs list is empty");
@@ -157,8 +162,8 @@ public class Library {
      */
     public static void printAllAudioBooks(List<AudioBook> storedAudioBooks) {
         StringBuilder sb = new StringBuilder();
-        for (AudioBook audioBook: storedAudioBooks) {
-            sb.append(audioBook.toString().replace(";", " - ")).append("\n");
+        for (AudioBook audioBook : storedAudioBooks) {
+            sb.append(audioBook.toString().replace(";", " - ")).append(System.getProperty("line.separator"));
         }
         if (sb.isEmpty()) {
             log.info("Audiobooks list is empty");
@@ -174,8 +179,8 @@ public class Library {
      */
     public static void printAllAlbums(List<Album> storedAlbums) {
         StringBuilder sb = new StringBuilder();
-        for (Album album: storedAlbums) {
-            sb.append(album.toString().replace(";", " - ")).append("\n");
+        for (Album album : storedAlbums) {
+            sb.append(album.toString().replace(";", " - ")).append(System.getProperty("line.separator"));
         }
         if (sb.isEmpty()) {
             log.info("Albums list is empty");
@@ -191,8 +196,8 @@ public class Library {
      */
     public static void printAllPlaylists(List<Playlist> storedPlaylists) {
         StringBuilder sb = new StringBuilder();
-        for (Playlist playlist: storedPlaylists) {
-            sb.append(playlist.toString().replace(";", " - ")).append("\n");
+        for (Playlist playlist : storedPlaylists) {
+            sb.append(playlist.toString().replace(";", " - ")).append(System.getProperty("line.separator"));
         }
         if (sb.isEmpty()) {
             log.info("Playlists list is empty");

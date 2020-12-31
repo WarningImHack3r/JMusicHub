@@ -261,7 +261,7 @@ public final class MusicHub {
             StringBuilder albumSb = new StringBuilder();
             for (Album a : library.getStoredAlbums()) {
                 albumSb.append(library.getStoredAlbums().indexOf(a) + 1).append(") ").append(a.getTitle()).append(" - ")
-                        .append(a.getAuthor()).append("\n");
+                        .append(a.getAuthor()).append(System.getProperty("line.separator"));
             }
             log.log(Level.INFO, "Choose your album to add songs in:\n{0}", albumSb);
             String line = sc.nextLine();
@@ -356,7 +356,8 @@ public final class MusicHub {
                 StringBuilder audiobookSb = new StringBuilder();
                 for (AudioBook ab : library.getStoredAudioBooks()) {
                     audiobookSb.append(library.getStoredAudioBooks().indexOf(ab) + 1).append(") ")
-                            .append(ab.getAuthor()).append(" - ").append(ab.getTitle()).append("\n");
+                            .append(ab.getAuthor()).append(" - ").append(ab.getTitle())
+                            .append(System.getProperty("line.separator"));
                 }
                 log.log(Level.INFO, "Which audiobook to add?\n{0}", audiobookSb);
                 inputContent = sc.nextLine();
@@ -365,7 +366,7 @@ public final class MusicHub {
                 StringBuilder songSb = new StringBuilder();
                 for (Song s : library.getStoredSongs()) {
                     songSb.append(library.getStoredSongs().indexOf(s) + 1).append(" - ").append(s.getTitle())
-                            .append("\n");
+                            .append(System.getProperty("line.separator"));
                 }
                 log.log(Level.INFO, "Which song to add?\n{0}", songSb);
                 inputContent = sc.nextLine();
@@ -421,7 +422,7 @@ public final class MusicHub {
         StringBuilder sb = new StringBuilder();
         for (Playlist playlist : library.getStoredPlaylists()) {
             sb.append(library.getStoredPlaylists().indexOf(playlist) + 1).append(") ").append(playlist.getName())
-                    .append("\n");
+                    .append(System.getProperty("line.separator"));
         }
         log.log(Level.INFO, "Which playlist do you want to delete?\n{0}", sb);
         String albumToParse = sc.nextLine();

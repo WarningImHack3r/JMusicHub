@@ -1,7 +1,7 @@
 # JMusicHub
 Projet JMusicHub - POO
 
-## TODO
+## To-do list
 - faire le GUI
 - faire la javadoc de GUI et tout exporter en html
 - générer UML
