@@ -3,12 +3,18 @@ package lethimonnier.antoine.jmusichub.cli.classes.music;
 import lethimonnier.antoine.jmusichub.cli.enums.Genre;
 import lethimonnier.antoine.jmusichub.cli.interfaces.AudioContent;
 
+import java.io.Serial;
+
 /**
  * Song
  */
 public class Song extends AudioContent {
 
+    @Serial
     private static final long serialVersionUID = -2212993214794023637L;
+	/**
+	 * The Genre.
+	 */
 	public final Genre genre;
 
 	/**

@@ -3,6 +3,7 @@ package lethimonnier.antoine.jmusichub.cli.classes.music;
 import lethimonnier.antoine.jmusichub.cli.MusicHub;
 import lethimonnier.antoine.jmusichub.cli.enums.Genre;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -15,11 +16,24 @@ import java.util.UUID;
  */
 public class Album implements Serializable {
 
+	@Serial
 	private static final long serialVersionUID = -6929217727508986261L;
+	/**
+	 * The Title.
+	 */
 	public final String title;
+	/**
+	 * The Author.
+	 */
 	public final String author;
+	/**
+	 * The Release date.
+	 */
 	public final Date releaseDate;
 	private final UUID id;
+	/**
+	 * The Songs.
+	 */
 	public transient Song[] songs;
 	private Genre[] genres;
 	private long totalDuration = 0;

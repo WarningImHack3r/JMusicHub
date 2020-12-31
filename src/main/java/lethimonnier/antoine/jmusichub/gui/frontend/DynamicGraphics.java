@@ -14,6 +14,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Stream;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -25,7 +26,6 @@ import javax.swing.JSpinner;
 import javax.swing.JTabbedPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
-import javax.swing.ScrollPaneConstants;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.SwingConstants;
 import javax.swing.table.DefaultTableCellRenderer;
@@ -34,16 +34,21 @@ import javax.swing.table.TableCellRenderer;
 
 import com.github.lgooddatepicker.components.DatePicker;
 
+import lethimonnier.antoine.jmusichub.cli.Library;
 import lethimonnier.antoine.jmusichub.cli.classes.music.Album;
 import lethimonnier.antoine.jmusichub.cli.classes.music.AudioBook;
 import lethimonnier.antoine.jmusichub.cli.classes.music.Playlist;
 import lethimonnier.antoine.jmusichub.cli.classes.music.Song;
+import lethimonnier.antoine.jmusichub.cli.classes.parsing.ConsoleParser;
 import lethimonnier.antoine.jmusichub.cli.enums.Category;
 import lethimonnier.antoine.jmusichub.cli.enums.Genre;
 import lethimonnier.antoine.jmusichub.cli.enums.Language;
 import lethimonnier.antoine.jmusichub.cli.interfaces.AudioContent;
 import lethimonnier.antoine.jmusichub.gui.backend.InterfacesLinker;
 
+/**
+ * The type Dynamic graphics.
+ */
 public class DynamicGraphics {
 
     private static final Dimension DEF_TEXT_FIELD_DIM = new Dimension(200, 20);
@@ -62,14 +67,14 @@ public class DynamicGraphics {
         return input.substring(0, 1).toUpperCase() + input.substring(1);
     }
 
-    /**
-     * Fetchs the <code>type</code>'s fields to create adapted user inputs.
-     * <strong>Requires fields to be public</strong>.
-     * 
-     * @param type the class to look into
-     * @return the generated panel
-     */
-    public JPanel addPanelForType(Class<?> type) {
+	/**
+	 * Fetchs the <code>type</code>'s fields to create adapted user inputs.
+	 * <strong>Requires fields to be public</strong>.
+	 *
+	 * @param type the class to look into
+	 * @return the generated panel
+	 */
+	public JPanel addPanelForType(Class<?> type) {
         JPanel panel = new JPanel();
         ArrayList<JComboBox<String>> combos = new ArrayList<>();
 
@@ -128,19 +133,52 @@ public class DynamicGraphics {
         }
     }
 
-    public void addToLibraryFromComponents(List<Component> comps) {
-        for (Component component : comps) {
+	/**
+	 * Add to library from components.
+	 *
+	 * @param comps   the comps
+	 * @param library the library
+	 */
+	public void addToLibraryFromComponents(List<Component> comps, Library library) {
+        List<Component> filteredComps = new ArrayList<>(comps);
+        for (Component component : comps) { // remove JButtons
+            if (!(component instanceof JButton))
+                filteredComps.add(component);
+        }
+        comps = filteredComps;
+
+        ArrayList<Integer> objStarts = new ArrayList<>();
+        for (Component component : comps) { // list indexes of new objects starts
             int index = comps.indexOf(component);
-            if (index == 0 || component instanceof JButton)
+            if (index == 0 || (component instanceof JTextField && !(comps.get(index - 1) instanceof JTextField))
+                    || index == objStarts.size() - 1) // new object
+                objStarts.add(index);
+        }
+        // NOT FINISHED, MISS SOME TIME
+        for (int i = 0; i < objStarts.size(); i++) {
+            if (objStarts.get(i) == objStarts.size() - 1) // don't use last element
                 continue;
-            if (component instanceof JTextField && !(comps.get(index - 1) instanceof JTextField)) {
-                // new object
-                // TODO finish
-            }
+
+            if (objStarts.get(i + 1) - objStarts.get(i) == 1) // playlist
+                library.addToPlaylistsLibrary(new Playlist(null, null)); // titre audiocontents
+            else if (objStarts.get(i + 1) - objStarts.get(i) == 3) // album
+                library.addToAlbumsLibrary(new Album(null, null, null, null)); // songs titre auteur date
+            else if (objStarts.get(i + 1) - objStarts.get(i) == 4) // song
+                library.addToSongsLibrary(new Song(null, null, i, null)); // titre auteurs durée genre
+            else if (objStarts.get(i + 1) - objStarts.get(i) == 5) // audiobook
+                library.addToAudioBooksLibrary(new AudioBook(null, null, i, null, null)); // titre auteur durée langue
+                                                                                          // catégorie
         }
     }
 
-    public void addElementToPanel(Class<?> type, Container panel, Component btnCenter) {
+	/**
+	 * Add element to panel.
+	 *
+	 * @param type      the type
+	 * @param panel     the panel
+	 * @param btnCenter the btn center
+	 */
+	public void addElementToPanel(Class<?> type, Container panel, Component btnCenter) {
         panel.remove(btnCenter);
         panel.add(addPanelForType(type));
         panel.add(btnCenter);
@@ -148,23 +186,60 @@ public class DynamicGraphics {
         panel.repaint();
     }
 
-    /**
-     * Creates a panel to remove instances of class <code>type</code>.
-     * 
-     * @param type the class to fetch
-     * @return the generated panel
-     */
-    public JPanel removePanelForType(Class<?> type) {
-        return new JPanel();
+	/**
+	 * Creates a panel to remove instances of class <code>type</code>.
+	 *
+	 * @param type    the class to fetch
+	 * @param library the library
+	 * @return the generated panel
+	 */
+	public JPanel removePanelForType(Class<?> type, Library library) {
+        JPanel tableRemovePanel = new JPanel();
+        JButton removeBtn = new JButton("Delete row(s)");
+        removeBtn.setEnabled(false);
+        JTable removeTable = new JTable(getTableModelForType(type));
+        removeTable.getSelectionModel().addListSelectionListener(
+                e -> removeBtn.setEnabled(!removeTable.getSelectionModel().isSelectionEmpty()));
+        removeBtn.addActionListener(e -> {
+            ConsoleParser consoleParser = new ConsoleParser();
+            for (int i = 0; i < removeTable.getSelectedRows().length; i++) {
+                String[] line = new String[removeTable.getModel().getColumnCount()];
+                for (int j = 0; j < removeTable.getColumnCount(); j++) {
+                    Object value = removeTable.getModel().getValueAt(removeTable.getSelectedRows()[i], j);
+                    line[j] = value != null ? value.toString() : "";
+                    if (type.equals(Album.class) || type.equals(Playlist.class)) {
+                        while (line[0].equals("")) {
+                            line[j] = removeTable.getModel().getValueAt(removeTable.getSelectedRows()[i] - 1, j)
+                                    .toString();
+                        }
+                    }
+                }
+                if (type.equals(Song.class)) {
+                    library.getStoredSongs().remove(consoleParser.getSongFromString(line[1], library));
+                } else if (type.equals(AudioBook.class)) {
+                    library.getStoredAudioBooks().remove(consoleParser.getAudioBookFromString(line[2], library));
+                } else if (type.equals(Album.class)) {
+                    library.getStoredAlbums().remove(consoleParser.getAlbumFromString(line[0], library));
+                } else if (type.equals(Playlist.class)) {
+                    library.getStoredPlaylists().remove(consoleParser.getPlaylistFromString(line[0], library));
+                }
+            }
+            JOptionPane.showMessageDialog(tableRemovePanel, "Please use the File > Refresh tables to see the changes",
+                    "Refresh required", JOptionPane.INFORMATION_MESSAGE);
+        });
+        tableRemovePanel.add(new JScrollPane(removeTable));
+        tableRemovePanel.add(removeBtn);
+        formatTable(removeTable);
+        return tableRemovePanel;
     }
 
-    /**
-     * Creates a panel to view existing instances of class <code>type</code>
-     * 
-     * @param type the class to fetch
-     * @return the generated panel
-     */
-    public JPanel viewPanelForType(Class<?> type) {
+	/**
+	 * Creates a panel to view existing instances of class <code>type</code>
+	 *
+	 * @param type the class to fetch
+	 * @return the generated panel
+	 */
+	public JPanel viewPanelForType(Class<?> type) {
         JPanel tablePanel = new JPanel();
         JTable table = new JTable(getTableModelForType(type));
         tablePanel.add(new JScrollPane(table));
@@ -177,11 +252,21 @@ public class DynamicGraphics {
         ArrayList<Field> fields = new ArrayList<>(typeFields);
         for (Field field : typeFields) { // removing Song[] and Collection<AudioContent>
             Class<?> fieldType = field.getType();
-            if ((fieldType.isArray() && fieldType.getComponentType().equals(Song.class))
-                    || (Collection.class.isAssignableFrom(fieldType)
-                            && ((Class<?>) ((ParameterizedType) field.getGenericType()).getActualTypeArguments()[0])
-                                    .equals(AudioContent.class)))
+            if (fieldType.isArray() && fieldType.getComponentType().equals(Song.class)) {
                 fields.remove(field);
+                fields.addAll(Arrays.asList(Song.class.getFields()));
+            }
+            if (Collection.class.isAssignableFrom(fieldType)
+                    && ((Class<?>) ((ParameterizedType) field.getGenericType()).getActualTypeArguments()[0])
+                            .equals(AudioContent.class)) {
+                fields.remove(field);
+                fields.addAll(Arrays.asList(AudioContent.class.getFields()));
+                for (Field declaredField : Stream.concat(Arrays.stream(Song.class.getDeclaredFields()),
+                        Arrays.stream(AudioBook.class.getDeclaredFields())).toArray(Field[]::new)) {
+                    if (!declaredField.getName().equals("serialVersionUID"))
+                        fields.add(declaredField);
+                }
+            }
         }
         String[] cols = new String[fields.size()];
         for (int i = 0; i < fields.size(); i++) { // getting columns names
@@ -236,56 +321,100 @@ public class DynamicGraphics {
         table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
     }
 
-    public void refreshTables(JTabbedPane[] tabs) {
+	/**
+	 * Refresh tables.
+	 *
+	 * @param tabs    the tabs
+	 * @param library the library
+	 */
+	public void refreshTables(JTabbedPane[] tabs, Library library) {
         Class<?>[] classes = { Song.class, AudioBook.class, Album.class, Playlist.class };
         for (int i = 0; i < tabs.length * 2; i++) {
             if (i > 3) { // view panels
-                tabs[i - 4].setComponentAt(tabs[i - 4].getTabCount() - 1,
-                        new JScrollPane(viewPanelForType(classes[i - 4]),
-                                ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,
-                                ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER));
+                tabs[i - 4].setComponentAt(tabs[i - 4].getTabCount() - 1, viewPanelForType(classes[i - 4]));
             } else { // remove panels
-                tabs[i].setComponentAt(tabs[i].getTabCount() - 2,
-                        new JScrollPane(viewPanelForType(classes[i]), ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,
-                                ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER)); // TODO add button to delete
+                tabs[i].setComponentAt(tabs[i].getTabCount() - 2, removePanelForType(classes[i], library));
             }
         }
     }
 
-    // GETTERS
+	/**
+	 * Gets add button center song.
+	 *
+	 * @return the add button center song
+	 */
+	// GETTERS
     public JPanel getAddButtonCenterSong() {
         return addButtonCenterSong;
     }
 
-    public JPanel getAddButtonCenterAudio() {
+	/**
+	 * Gets add button center audio.
+	 *
+	 * @return the add button center audio
+	 */
+	public JPanel getAddButtonCenterAudio() {
         return addButtonCenterAudio;
     }
 
-    public JPanel getAddButtonCenterAlbum() {
+	/**
+	 * Gets add button center album.
+	 *
+	 * @return the add button center album
+	 */
+	public JPanel getAddButtonCenterAlbum() {
         return addButtonCenterAlbum;
     }
 
-    public JPanel getAddButtonCenterPlaylist() {
+	/**
+	 * Gets add button center playlist.
+	 *
+	 * @return the add button center playlist
+	 */
+	public JPanel getAddButtonCenterPlaylist() {
         return addButtonCenterPlaylist;
     }
 
-    public JPanel getSongAddPanel() {
+	/**
+	 * Gets song add panel.
+	 *
+	 * @return the song add panel
+	 */
+	public JPanel getSongAddPanel() {
         return songAddPanel;
     }
 
-    public JPanel getAudioAddPanel() {
+	/**
+	 * Gets audio add panel.
+	 *
+	 * @return the audio add panel
+	 */
+	public JPanel getAudioAddPanel() {
         return audioAddPanel;
     }
 
-    public JPanel getAlbumAddPanel() {
+	/**
+	 * Gets album add panel.
+	 *
+	 * @return the album add panel
+	 */
+	public JPanel getAlbumAddPanel() {
         return albumAddPanel;
     }
 
-    public JPanel getPlaylistAddPanel() {
+	/**
+	 * Gets playlist add panel.
+	 *
+	 * @return the playlist add panel
+	 */
+	public JPanel getPlaylistAddPanel() {
         return playlistAddPanel;
     }
 
-    // Listeners
+	/**
+	 * The Add content.
+	 */
+	// Listeners
     ActionListener addContent = e -> {
         int selected = JOptionPane.showOptionDialog(null, "Which content do you want to add?", "Add audio content",
                 JOptionPane.NO_OPTION, JOptionPane.PLAIN_MESSAGE, null, new String[] { "Song", "AudioBook", "Cancel" },
@@ -307,11 +436,19 @@ public class DynamicGraphics {
     };
 }
 
+/**
+ * The type Field focus listener.
+ */
 class FieldFocusListener implements FocusListener {
 
     private String fieldName;
 
-    public FieldFocusListener(String fieldName) {
+	/**
+	 * Instantiates a new Field focus listener.
+	 *
+	 * @param fieldName the field name
+	 */
+	public FieldFocusListener(String fieldName) {
         this.fieldName = fieldName;
     }
 

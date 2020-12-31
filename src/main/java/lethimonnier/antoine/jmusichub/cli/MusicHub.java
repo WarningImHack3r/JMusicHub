@@ -26,10 +26,10 @@ import java.util.logging.Logger;
  */
 public final class MusicHub {
 
-    /**
-     * The constant DATE_FORMAT.
-     */
-    // Static final
+	/**
+	 * The constant DATE_FORMAT.
+	 */
+	// Static final
     public static final String DATE_FORMAT = "dd/MM/yyyy";
 
     // Final
@@ -60,11 +60,11 @@ public final class MusicHub {
             e.printStackTrace();
         }
         while (true) {
-            log.info("What do you want to do?");
+            log.info("What do you want to do? (Press 'h' to show help)");
             switch (sc.nextLine().toLowerCase().charAt(0)) {
                 case 'c':
-                    // creates a new song
-                    log.info("New song creation.");
+                    // add a new song
+                    log.info("New song adding.");
                     createNewSongFromUserInput();
                     break;
 
@@ -169,7 +169,7 @@ public final class MusicHub {
                     // shows help
                     log.info("""
                             MusicHub help - available options
-                            c: creates a song from user input
+                            c: add a song from user input
                             a: creates an album without songs
                             +: add (an) existing song(s) to an album
                             l: creates a new audiobook
@@ -181,6 +181,7 @@ public final class MusicHub {
                             o: additional option that shows all the content of the library
                             x: additional option that clears the library
                             h: shows this help menu
+                            q: quit the application
                             """);
                     break;
 
@@ -448,32 +449,32 @@ public final class MusicHub {
         }
     }
 
-    /**
-     * Returns a formatted <code>Date</code> as a <code>String</code>
-     *
-     * @param date the <code>Date</code> to format
-     * @return the formatted <code>Date</code> as a <code>String</code>
-     */
-    public static String getFormattedDate(Date date) {
+	/**
+	 * Returns a formatted <code>Date</code> as a <code>String</code>
+	 *
+	 * @param date the <code>Date</code> to format
+	 * @return the formatted <code>Date</code> as a <code>String</code>
+	 */
+	public static String getFormattedDate(Date date) {
         return new SimpleDateFormat(DATE_FORMAT).format(date);
     }
 
-    /**
-     * Returns a <code>Date</code> object from a <code>String</code> input.
-     *
-     * @param dateToParse the <code>String</code> date to parse
-     * @return the parsed <code>Date</code>
-     */
-    public static Date getDateFromString(String dateToParse) {
+	/**
+	 * Returns a <code>Date</code> object from a <code>String</code> input.
+	 *
+	 * @param dateToParse the <code>String</code> date to parse
+	 * @return the parsed <code>Date</code>
+	 */
+	public static Date getDateFromString(String dateToParse) {
         return java.sql.Date.valueOf(LocalDate.parse(dateToParse, DateTimeFormatter.ofPattern(DATE_FORMAT)));
     }
 
-    /**
-     * Starts the MusicHub.
-     *
-     * @param args The arguments of the program.
-     */
-    public static void main(String[] args) {
+	/**
+	 * Starts the MusicHub.
+	 *
+	 * @param args The arguments of the program.
+	 */
+	public static void main(String[] args) {
         SwingUtilities.invokeLater(MusicHub::new);
     }
 }

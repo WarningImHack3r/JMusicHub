@@ -1,5 +1,6 @@
 package lethimonnier.antoine.jmusichub.cli.interfaces;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.UUID;
 
@@ -8,10 +9,20 @@ import java.util.UUID;
  */
 public abstract class AudioContent implements Serializable {
 
+	@Serial
 	private static final long serialVersionUID = 1948714750895464113L;
+	/**
+	 * The Title.
+	 */
 	public String title;
-    public String[] authors;
-    public int duration;
+	/**
+	 * The Authors.
+	 */
+	public String[] authors;
+	/**
+	 * The Duration.
+	 */
+	public int duration;
     private final UUID id;
 
 	/**

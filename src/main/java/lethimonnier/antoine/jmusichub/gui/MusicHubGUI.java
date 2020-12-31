@@ -17,7 +17,7 @@ public class MusicHubGUI extends JFrame {
 
     /**
      * GUI Constructor
-     * 
+     *
      * @param title the window title
      */
     private MusicHubGUI(String title) {
@@ -30,7 +30,7 @@ public class MusicHubGUI extends JFrame {
 
     /**
      * Sets the icon if the window (replacing Java's default one)
-     * 
+     *
      * @param path the path of the icon to use
      */
     private void setWindowIcon(String path) {
@@ -69,12 +69,12 @@ public class MusicHubGUI extends JFrame {
         setVisible(true);
     }
 
-    /**
-     * The entry point of application.
-     *
-     * @param args the input arguments
-     */
-    public static void main(String[] args) {
+	/**
+	 * The entry point of application.
+	 *
+	 * @param args the input arguments
+	 */
+	public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> new MusicHubGUI("JMusicHub"));
     }
 }

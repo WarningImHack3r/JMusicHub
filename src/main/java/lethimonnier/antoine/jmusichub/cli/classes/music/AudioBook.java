@@ -4,13 +4,22 @@ import lethimonnier.antoine.jmusichub.cli.enums.Category;
 import lethimonnier.antoine.jmusichub.cli.enums.Language;
 import lethimonnier.antoine.jmusichub.cli.interfaces.AudioContent;
 
+import java.io.Serial;
+
 /**
  * AudioBook
  */
 public class AudioBook extends AudioContent {
 
+	@Serial
 	private static final long serialVersionUID = 4664945769348239740L;
+	/**
+	 * The Language.
+	 */
 	public final Language language;
+	/**
+	 * The Category.
+	 */
 	public final Category category;
 
 	/**
