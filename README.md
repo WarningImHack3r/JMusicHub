@@ -1,11 +1,36 @@
 # JMusicHub
-Projet JMusicHub - POO
 
-## To-do list
-Fini !
+## Version 2
 
-## Rendu
-Rendu le **31/12 à 23h55** sur Moodle (format NOM1_NOM2.zip)
+Improvements - Software Engineering and OOP
 
-## Liens
-- [Documentation bibliothèque openCSV](https://opencsv.sourceforge.net)
+### Goal
+
+Improve the original project
+
+- Add tracks listening
+- Add MVC design pattern
+- Add Logger in file
+- 2 free features (yet to determine)
+
+### Delivering
+
+Delivering the **28/06 at 23:59** on Moodle
+
+---
+
+## Version 1
+
+JMusicHub Project - OOP
+
+### To-do list
+
+Done!
+
+### Delivering
+
+Delivering the **31/12 at 23:55** on Moodle (formatted: NAME1_NAME2.zip)
+
+### Links
+
+- [openCSV library documentation](https://opencsv.sourceforge.net)
