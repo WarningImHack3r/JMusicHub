@@ -11,7 +11,7 @@ Improve the original project
 - Add tracks listening
 - Add MVC design pattern
 - Add Logger in file
-~~- 2 free features (yet to determine)~~
+- ~~2 free features (yet to determine)~~
 
 ### Delivering
 
