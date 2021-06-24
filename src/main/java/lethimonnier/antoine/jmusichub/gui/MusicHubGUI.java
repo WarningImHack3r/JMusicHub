@@ -1,11 +1,10 @@
 package lethimonnier.antoine.jmusichub.gui;
 
-import javax.swing.*;
-
+import lethimonnier.antoine.jmusichub.cli.logging.MusicLogger;
 import lethimonnier.antoine.jmusichub.gui.frontend.ComponentsInitializer;
 
+import javax.swing.*;
 import java.awt.*;
-import java.util.logging.Logger;
 
 /**
  * The type Music hub gui.
@@ -37,7 +36,7 @@ public class MusicHubGUI extends JFrame {
         try {
             setIconImage(Toolkit.getDefaultToolkit().getImage(getClass().getResource(path)));
         } catch (Exception e) {
-            Logger.getGlobal().warning("[WINDOW_ICON] L'image spécifiée est introuvable.");
+            MusicLogger.getLogger("output.log").warning("[WINDOW_ICON] L'image spécifiée est introuvable.");
         }
     }
 

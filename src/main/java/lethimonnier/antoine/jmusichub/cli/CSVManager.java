@@ -8,6 +8,7 @@ import lethimonnier.antoine.jmusichub.cli.classes.music.AudioBook;
 import lethimonnier.antoine.jmusichub.cli.classes.music.Playlist;
 import lethimonnier.antoine.jmusichub.cli.classes.music.Song;
 import lethimonnier.antoine.jmusichub.cli.classes.parsing.CSVParser;
+import lethimonnier.antoine.jmusichub.cli.logging.MusicLogger;
 
 import javax.swing.*;
 import javax.swing.filechooser.FileFilter;
@@ -24,7 +25,7 @@ import java.util.logging.Logger;
  */
 public class CSVManager {
 
-	private final Logger log = Logger.getGlobal();
+	private final Logger log = MusicLogger.getLogger("output.log");
 	private final CSVParser csv = new CSVParser();
 
 	/**

@@ -11,6 +11,7 @@ import lethimonnier.antoine.jmusichub.cli.enums.Genre;
 import lethimonnier.antoine.jmusichub.cli.enums.Language;
 import lethimonnier.antoine.jmusichub.cli.interfaces.AudioContent;
 import lethimonnier.antoine.jmusichub.cli.interfaces.Parser;
+import lethimonnier.antoine.jmusichub.cli.logging.MusicLogger;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -25,7 +26,7 @@ public class CSVParser implements Parser {
 	/**
 	 * The Log.
 	 */
-	Logger log = Logger.getGlobal();
+	Logger log = MusicLogger.getLogger("output.log");
 
 	/**
 	 * Checks if an <code>String</code> is a <code>Song</code> or an <code>AudioBook</code>. Use only for this class.

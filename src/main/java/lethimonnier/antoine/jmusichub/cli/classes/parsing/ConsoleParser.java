@@ -6,6 +6,7 @@ import lethimonnier.antoine.jmusichub.cli.classes.music.AudioBook;
 import lethimonnier.antoine.jmusichub.cli.classes.music.Playlist;
 import lethimonnier.antoine.jmusichub.cli.classes.music.Song;
 import lethimonnier.antoine.jmusichub.cli.interfaces.Parser;
+import lethimonnier.antoine.jmusichub.cli.logging.MusicLogger;
 
 import java.util.List;
 import java.util.logging.Level;
@@ -19,7 +20,7 @@ public class ConsoleParser implements Parser {
 	/**
 	 * The Log.
 	 */
-	Logger log = Logger.getGlobal();
+	Logger log = MusicLogger.getLogger("output.log");
 
 	/**
 	 * Returns a <code>Song</code> from a <code>String</code> containing its title.

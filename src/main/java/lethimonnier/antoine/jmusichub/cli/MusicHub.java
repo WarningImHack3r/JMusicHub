@@ -10,6 +10,7 @@ import lethimonnier.antoine.jmusichub.cli.enums.Category;
 import lethimonnier.antoine.jmusichub.cli.enums.Genre;
 import lethimonnier.antoine.jmusichub.cli.enums.Language;
 import lethimonnier.antoine.jmusichub.cli.interfaces.AudioContent;
+import lethimonnier.antoine.jmusichub.cli.logging.MusicLogger;
 
 import javax.swing.*;
 import java.io.File;
@@ -33,7 +34,7 @@ public final class MusicHub {
     public static final String DATE_FORMAT = "dd/MM/yyyy";
 
     // Final
-    private final Logger log = Logger.getGlobal();
+    private final Logger log = MusicLogger.getLogger("output.log");
     private final Scanner sc = new Scanner(System.in);
     private final Library library;
     private final ConsoleParser console = new ConsoleParser();

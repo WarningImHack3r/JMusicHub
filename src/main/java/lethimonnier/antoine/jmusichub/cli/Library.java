@@ -6,6 +6,7 @@ import lethimonnier.antoine.jmusichub.cli.classes.music.Playlist;
 import lethimonnier.antoine.jmusichub.cli.classes.music.Song;
 import lethimonnier.antoine.jmusichub.cli.enums.Genre;
 import lethimonnier.antoine.jmusichub.cli.interfaces.AudioContent;
+import lethimonnier.antoine.jmusichub.cli.logging.MusicLogger;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -24,7 +25,7 @@ public class Library {
     private final ArrayList<AudioBook> storedAudioBooks;
     private final ArrayList<Song> storedSongs;
 
-    private static final Logger log = Logger.getGlobal();
+    private static final Logger log = MusicLogger.getLogger("output.log");
 
 	/**
 	 * Instantiates a new Library.
