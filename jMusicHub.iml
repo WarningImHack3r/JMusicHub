@@ -29,8 +29,7 @@
     <orderEntry type="library" scope="TEST" name="Maven: org.junit.platform:junit-platform-commons:1.6.0" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: org.junit.jupiter:junit-jupiter-engine:5.6.0" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: org.junit.platform:junit-platform-engine:1.6.0" level="project" />
-    <orderEntry type="library" name="Maven: org.jetbrains:annotations:21.0.1" level="project" />
-    <orderEntry type="library" name="Maven: javazoom:jlayer:1.0.1" level="project" />
     <orderEntry type="library" name="Maven: org.junit.platform:junit-platform-console-standalone:1.8.0-M1" level="project" />
+    <orderEntry type="library" name="Maven: javazoom:jlayer:1.0.1" level="project" />
   </component>
 </module>
