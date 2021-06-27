@@ -1,5 +1,8 @@
 package lethimonnier.antoine.jmusichub.cli.interfaces;
 
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
+
 import java.io.Serial;
 import java.io.Serializable;
 import java.util.UUID;
@@ -14,16 +17,16 @@ public abstract class AudioContent implements Serializable {
 	/**
 	 * The Title.
 	 */
-	public String title;
+	private String title;
 	/**
 	 * The Authors.
 	 */
-	public String[] authors;
+	private String[] authors;
 	/**
 	 * The Duration.
 	 */
-	public int duration;
-    private final UUID id;
+	private int duration;
+	private final UUID id;
 
 	/**
 	 * Instantiates a new Audio content.
@@ -32,15 +35,15 @@ public abstract class AudioContent implements Serializable {
 	 * @param authors  the authors
 	 * @param duration the duration
 	 */
-	protected AudioContent(String title, String[] authors, int duration) {
-        setTitle(title.trim());
-        for (int i = 0; i < authors.length; i++) {
-            authors[i] = authors[i].trim();
-        }
-        setAuthors(authors);
-        setDuration(duration);
-        id = UUID.randomUUID();
-    }
+	protected AudioContent(@NotNull String title, @NotNull String[] authors, int duration) {
+		setTitle(title.trim());
+		for (var i = 0; i < authors.length; i++) {
+			authors[i] = authors[i].trim();
+		}
+		setAuthors(authors);
+		setDuration(duration);
+		id = UUID.randomUUID();
+	}
 
 	/**
 	 * Gets formatted duration.
@@ -48,22 +51,25 @@ public abstract class AudioContent implements Serializable {
 	 * @param duration the duration
 	 * @return the formatted duration
 	 */
+	@NotNull
+	@Contract(pure = true)
 	public static String getFormattedDuration(long duration) {
-        if (duration < 60)
-            return duration + "s";
-        if (duration < 3600)
-            return (duration / 60) + "m " + (duration % 60) + "s";
-        if (duration < 24 * 3600)
-            return (duration / 3600) + "h " + ((duration % 3600) / 60) + "m " + ((duration % 3600) % 60) + "s";
-        return (duration / 86400) + "d " + ((duration % 86400) / 3600) + "h " + (((duration % 86400) % 3600) / 60) + "m " + (((duration % 86400) % 3600) % 60) + "s";
-    }
+		if (duration < 60)
+			return duration + "s";
+		if (duration < 3600)
+			return (duration / 60) + "m " + (duration % 60) + "s";
+		if (duration < 24 * 3600)
+			return (duration / 3600) + "h " + ((duration % 3600) / 60) + "m " + ((duration % 3600) % 60) + "s";
+		return (duration / 86400) + "d " + ((duration % 86400) / 3600) + "h " + (((duration % 86400) % 3600) / 60) +
+				       "m " + (((duration % 86400) % 3600) % 60) + "s";
+	}
 
 	/**
 	 * Sets title.
 	 *
 	 * @param title the title
 	 */
-	public void setTitle(String title) {
+	public void setTitle(@NotNull String title) {
         this.title = title.trim();
     }
 
@@ -109,17 +115,17 @@ public abstract class AudioContent implements Serializable {
 	 * @return the id
 	 */
 	public UUID getId() {
-        return id;
-    }
+		return id;
+	}
 
 	/**
 	 * Sets authors.
 	 *
 	 * @param authors the authors
 	 */
-	public void setAuthors(String[] authors) {
-        for (int i = 0; i < authors.length; i++) {
-            authors[i] = authors[i].trim();
+	public void setAuthors(@NotNull String[] authors) {
+		for (var i = 0; i < authors.length; i++) {
+			authors[i] = authors[i].trim();
         }
         this.authors = authors;
     }

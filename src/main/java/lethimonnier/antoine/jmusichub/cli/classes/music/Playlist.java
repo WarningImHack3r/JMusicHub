@@ -1,6 +1,7 @@
 package lethimonnier.antoine.jmusichub.cli.classes.music;
 
 import lethimonnier.antoine.jmusichub.cli.interfaces.AudioContent;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.Serial;
 import java.io.Serializable;
@@ -14,17 +15,17 @@ import java.util.UUID;
  */
 public class Playlist implements Serializable {
 
-    @Serial
-    private static final long serialVersionUID = 6521686263527169809L;
+	@Serial
+	private static final long serialVersionUID = 6521686263527169809L;
 	/**
 	 * The Name.
 	 */
-	public String name;
+	private String name;
 	/**
 	 * The Content.
 	 */
-	public transient List<AudioContent> content;
-    private long totalDuration = 0;
+	private List<AudioContent> content;
+	private long totalDuration = 0;
     private final Date creationDate;
     private Date lastModifiedDate;
     private final UUID id;
@@ -35,12 +36,12 @@ public class Playlist implements Serializable {
 	 * @param name    the name
 	 * @param content the content
 	 */
-	public Playlist(String name, List<AudioContent> content) {
-        this.name = name.trim();
-        setContent(content);
-        creationDate = new Date();
-        lastModifiedDate = creationDate;
-        id = UUID.randomUUID();
+	public Playlist(@NotNull String name, List<AudioContent> content) {
+		this.name = name.trim();
+		setContent(content);
+		creationDate = new Date();
+		lastModifiedDate = creationDate;
+		id = UUID.randomUUID();
     }
 
 	/**
@@ -58,15 +59,15 @@ public class Playlist implements Serializable {
                 totalDuration += audioContent.getDuration();
         }
         lastModifiedDate = new Date();
-    }
+	}
 
 	/**
 	 * Sets name.
 	 *
 	 * @param name the name
 	 */
-	public void setName(String name) {
-        this.name = name.trim();
+	public void setName(@NotNull String name) {
+		this.name = name.trim();
     }
 
 	/**
@@ -125,15 +126,14 @@ public class Playlist implements Serializable {
 
     @Override
     public String toString() {
-        StringBuilder audioContent = new StringBuilder();
+	    var audioContent = new StringBuilder();
         if (content != null) {
-            for (AudioContent ac : content) {
-                if (ac instanceof Song) {
-                    Song song = (Song) ac;
-                    audioContent.append(";").append(song.toString().replace(";", "-"));
-                } else {
-                    AudioBook audioBook = (AudioBook) ac;
-                    audioContent.append(";").append(audioBook.toString().replace(";", "-"));
+	        for (AudioContent ac : content) {
+		        if (ac instanceof Song song) {
+			        audioContent.append(";").append(song.toString().replace(";", "-"));
+		        } else {
+			        var audioBook = (AudioBook) ac;
+			        audioContent.append(";").append(audioBook.toString().replace(";", "-"));
                 }
             }
         }

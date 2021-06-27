@@ -1,4 +1,5 @@
 # JMusicHub
+_**Made in/for IntelliJ IDEA & Java 15+**_
 
 ## Version 2
 
@@ -37,7 +38,7 @@ _None_
 
 - An issue may occur with the 'Remove' button
 - The 'Save' button is not completely
-  implemented ([here](src/main/java/lethimonnier/antoine/jmusichub/gui/frontend/DynamicGraphics.java#L148))
+  implemented ([here](src/main/java/lethimonnier/antoine/jmusichub/gui/frontend/DynamicGraphics.java#L141))
 
 ### Delivering
 

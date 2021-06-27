@@ -12,6 +12,7 @@ import lethimonnier.antoine.jmusichub.cli.enums.Language;
 import lethimonnier.antoine.jmusichub.cli.interfaces.AudioContent;
 import lethimonnier.antoine.jmusichub.cli.interfaces.Parser;
 import lethimonnier.antoine.jmusichub.cli.logging.MusicLogger;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -34,7 +35,7 @@ public class CSVParser implements Parser {
 	 * @param audioContent the <code>String</code> to check
 	 * @return true if <code>audiocontent</code> is a <code>Song</code>, false if it is an <code>AudioBook</code>
 	 */
-	private boolean isSong(String audioContent) throws IOException {
+	private boolean isSong(@NotNull String audioContent) throws IOException {
 		String[] splitted = audioContent.contains("-") ? audioContent.split("-") : audioContent.split(";");
 		if (splitted.length < 4)
 			throw new IOException("Error parsing audiocontent");
@@ -90,12 +91,12 @@ public class CSVParser implements Parser {
 	 * @return the created <code>Playlist</code>, or <code>null</code> if an error occurred
 	 */
 	@Override
-	public Playlist getPlaylistFromString(String str, Library library) {
+	public Playlist getPlaylistFromString(@NotNull String str, Library library) {
 		String[] splitted = str.split(";");
 		List<AudioContent> content = null;
 		if (splitted.length > 1) {
 			content = new ArrayList<>();
-			for (int i = 1; i < splitted.length; i++) {
+			for (var i = 1; i < splitted.length; i++) {
 				boolean isASong;
 				try {
 					isASong = isSong(splitted[i]);
@@ -121,12 +122,12 @@ public class CSVParser implements Parser {
 	 * @return the created <code>Album</code>, or <code>null</code> if an error occurred
 	 */
 	@Override
-	public Album getAlbumFromString(String str, Library library) {
+	public Album getAlbumFromString(@NotNull String str, Library library) {
 		String[] splitted = str.split(";");
 		Song[] songs = null;
 		if (splitted.length > 3) {
 			songs = new Song[splitted.length - 3];
-			for (int i = 0; i < songs.length; i++) {
+			for (var i = 0; i < songs.length; i++) {
 				songs[i] = getSongFromString(splitted[i + 3].replace("-", ";"), null);
 			}
 		}

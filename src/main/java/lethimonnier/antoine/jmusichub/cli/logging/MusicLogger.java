@@ -1,5 +1,6 @@
 package lethimonnier.antoine.jmusichub.cli.logging;
 
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
@@ -31,6 +32,8 @@ public class MusicLogger extends Logger {
 	 * @param filePath the file path for the output file
 	 * @return the logger
 	 */
+	@NotNull
+	@Contract("_ -> new")
 	public static MusicLogger getLogger(String filePath) {
 		return new MusicLogger(filePath);
 	}

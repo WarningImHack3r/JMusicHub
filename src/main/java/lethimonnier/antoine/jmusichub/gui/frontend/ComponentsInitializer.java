@@ -1,41 +1,24 @@
 package lethimonnier.antoine.jmusichub.gui.frontend;
 
-import java.awt.BorderLayout;
-import java.awt.Component;
-import java.awt.Dimension;
-import java.awt.Toolkit;
-import java.awt.event.KeyEvent;
-
-import java.util.ArrayList;
-import java.util.Collections;
-
-import javax.swing.BoxLayout;
-import javax.swing.JButton;
-import javax.swing.JLabel;
-import javax.swing.JMenu;
-import javax.swing.JMenuBar;
-import javax.swing.JMenuItem;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTabbedPane;
-import javax.swing.KeyStroke;
-import javax.swing.ScrollPaneConstants;
-import javax.swing.SwingConstants;
-
 import lethimonnier.antoine.jmusichub.cli.classes.music.Album;
 import lethimonnier.antoine.jmusichub.cli.classes.music.AudioBook;
 import lethimonnier.antoine.jmusichub.cli.classes.music.Playlist;
 import lethimonnier.antoine.jmusichub.cli.classes.music.Song;
 import lethimonnier.antoine.jmusichub.gui.backend.InterfacesLinker;
 
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.KeyEvent;
+import java.util.ArrayList;
+import java.util.Collections;
+
 /**
  * The type Components initializer.
  */
 public class ComponentsInitializer {
 
-    private DynamicGraphics dg = new DynamicGraphics();
-    private InterfacesLinker il = InterfacesLinker.getInstance();
+    private final DynamicGraphics dg = new DynamicGraphics();
+    private final InterfacesLinker il = InterfacesLinker.getInstance();
 
     private static final Dimension DEF_COMBO_BOX_DIM = new Dimension(150, 20);
     private static final String ADD_LABEL = "Add";
@@ -56,36 +39,36 @@ public class ComponentsInitializer {
 	 */
 	public JMenuBar initMenuBar() {
         // Menubar
-        JMenuBar menubar = new JMenuBar();
-        JMenu fileMenu = new JMenu("File");
-        JMenuItem importItem = new JMenuItem("Import");
-        importItem.setAccelerator(
-                KeyStroke.getKeyStroke(KeyEvent.VK_I, Toolkit.getDefaultToolkit().getMenuShortcutKeyMaskEx()));
-        JMenuItem exportItem = new JMenuItem("Export");
-        exportItem.setAccelerator(
-                KeyStroke.getKeyStroke(KeyEvent.VK_S, Toolkit.getDefaultToolkit().getMenuShortcutKeyMaskEx()));
+        var menubar = new JMenuBar();
+        var fileMenu = new JMenu("File");
+        var importItem = new JMenuItem("Import");
+        importItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_I,
+		        Toolkit.getDefaultToolkit().getMenuShortcutKeyMaskEx()));
+        var exportItem = new JMenuItem("Export");
+        exportItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S,
+		        Toolkit.getDefaultToolkit().getMenuShortcutKeyMaskEx()));
         menubar.add(fileMenu);
-        JMenuItem refreshItem = new JMenuItem("Refresh tables");
-        refreshItem.setAccelerator(
-                KeyStroke.getKeyStroke(KeyEvent.VK_R, Toolkit.getDefaultToolkit().getMenuShortcutKeyMaskEx()));
-        JMenuItem quitItem = new JMenuItem("Quit");
-        quitItem.setAccelerator(
-                KeyStroke.getKeyStroke(KeyEvent.VK_Q, Toolkit.getDefaultToolkit().getMenuShortcutKeyMaskEx()));
+        var refreshItem = new JMenuItem("Refresh tables");
+        refreshItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_R,
+		        Toolkit.getDefaultToolkit().getMenuShortcutKeyMaskEx()));
+        var quitItem = new JMenuItem("Quit");
+        quitItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Q,
+		        Toolkit.getDefaultToolkit().getMenuShortcutKeyMaskEx()));
         fileMenu.add(importItem);
         fileMenu.add(exportItem);
         fileMenu.addSeparator();
         fileMenu.add(refreshItem);
         fileMenu.addSeparator();
         fileMenu.add(quitItem);
-        JMenu helpMenu = new JMenu("Help");
-        JMenuItem aboutItem = new JMenuItem("About");
+        var helpMenu = new JMenu("Help");
+        var aboutItem = new JMenuItem("About");
         helpMenu.add(aboutItem);
         menubar.add(helpMenu);
 
         importItem.addActionListener(e -> {
             il.importToLibrary();
-            dg.refreshTables(new JTabbedPane[] { songActionsPane, audioActionsPane, albumActionsPane, playActionsPane },
-                    il.getLibrary());
+            dg.refreshTables(new JTabbedPane[] { songActionsPane, audioActionsPane, albumActionsPane,
+		            playActionsPane }, il.getLibrary());
         });
 
         exportItem.addActionListener(e -> {
@@ -115,10 +98,10 @@ public class ComponentsInitializer {
 	public JTabbedPane initComponents() {
 
         // Buttons
-        JButton addItemSong = new JButton(SAVE_LABEL);
-        JButton addItemAudio = new JButton(SAVE_LABEL);
-        JButton addItemAlbum = new JButton(SAVE_LABEL);
-        JButton addItemPlaylist = new JButton(SAVE_LABEL);
+        var addItemSong = new JButton(SAVE_LABEL);
+        var addItemAudio = new JButton(SAVE_LABEL);
+        var addItemAlbum = new JButton(SAVE_LABEL);
+        var addItemPlaylist = new JButton(SAVE_LABEL);
 
         // SONG PANE
         songActionsPane = new JTabbedPane();
@@ -127,7 +110,7 @@ public class ComponentsInitializer {
         songActionsPane.setTabPlacement(SwingConstants.LEFT);
         dg.getSongAddPanel().setLayout(new BoxLayout(dg.getSongAddPanel(), BoxLayout.Y_AXIS));
         songActionsPane.addTab(ADD_LABEL, new JScrollPane(dg.getSongAddPanel(),
-                ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED, ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER));
+		        ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED, ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER));
         songActionsPane.addTab(REMOVE_LABEL, dg.removePanelForType(Song.class, il.getLibrary()));
         songActionsPane.addTab(VIEW_LABEL, dg.viewPanelForType(Song.class));
 
@@ -165,7 +148,7 @@ public class ComponentsInitializer {
         playActionsPane.addTab(VIEW_LABEL, dg.viewPanelForType(Playlist.class));
 
         // Main tabbed pane
-        JTabbedPane tabbedPane = new JTabbedPane();
+        var tabbedPane = new JTabbedPane();
 
         tabbedPane.setFocusable(false);
         tabbedPane.addTab("Song", songActionsPane);

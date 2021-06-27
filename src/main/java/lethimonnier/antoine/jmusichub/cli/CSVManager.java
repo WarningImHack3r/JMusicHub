@@ -86,11 +86,11 @@ public class CSVManager {
 	 */
 	public int importSavedContentFromFile(File file, Library library) throws IOException, CsvValidationException {
 		// Instantiate Albums, Playlists, AudioBooks and Songs
-		int lineState = 0; // 0 = idle, 1 = alb, 2 = playl, 3 = ab, 4 = song
+		var lineState = 0; // 0 = idle, 1 = alb, 2 = playl, 3 = ab, 4 = song
 		int section = lineState;
-		int importsCount = 0;
+		var importsCount = 0;
 
-		try (CSVReader csvReader = new CSVReader(new FileReader(file))) {
+		try (var csvReader = new CSVReader(new FileReader(file))) {
 			String[] line;
 			while ((line = csvReader.readNext()) != null) {
 				line = String.join(",", line).replace("\"", "").split(";");
@@ -109,7 +109,7 @@ public class CSVManager {
 					continue;
 				switch (section) {
 					case 1: // Album
-						Album album = csv.getAlbumFromString(String.join(";", line), null);
+						var album = csv.getAlbumFromString(String.join(";", line), null);
 						if (album == null)
 							break;
 						library.addToAlbumsLibrary(album);
@@ -117,7 +117,7 @@ public class CSVManager {
 						break;
 
 					case 2: // Playlist
-						Playlist playlist = csv.getPlaylistFromString(String.join(";", line), null);
+						var playlist = csv.getPlaylistFromString(String.join(";", line), null);
 						if (playlist == null)
 							break;
 						library.addToPlaylistsLibrary(playlist);
@@ -125,7 +125,7 @@ public class CSVManager {
 						break;
 
 					case 3: // AudioBook
-						AudioBook audioBook = csv.getAudioBookFromString(String.join(";", line), null);
+						var audioBook = csv.getAudioBookFromString(String.join(";", line), null);
 						if (audioBook == null)
 							break;
 						library.addToAudioBooksLibrary(audioBook);
@@ -133,7 +133,7 @@ public class CSVManager {
 						break;
 
 					case 4: // Song
-						Song song = csv.getSongFromString(String.join(";", line), null);
+						var song = csv.getSongFromString(String.join(";", line), null);
 						if (song == null)
 							break;
 						library.addToSongsLibrary(song);
@@ -188,8 +188,8 @@ public class CSVManager {
 			default:
 				return;
 		}
-		String st = ";\n";
-		CSVWriter writer = new CSVWriter(new FileWriter(f), ';', '"', '\\', st);
+		var st = ";" + System.lineSeparator();
+		var writer = new CSVWriter(new FileWriter(f), ';', '"', '\\', st);
 
 		List<String[]> tosave = new ArrayList<>();
 		tosave.add(new String[] { "SONGS" });

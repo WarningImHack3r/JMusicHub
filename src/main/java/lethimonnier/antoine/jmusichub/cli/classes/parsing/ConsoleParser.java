@@ -7,6 +7,7 @@ import lethimonnier.antoine.jmusichub.cli.classes.music.Playlist;
 import lethimonnier.antoine.jmusichub.cli.classes.music.Song;
 import lethimonnier.antoine.jmusichub.cli.interfaces.Parser;
 import lethimonnier.antoine.jmusichub.cli.logging.MusicLogger;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 import java.util.logging.Level;
@@ -54,7 +55,7 @@ public class ConsoleParser implements Parser {
 	 * @return the matched <code>Playlist</code>, or <code>null</code> if not found
 	 */
 	@Override
-	public Playlist getPlaylistFromString(String match, Library library) {
+	public Playlist getPlaylistFromString(String match, @NotNull Library library) {
 		Playlist toReturn = null;
 		List<Playlist> libraryPlaylists = library.getStoredPlaylists();
 		for (Playlist a : libraryPlaylists) {
@@ -78,7 +79,7 @@ public class ConsoleParser implements Parser {
 	 * @return the matched <code>Album</code>, or <code>null</code> if not found
 	 */
 	@Override
-	public Album getAlbumFromString(String match, Library library) {
+	public Album getAlbumFromString(String match, @NotNull Library library) {
 		Album toReturn = null;
 		List<Album> libraryAlbums = library.getStoredAlbums();
 		for (Album a : libraryAlbums) {
@@ -102,7 +103,7 @@ public class ConsoleParser implements Parser {
 	 * @return the matched <code>AudioBook</code>, or <code>null</code> if not found
 	 */
 	@Override
-	public AudioBook getAudioBookFromString(String match, Library library) {
+	public AudioBook getAudioBookFromString(String match, @NotNull Library library) {
 		AudioBook toReturn = null;
 		List<AudioBook> libraryAudioBooks = library.getStoredAudioBooks();
 		for (AudioBook ab : libraryAudioBooks) {

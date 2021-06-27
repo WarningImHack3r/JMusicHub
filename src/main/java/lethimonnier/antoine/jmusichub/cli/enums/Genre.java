@@ -1,5 +1,7 @@
 package lethimonnier.antoine.jmusichub.cli.enums;
 
+import org.jetbrains.annotations.NotNull;
+
 /**
  * Genre
  */
@@ -43,18 +45,19 @@ public enum Genre {
 	 */
 	public String getName() {
         return name;
-    }
+	}
 
 	/**
 	 * Get string values string [ ].
 	 *
 	 * @return the string [ ]
 	 */
+	@NotNull
 	public static String[] getStringValues() {
-        String[] vals = new String[values().length];
-        for (int i = 0; i < values().length; i++) {
-            vals[i] = values()[i].getName();
-        }
-        return vals;
+		var vals = new String[values().length];
+		for (var i = 0; i < values().length; i++) {
+			vals[i] = values()[i].getName();
+		}
+		return vals;
     }
 }

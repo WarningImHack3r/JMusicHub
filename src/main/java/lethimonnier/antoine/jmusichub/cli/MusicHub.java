@@ -11,9 +11,11 @@ import lethimonnier.antoine.jmusichub.cli.enums.Genre;
 import lethimonnier.antoine.jmusichub.cli.enums.Language;
 import lethimonnier.antoine.jmusichub.cli.interfaces.AudioContent;
 import lethimonnier.antoine.jmusichub.cli.logging.MusicLogger;
+import lethimonnier.antoine.jmusichub.cli.player.MusicPlayer;
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
-import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
@@ -45,10 +47,10 @@ public final class MusicHub {
     private MusicHub() {
         log.info("Welcome to the MusicHub!");
         library = new Library();
-        CSVManager csv = new CSVManager();
+        var csv = new CSVManager();
         try {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-            File currentFile = csv.openFileFromChooser(null);
+            var currentFile = csv.openFileFromChooser(null);
             if (currentFile == null) {
                 log.warning("No input file found.");
             } else {
@@ -72,7 +74,7 @@ public final class MusicHub {
                 case 'a':
                     // creates a new album
                     log.info("Album creation.");
-                    Album createdAlbum = createBlankAlbumFromUserInput();
+                    var createdAlbum = createBlankAlbumFromUserInput();
                     log.log(Level.INFO, "Add songs to newly created album {0}? [yes/no]", createdAlbum.getTitle());
                     if (sc.nextLine().contains("y"))
                         addSongToAlbum(createdAlbum);
@@ -105,7 +107,7 @@ public final class MusicHub {
                 case 'i':
                     // imports from a csv file
                     try {
-                        File currentFile = csv.openFileFromChooser(filePath);
+                        var currentFile = csv.openFileFromChooser(filePath);
                         if (currentFile == null) {
                             log.warning("No input file found.");
                         } else {
@@ -166,6 +168,12 @@ public final class MusicHub {
                     }
                     break;
 
+                case 'y':
+                    log.info("Starting Music Player");
+                    var player = MusicPlayer.getPlayer().setPlayingSong(null);
+                    player.play();
+                    break;
+
                 case 'h':
                     // shows help
                     log.info("""
@@ -181,6 +189,7 @@ public final class MusicHub {
                             t: additional option that shows stats of the database
                             o: additional option that shows all the content of the library
                             x: additional option that clears the library
+                            y: starts the music player
                             h: shows this help menu
                             q: quit the application
                             """);
@@ -198,6 +207,29 @@ public final class MusicHub {
     }
 
     /**
+     * Returns a formatted <code>Date</code> as a <code>String</code>
+     *
+     * @param date the <code>Date</code> to format
+     * @return the formatted <code>Date</code> as a <code>String</code>
+     */
+    @NotNull
+    public static String getFormattedDate(Date date) {
+        return new SimpleDateFormat(DATE_FORMAT).format(date);
+    }
+
+    /**
+     * Returns a <code>Date</code> object from a <code>String</code> input.
+     *
+     * @param dateToParse the <code>String</code> date to parse
+     * @return the parsed <code>Date</code>
+     */
+    @NotNull
+    @Contract("_ -> new")
+    public static Date getDateFromString(String dateToParse) {
+        return java.sql.Date.valueOf(LocalDate.parse(dateToParse, DateTimeFormatter.ofPattern(DATE_FORMAT)));
+    }
+
+    /**
      * Creates a <code>Song</code> from user inputs in console, and adds it to the
      * <code>Library</code>.
      */
@@ -207,7 +239,7 @@ public final class MusicHub {
         log.info("Song author(s)? (separated with commas)");
         String[] songAuthors = sc.nextLine().split(",");
         log.info("Song duration? (in seconds)");
-        int songDuration = sc.nextInt();
+        var songDuration = sc.nextInt();
         sc.nextLine();
         log.log(Level.INFO, "Song genre? {0}",
                 Arrays.toString(Genre.getStringValues()).replace("[", "(").replace("]", ")"));
@@ -226,23 +258,24 @@ public final class MusicHub {
      *
      * @return the created <code>Album</code>
      */
+    @NotNull
     private Album createBlankAlbumFromUserInput() {
         log.info("Album title?");
         String albumTitle = sc.nextLine();
         log.info("Album author?");
         String albumAuthor = sc.nextLine();
         log.info("Album creation date?");
-        String[] toPrint = { "Year (yyyy)", "Month (MM)", "Day (dd)" };
-        int[] fields = { 0 /* year */, 0 /* month */, 0 /* day */ };
-        for (int i = 0; i < fields.length; i++) {
+        var toPrint = new String[] { "Year (yyyy)", "Month (MM)", "Day (dd)" };
+        var fields = new int[] { 0 /* year */, 0 /* month */, 0 /* day */ };
+        for (var i = 0; i < fields.length; i++) {
             log.log(Level.INFO, "{0}: ", toPrint[i]);
             fields[i] = sc.nextInt();
         }
         sc.nextLine();
-        Calendar c = Calendar.getInstance();
+        var c = Calendar.getInstance();
         c.set(fields[0], fields[1] - 1 /* Calendar.JANUARY = 0 */, fields[2]);
-        Date albumParsedDate = c.getTime();
-        Album album = new Album(null, albumTitle, albumAuthor, albumParsedDate);
+        var albumParsedDate = c.getTime();
+        var album = new Album(null, albumTitle, albumAuthor, albumParsedDate);
         library.addToAlbumsLibrary(album);
         return album;
     }
@@ -257,22 +290,21 @@ public final class MusicHub {
      * @param targetAlbum the album to add songs in. Can be <code>null</code>
      */
     private void addSongToAlbum(Album targetAlbum) {
-        Album albumToAddIn = targetAlbum;
+        var albumToAddIn = targetAlbum;
         if (albumToAddIn == null) {
             // Prompt albums to choose among them
-            StringBuilder albumSb = new StringBuilder();
+            var albumSb = new StringBuilder();
             for (Album a : library.getStoredAlbums()) {
-                albumSb.append(library.getStoredAlbums().indexOf(a) + 1).append(") ").append(a.getTitle()).append(" - ")
-                        .append(a.getAuthor()).append(System.getProperty("line.separator"));
+                albumSb.append(library.getStoredAlbums().indexOf(a) + 1).append(") ").append(a.getTitle()).append(" - ").append(a.getAuthor()).append(System.lineSeparator());
             }
-            log.log(Level.INFO, "Choose your album to add songs in:\n{0}", albumSb);
+            log.log(Level.INFO, "Choose your album to add songs in:{0}{1}", new Object[] { System.lineSeparator(), albumSb});
             String line = sc.nextLine();
             try {
                 // Number input
                 albumToAddIn = library.getStoredAlbums().get(Integer.parseInt(line) - 1);
             } catch (NumberFormatException e) {
                 // Text input
-                Album functionResult = console.getAlbumFromString(line, library);
+                var functionResult = console.getAlbumFromString(line, library);
                 if (functionResult == null)
                     return;
                 albumToAddIn = functionResult;
@@ -280,14 +312,13 @@ public final class MusicHub {
         }
         // Prompt songs to choose which to add
         do {
-            StringBuilder songSb = new StringBuilder();
-            int i = 0;
+            var songSb = new StringBuilder();
+            var i = 0;
             for (Song s : library.getStoredSongs()) {
-                songSb.append(++i).append(" - ").append(s.getTitle()).append(" (").append(s.getDuration() / 60)
-                        .append(":").append(String.format("%02d", s.getDuration() % 60)).append(")\n");
+                songSb.append(++i).append(" - ").append(s.getTitle()).append(" (").append(s.getDuration() / 60).append(":").append(String.format("%02d", s.getDuration() % 60)).append(")").append(System.lineSeparator());
             }
-            log.log(Level.INFO, "Choose the song to add in the album \"{0}\":\n{1}",
-                    new Object[] { albumToAddIn.getTitle(), songSb });
+            log.log(Level.INFO, "Choose the song to add in the album \"{0}\":{1}{2}",
+                    new Object[] { albumToAddIn.getTitle(), System.lineSeparator(), songSb });
             String songLine = sc.nextLine();
             try {
                 // Number input
@@ -301,8 +332,39 @@ public final class MusicHub {
     }
 
     /**
-     * Creates an <code>AudioBook</code> from user inputs in console, and adds it to
-     * the <code>Library</code>.
+     * Returns the matching <code>AudioContent</code> from the <code>Library</code> from an user input (index or text).
+     * Used by
+     * <code>createPlaylistFromUserInput(Scanner)</code>.
+     *
+     * @param input       the index or text user input
+     * @param listToParse the list to search in (<code>Song</code> or
+     *                    <code>AudioBook</code>). Can be exactly "song" or
+     *                    "audiobook".
+     * @return the matched <code>AudioContent</code>, or <code>null</code> if not found
+     */
+    private AudioContent getAudioContentFromInput(String input, String listToParse) {
+        if (listToParse.equals("song")) {
+            try {
+                // Number input
+                return library.getStoredSongs().get(Integer.parseInt(input) - 1);
+            } catch (NumberFormatException e) {
+                // Text input
+                return console.getSongFromString(input, library);
+            }
+        } else if (listToParse.equals("audiobook")) {
+            try {
+                // Number input
+                return library.getStoredAudioBooks().get(Integer.parseInt(input) - 1);
+            } catch (NumberFormatException e) {
+                // Text input
+                return console.getAudioBookFromString(input, library);
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Creates an <code>AudioBook</code> from user inputs in console, and adds it to the <code>Library</code>.
      */
     private void createAudioBookFromUserInput() {
         log.info("Audiobook title?");
@@ -310,7 +372,7 @@ public final class MusicHub {
         log.info("Audiobook author?");
         String audiobookAuthor = sc.nextLine();
         log.info("Audiobook duration? (in seconds)");
-        int audiobookDuration = sc.nextInt();
+        var audiobookDuration = sc.nextInt();
         sc.nextLine();
         log.log(Level.INFO, "Audiobook language? {0}",
                 Arrays.toString(Language.getStringValues()).replace("[", "(").replace("]", ")"));
@@ -355,22 +417,20 @@ public final class MusicHub {
             log.info("Which type of content to add? [song/audiobook]");
             String contentType = sc.nextLine();
             if (contentType.toLowerCase().startsWith("a") || contentType.toLowerCase().startsWith("b")) {
-                StringBuilder audiobookSb = new StringBuilder();
+                var audiobookSb = new StringBuilder();
                 for (AudioBook ab : library.getStoredAudioBooks()) {
-                    audiobookSb.append(library.getStoredAudioBooks().indexOf(ab) + 1).append(") ")
-                            .append(ab.getAuthor()).append(" - ").append(ab.getTitle())
-                            .append(System.getProperty("line.separator"));
+                    audiobookSb.append(library.getStoredAudioBooks().indexOf(ab) + 1).append(") ").append(ab.getAuthor()).append(" - ").append(ab.getTitle()).append(System.lineSeparator());
                 }
-                log.log(Level.INFO, "Which audiobook to add?\n{0}", audiobookSb);
+                log.log(Level.INFO, "Which audiobook to add?{0}{1}", new Object[] { System.lineSeparator(),
+                        audiobookSb });
                 inputContent = sc.nextLine();
                 contentType = "audiobook";
             } else if (contentType.toLowerCase().startsWith("s")) {
-                StringBuilder songSb = new StringBuilder();
+                var songSb = new StringBuilder();
                 for (Song s : library.getStoredSongs()) {
-                    songSb.append(library.getStoredSongs().indexOf(s) + 1).append(" - ").append(s.getTitle())
-                            .append(System.getProperty("line.separator"));
+                    songSb.append(library.getStoredSongs().indexOf(s) + 1).append(" - ").append(s.getTitle()).append(System.lineSeparator());
                 }
-                log.log(Level.INFO, "Which song to add?\n{0}", songSb);
+                log.log(Level.INFO, "Which song to add?{0}{1}", new Object[] { System.lineSeparator(), songSb });
                 inputContent = sc.nextLine();
                 contentType = "song";
             } else {
@@ -384,49 +444,15 @@ public final class MusicHub {
     }
 
     /**
-     * Returns the matching <code>AudioContent</code> from the <code>Library</code>
-     * from an user input (index or text). Used by
-     * <code>createPlaylistFromUserInput(Scanner)</code>.
-     *
-     * @param input       the index or text user input
-     * @param listToParse the list to search in (<code>Song</code> or
-     *                    <code>AudioBook</code>). Can be exactly "song" or
-     *                    "audiobook".
-     * @return the matched <code>AudioContent</code>, or <code>null</code> if not
-     *         found
-     */
-    private AudioContent getAudioContentFromInput(String input, String listToParse) {
-        if (listToParse.equals("song")) {
-            try {
-                // Number input
-                return library.getStoredSongs().get(Integer.parseInt(input) - 1);
-            } catch (NumberFormatException e) {
-                // Text input
-                return console.getSongFromString(input, library);
-            }
-        } else if (listToParse.equals("audiobook")) {
-            try {
-                // Number input
-                return library.getStoredAudioBooks().get(Integer.parseInt(input) - 1);
-            } catch (NumberFormatException e) {
-                // Text input
-                return console.getAudioBookFromString(input, library);
-            }
-        }
-        return null;
-    }
-
-    /**
      * Deletes a <code>Playlist</code> from user inputs in console. Prompt existing
      * <code>Playlist</code>s, and searches for a match in index or name.
      */
     private void deletePlaylistFromUserInput() {
-        StringBuilder sb = new StringBuilder();
+        var sb = new StringBuilder();
         for (Playlist playlist : library.getStoredPlaylists()) {
-            sb.append(library.getStoredPlaylists().indexOf(playlist) + 1).append(") ").append(playlist.getName())
-                    .append(System.getProperty("line.separator"));
+            sb.append(library.getStoredPlaylists().indexOf(playlist) + 1).append(") ").append(playlist.getName()).append(System.lineSeparator());
         }
-        log.log(Level.INFO, "Which playlist do you want to delete?\n{0}", sb);
+        log.log(Level.INFO, "Which playlist do you want to delete?{0}{1}", new Object[] { System.lineSeparator(), sb });
         String albumToParse = sc.nextLine();
         try {
             library.removeFromPlaylistsLibary(library.getStoredPlaylists().get(Integer.parseInt(albumToParse) - 1));
@@ -448,26 +474,6 @@ public final class MusicHub {
                 }
             }
         }
-    }
-
-	/**
-	 * Returns a formatted <code>Date</code> as a <code>String</code>
-	 *
-	 * @param date the <code>Date</code> to format
-	 * @return the formatted <code>Date</code> as a <code>String</code>
-	 */
-	public static String getFormattedDate(Date date) {
-        return new SimpleDateFormat(DATE_FORMAT).format(date);
-    }
-
-	/**
-	 * Returns a <code>Date</code> object from a <code>String</code> input.
-	 *
-	 * @param dateToParse the <code>String</code> date to parse
-	 * @return the parsed <code>Date</code>
-	 */
-	public static Date getDateFromString(String dateToParse) {
-        return java.sql.Date.valueOf(LocalDate.parse(dateToParse, DateTimeFormatter.ofPattern(DATE_FORMAT)));
     }
 
 	/**

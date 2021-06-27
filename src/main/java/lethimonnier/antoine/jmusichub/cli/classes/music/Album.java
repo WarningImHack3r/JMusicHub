@@ -2,6 +2,7 @@ package lethimonnier.antoine.jmusichub.cli.classes.music;
 
 import lethimonnier.antoine.jmusichub.cli.MusicHub;
 import lethimonnier.antoine.jmusichub.cli.enums.Genre;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.Serial;
 import java.io.Serializable;
@@ -34,7 +35,7 @@ public class Album implements Serializable {
 	/**
 	 * The Songs.
 	 */
-	public transient Song[] songs;
+	private Song[] songs;
 	private Genre[] genres;
 	private long totalDuration = 0;
 
@@ -46,7 +47,7 @@ public class Album implements Serializable {
 	 * @param author      the author
 	 * @param releaseDate the release date
 	 */
-	public Album(Song[] songs, String title, String author, Date releaseDate) {
+	public Album(Song[] songs, @NotNull String title, @NotNull String author, Date releaseDate) {
 		setSongs(songs);
 		this.title = title.trim();
 		this.author = author.trim();
@@ -74,6 +75,15 @@ public class Album implements Serializable {
 				genresTmp.add(song.getGenre());
 		}
 		genres = genresTmp.toArray(new Genre[0]);
+	}
+
+	/**
+	 * Get songs song [ ].
+	 *
+	 * @return the song [ ]
+	 */
+	public Song[] getSongs() {
+		return songs;
 	}
 
 	/**
@@ -143,7 +153,7 @@ public class Album implements Serializable {
 
 	@Override
 	public String toString() {
-		StringBuilder printableSongs = new StringBuilder();
+		var printableSongs = new StringBuilder();
 		if (songs != null) {
 			for (Song song : songs) {
 				printableSongs.append(";").append(song.toString().replace(";", "-"));

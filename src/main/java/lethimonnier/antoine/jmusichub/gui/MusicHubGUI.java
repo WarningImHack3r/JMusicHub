@@ -5,14 +5,16 @@ import lethimonnier.antoine.jmusichub.gui.frontend.ComponentsInitializer;
 
 import javax.swing.*;
 import java.awt.*;
+import java.io.Serial;
 
 /**
  * The type Music hub gui.
  */
 public class MusicHubGUI extends JFrame {
 
+    @Serial
     private static final long serialVersionUID = 5930451128361756517L;
-    private transient ComponentsInitializer ci = new ComponentsInitializer();
+    private final transient ComponentsInitializer ci = new ComponentsInitializer();
 
     /**
      * GUI Constructor

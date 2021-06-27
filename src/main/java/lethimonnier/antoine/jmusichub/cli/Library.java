@@ -7,6 +7,7 @@ import lethimonnier.antoine.jmusichub.cli.classes.music.Song;
 import lethimonnier.antoine.jmusichub.cli.enums.Genre;
 import lethimonnier.antoine.jmusichub.cli.interfaces.AudioContent;
 import lethimonnier.antoine.jmusichub.cli.logging.MusicLogger;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -49,16 +50,15 @@ public class Library {
             return;
         }
         albums.sort(Comparator.comparing(Album::getReleaseDate));
-        StringBuilder sb = new StringBuilder();
+	    var sb = new StringBuilder();
         for (Album album : albums) {
-            sb.append(album.getTitle()).append(" (").append(AudioContent.getFormattedDuration(album.getTotalDuration()))
-                    .append(" - ").append(album.getReleaseDate()).append(")\n");
+	        sb.append(album.getTitle()).append(" (").append(AudioContent.getFormattedDuration(album.getTotalDuration())).append(" - ").append(album.getReleaseDate()).append(")").append(System.lineSeparator());
         }
         if (sb.isEmpty()) {
             log.info("Album list is empty");
             return;
         }
-        log.log(Level.INFO, "Albums by release date:\n{0}", sb);
+	    log.log(Level.INFO, "Albums by release date:{0}{1}", new Object[] { System.lineSeparator(), sb });
     }
 
 	/**
@@ -71,17 +71,17 @@ public class Library {
             log.info("Null albums parameter");
             return;
         }
-        StringBuilder genreSb;
-        StringBuilder sbToPrint = new StringBuilder("Albums by genre:\n");
+		StringBuilder genreSb;
+		var sbToPrint = new StringBuilder("Albums by genre:" + System.lineSeparator());
         for (Genre genre : Genre.values()) {
             genreSb = new StringBuilder();
             for (Album album : albums) {
                 if (album.getGenres() != null && Arrays.asList(album.getGenres()).contains(genre)) {
-                    genreSb.append(album.getTitle()).append(System.getProperty("line.separator"));
+	                genreSb.append(album.getTitle()).append(System.lineSeparator());
                 }
             }
             if (!genreSb.isEmpty()) {
-                sbToPrint.append(genre.getName()).append(":\n").append(genreSb);
+	            sbToPrint.append(genre.getName()).append(":").append(System.lineSeparator()).append(genreSb);
             }
         }
         if (sbToPrint.isEmpty()) {
@@ -102,18 +102,15 @@ public class Library {
             return;
         }
         playlists.sort(Comparator.comparing(Playlist::getName));
-        StringBuilder sb = new StringBuilder();
+		var sb = new StringBuilder();
         for (Playlist playlist : playlists) {
-            sb.append(playlists.indexOf(playlist) + 1).append(" - ").append(playlist.getName()).append(" (")
-                    .append(AudioContent.getFormattedDuration(playlist.getTotalDuration())).append(" - ")
-                    .append(MusicHub.getFormattedDate(playlist.getLastModifiedDate())).append(")")
-                    .append(System.getProperty("line.separator"));
+	        sb.append(playlists.indexOf(playlist) + 1).append(" - ").append(playlist.getName()).append(" (").append(AudioContent.getFormattedDuration(playlist.getTotalDuration())).append(" - ").append(MusicHub.getFormattedDate(playlist.getLastModifiedDate())).append(")").append(System.lineSeparator());
         }
         if (sb.isEmpty()) {
             log.info("Playlists list is empty");
             return;
         }
-        log.log(Level.INFO, "Playlists sorted alphabetically:\n{0}", sb);
+		log.log(Level.INFO, "Playlists sorted alphabetically:{0}", new Object[] { System.lineSeparator() + sb });
     }
 
 	/**
@@ -127,16 +124,15 @@ public class Library {
             return;
         }
         audioBooks.sort(Comparator.comparing(AudioBook::getAuthor));
-        StringBuilder sb = new StringBuilder();
+		var sb = new StringBuilder();
         for (AudioBook audioBook : audioBooks) {
-            sb.append(audioBook.getAuthor()).append(" - ").append(audioBook.getTitle())
-                    .append(System.getProperty("line.separator"));
+	        sb.append(audioBook.getAuthor()).append(" - ").append(audioBook.getTitle()).append(System.lineSeparator());
         }
         if (sb.isEmpty()) {
             log.info("Audiobooks list is empty");
             return;
         }
-        log.log(Level.INFO, "Audiobooks by author:\n{0}", sb);
+		log.log(Level.INFO, "Audiobooks by author:{0}", new Object[] { System.lineSeparator(), sb });
     }
 
 	/**
@@ -144,17 +140,17 @@ public class Library {
 	 *
 	 * @param storedSongs the stored songs
 	 */
-	public static void printAllSongs(List<Song> storedSongs) {
-        StringBuilder sb = new StringBuilder();
-        for (Song song : storedSongs) {
-            sb.append(song.toString().replace(";", " - ")).append(System.getProperty("line.separator"));
-        }
-        if (sb.isEmpty()) {
-            log.info("Songs list is empty");
-            return;
-        }
-        log.log(Level.INFO, "{0}", sb);
-    }
+	public static void printAllSongs(@NotNull List<Song> storedSongs) {
+		var sb = new StringBuilder();
+		for (Song song : storedSongs) {
+			sb.append(song.toString().replace(";", " - ")).append(System.lineSeparator());
+		}
+		if (sb.isEmpty()) {
+			log.info("Songs list is empty");
+			return;
+		}
+		log.log(Level.INFO, sb.toString());
+	}
 
 	/**
 	 * Print all audio books.
@@ -162,49 +158,49 @@ public class Library {
 	 * @param storedAudioBooks the stored audio books
 	 */
 	public static void printAllAudioBooks(List<AudioBook> storedAudioBooks) {
-        StringBuilder sb = new StringBuilder();
+		var sb = new StringBuilder();
         for (AudioBook audioBook : storedAudioBooks) {
-            sb.append(audioBook.toString().replace(";", " - ")).append(System.getProperty("line.separator"));
+	        sb.append(audioBook.toString().replace(";", " - ")).append(System.lineSeparator());
         }
         if (sb.isEmpty()) {
             log.info("Audiobooks list is empty");
             return;
         }
-        log.log(Level.INFO, "{0}", sb);
-    }
+		log.log(Level.INFO, sb.toString());
+	}
 
 	/**
 	 * Print all albums.
 	 *
 	 * @param storedAlbums the stored albums
 	 */
-	public static void printAllAlbums(List<Album> storedAlbums) {
-        StringBuilder sb = new StringBuilder();
-        for (Album album : storedAlbums) {
-            sb.append(album.toString().replace(";", " - ")).append(System.getProperty("line.separator"));
-        }
-        if (sb.isEmpty()) {
-            log.info("Albums list is empty");
-            return;
-        }
-        log.log(Level.INFO, "{0}", sb);
-    }
+	public static void printAllAlbums(@NotNull List<Album> storedAlbums) {
+		var sb = new StringBuilder();
+		for (Album album : storedAlbums) {
+			sb.append(album.toString().replace(";", " - ")).append(System.lineSeparator());
+		}
+		if (sb.isEmpty()) {
+			log.info("Albums list is empty");
+			return;
+		}
+		log.log(Level.INFO, sb.toString());
+	}
 
 	/**
 	 * Print all playlists.
 	 *
 	 * @param storedPlaylists the stored playlists
 	 */
-	public static void printAllPlaylists(List<Playlist> storedPlaylists) {
-        StringBuilder sb = new StringBuilder();
-        for (Playlist playlist : storedPlaylists) {
-            sb.append(playlist.toString().replace(";", " - ")).append(System.getProperty("line.separator"));
-        }
-        if (sb.isEmpty()) {
-            log.info("Playlists list is empty");
-            return;
-        }
-        log.log(Level.INFO, "{0}", sb);
+	public static void printAllPlaylists(@NotNull List<Playlist> storedPlaylists) {
+		var sb = new StringBuilder();
+		for (Playlist playlist : storedPlaylists) {
+			sb.append(playlist.toString().replace(";", " - ")).append(System.lineSeparator());
+		}
+		if (sb.isEmpty()) {
+			log.info("Playlists list is empty");
+			return;
+		}
+		log.log(Level.INFO, sb.toString());
     }
     // END OF ADDITIONAL OPTIONS
 
