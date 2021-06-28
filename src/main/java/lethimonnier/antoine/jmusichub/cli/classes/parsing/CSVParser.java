@@ -131,7 +131,7 @@ public class CSVParser implements Parser {
 				songs[i] = getSongFromString(splitted[i + 3].replace("-", ";"), null);
 			}
 		}
-		return new Album(songs, splitted[0], splitted[1], MusicHub.getDateFromString(splitted[2]));
+		return new Album(splitted[0], splitted[1], MusicHub.getDateFromString(splitted[2]), songs);
 	}
 
 	/**

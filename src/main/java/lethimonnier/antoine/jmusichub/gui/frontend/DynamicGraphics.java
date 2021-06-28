@@ -169,7 +169,7 @@ public class DynamicGraphics {
 			if (objStarts.get(i + 1) - objStarts.get(i) == 1) // playlist
 				library.addToPlaylistsLibrary(new Playlist("", new ArrayList<>())); // titre audiocontents
 			else if (objStarts.get(i + 1) - objStarts.get(i) == 3) // album
-				library.addToAlbumsLibrary(new Album(new Song[] {}, "", "", new Date())); // songs titre auteur date
+				library.addToAlbumsLibrary(new Album("", "", new Date(), new Song[] {})); // songs titre auteur date
 			else if (objStarts.get(i + 1) - objStarts.get(i) == 4) // song
 				library.addToSongsLibrary(new Song("", new String[] {}, 0, null)); // titre auteurs durée genre
 			else if (objStarts.get(i + 1) - objStarts.get(i) == 5) // audiobook

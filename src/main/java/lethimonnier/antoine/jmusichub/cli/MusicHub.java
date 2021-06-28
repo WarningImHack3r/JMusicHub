@@ -17,9 +17,10 @@ import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import java.io.IOException;
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
+import java.time.format.FormatStyle;
 import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -29,25 +30,18 @@ import java.util.logging.Logger;
  */
 public final class MusicHub {
 
-	/**
-	 * The constant DATE_FORMAT.
-	 */
-	// Static final
-    public static final String DATE_FORMAT = "dd/MM/yyyy";
-
     // Final
     private final Logger log = MusicLogger.getLogger("output.log");
     private final Scanner sc = new Scanner(System.in);
-    private final Library library;
+    private final Library library = new Library();
     private final ConsoleParser console = new ConsoleParser();
+    private final CSVManager csv = new CSVManager();
 
     // Other variables
     private String filePath;
 
     private MusicHub() {
         log.info("Welcome to the MusicHub!");
-        library = new Library();
-        var csv = new CSVManager();
         try {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
             var currentFile = csv.openFileFromChooser(null);
@@ -58,10 +52,41 @@ public final class MusicHub {
                 int imported = csv.importSavedContentFromFile(currentFile, library);
                 log.log(Level.INFO, "Successfully imported {0} elements", imported);
             }
-        } catch (IOException | CsvValidationException | InstantiationException | IllegalAccessException
-                | UnsupportedLookAndFeelException | ClassNotFoundException e) {
+        } catch (IOException | CsvValidationException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException | ClassNotFoundException e) {
             e.printStackTrace();
         }
+        try {
+            startCli();
+        } catch (IOException | CsvValidationException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Returns a formatted <code>Date</code> as a <code>String</code>
+     *
+     * @param date the <code>Date</code> to format
+     * @return the formatted <code>Date</code> as a <code>String</code>
+     */
+    @NotNull
+    public static String getFormattedDate(@NotNull Date date) {
+        return LocalDate.ofInstant(date.toInstant(), ZoneId.systemDefault()).format(DateTimeFormatter.ofLocalizedDate(FormatStyle.SHORT));
+    }
+
+    /**
+     * Returns a <code>Date</code> object from a <code>String</code> input.
+     *
+     * @param dateToParse the <code>String</code> date to parse
+     * @return the parsed <code>Date</code>
+     */
+    @NotNull
+    @Contract("_ -> new")
+    public static Date getDateFromString(String dateToParse) {
+        return java.sql.Date.valueOf(LocalDate.parse(dateToParse,
+                DateTimeFormatter.ofLocalizedDate(FormatStyle.SHORT)));
+    }
+
+    private void startCli() throws IOException, CsvValidationException {
         while (true) {
             log.info("What do you want to do? (Press 'h' to show help)");
             switch (sc.nextLine().toLowerCase().charAt(0)) {
@@ -106,28 +131,20 @@ public final class MusicHub {
 
                 case 'i':
                     // imports from a csv file
-                    try {
-                        var currentFile = csv.openFileFromChooser(filePath);
-                        if (currentFile == null) {
-                            log.warning("No input file found.");
-                        } else {
-                            filePath = currentFile.getAbsolutePath();
-                            int imported = csv.importSavedContentFromFile(currentFile, library);
-                            log.log(Level.INFO, "Successfully imported {0} elements", imported);
-                        }
-                    } catch (IOException | CsvValidationException e) {
-                        e.printStackTrace();
+                    var currentFile = csv.openFileFromChooser(filePath);
+                    if (currentFile == null) {
+                        log.warning("No input file found.");
+                        break;
                     }
+                    filePath = currentFile.getAbsolutePath();
+                    int imported = csv.importSavedContentFromFile(currentFile, library);
+                    log.log(Level.INFO, "Successfully imported {0} elements", imported);
                     break;
 
                 case 's':
                     // saves everything in a csv file
                     log.info("Saving library.");
-                    try {
-                        csv.saveLibaryToFile(library, filePath);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
+                    csv.saveLibaryToFile(library, filePath);
                     break;
 
                 case 't':
@@ -157,15 +174,15 @@ public final class MusicHub {
                 case 'x':
                     // additional option 3: clears the whole library
                     log.info("Are you sure to want to clear the library? [yes/no] ");
-                    if (sc.nextLine().contains("y")) {
-                        library.getStoredAlbums().clear();
-                        library.getStoredAudioBooks().clear();
-                        library.getStoredPlaylists().clear();
-                        library.getStoredSongs().clear();
-                        log.info("Library cleaned successfully");
-                    } else {
+                    if (!sc.nextLine().contains("y")) {
                         log.info("Cancelling.");
+                        break;
                     }
+                    library.getStoredAlbums().clear();
+                    library.getStoredAudioBooks().clear();
+                    library.getStoredPlaylists().clear();
+                    library.getStoredSongs().clear();
+                    log.info("Library cleaned successfully");
                     break;
 
                 case 'y':
@@ -204,29 +221,6 @@ public final class MusicHub {
                     break;
             }
         }
-    }
-
-    /**
-     * Returns a formatted <code>Date</code> as a <code>String</code>
-     *
-     * @param date the <code>Date</code> to format
-     * @return the formatted <code>Date</code> as a <code>String</code>
-     */
-    @NotNull
-    public static String getFormattedDate(Date date) {
-        return new SimpleDateFormat(DATE_FORMAT).format(date);
-    }
-
-    /**
-     * Returns a <code>Date</code> object from a <code>String</code> input.
-     *
-     * @param dateToParse the <code>String</code> date to parse
-     * @return the parsed <code>Date</code>
-     */
-    @NotNull
-    @Contract("_ -> new")
-    public static Date getDateFromString(String dateToParse) {
-        return java.sql.Date.valueOf(LocalDate.parse(dateToParse, DateTimeFormatter.ofPattern(DATE_FORMAT)));
     }
 
     /**
@@ -275,7 +269,7 @@ public final class MusicHub {
         var c = Calendar.getInstance();
         c.set(fields[0], fields[1] - 1 /* Calendar.JANUARY = 0 */, fields[2]);
         var albumParsedDate = c.getTime();
-        var album = new Album(null, albumTitle, albumAuthor, albumParsedDate);
+        var album = new Album(albumTitle, albumAuthor, albumParsedDate, new Song[] {});
         library.addToAlbumsLibrary(album);
         return album;
     }

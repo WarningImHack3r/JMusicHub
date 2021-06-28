@@ -6,7 +6,6 @@ import org.jetbrains.annotations.NotNull;
 
 import java.io.Serial;
 import java.io.Serializable;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -47,7 +46,7 @@ public class Album implements Serializable {
 	 * @param author      the author
 	 * @param releaseDate the release date
 	 */
-	public Album(Song[] songs, @NotNull String title, @NotNull String author, Date releaseDate) {
+	public Album(@NotNull String title, @NotNull String author, Date releaseDate, Song[] songs) {
 		setSongs(songs);
 		this.title = title.trim();
 		this.author = author.trim();
@@ -159,6 +158,6 @@ public class Album implements Serializable {
 				printableSongs.append(";").append(song.toString().replace(";", "-"));
 			}
 		}
-		return title + ";" + author + ";" + new SimpleDateFormat(MusicHub.DATE_FORMAT).format(releaseDate) + printableSongs;
+		return title + ";" + author + ";" + MusicHub.getFormattedDate(releaseDate) + printableSongs;
 	}
 }
