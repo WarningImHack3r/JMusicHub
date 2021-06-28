@@ -9,9 +9,9 @@ Improvements - Software Engineering and OOP
 
 Improve the original project
 
-- Add tracks listening
 - Add MVC design pattern
-- Add Logger in file
+- ~~Add tracks listening~~
+- ~~Add Logger in file~~
 - ~~2 free features (yet to determine)~~
 
 ### Delivering
@@ -36,6 +36,7 @@ _None_
 
 #### GUI
 
+- Music Player not implemented
 - An issue may occur with the 'Remove' button
 - The 'Save' button is not completely
   implemented ([here](src/main/java/lethimonnier/antoine/jmusichub/gui/frontend/DynamicGraphics.java#L141))
