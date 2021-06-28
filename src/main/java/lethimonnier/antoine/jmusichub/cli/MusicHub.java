@@ -13,6 +13,7 @@ import lethimonnier.antoine.jmusichub.cli.interfaces.AudioContent;
 import lethimonnier.antoine.jmusichub.cli.logging.MusicLogger;
 import lethimonnier.antoine.jmusichub.cli.player.MusicManager;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 import java.io.IOException;
@@ -309,7 +310,8 @@ public final class MusicHub {
      *                    "audiobook".
      * @return the matched <code>AudioContent</code>, or <code>null</code> if not found
      */
-    private AudioContent getAudioContentFromInput(String input, String listToParse) {
+    @Nullable
+    private AudioContent getAudioContentFromInput(String input, @NotNull String listToParse) {
         if (listToParse.equals("song")) {
             try {
                 // Number input
