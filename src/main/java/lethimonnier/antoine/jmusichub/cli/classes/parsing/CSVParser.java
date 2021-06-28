@@ -1,7 +1,7 @@
 package lethimonnier.antoine.jmusichub.cli.classes.parsing;
 
 import lethimonnier.antoine.jmusichub.cli.Library;
-import lethimonnier.antoine.jmusichub.cli.MusicHub;
+import lethimonnier.antoine.jmusichub.cli.Utils;
 import lethimonnier.antoine.jmusichub.cli.classes.music.Album;
 import lethimonnier.antoine.jmusichub.cli.classes.music.AudioBook;
 import lethimonnier.antoine.jmusichub.cli.classes.music.Playlist;
@@ -131,7 +131,7 @@ public class CSVParser implements Parser {
 				songs[i] = getSongFromString(splitted[i + 3].replace("-", ";"), null);
 			}
 		}
-		return new Album(splitted[0], splitted[1], MusicHub.getDateFromString(splitted[2]), songs);
+		return new Album(splitted[0], splitted[1], Utils.getDateFromString(splitted[2]), songs);
 	}
 
 	/**

@@ -1,6 +1,6 @@
 package lethimonnier.antoine.jmusichub.cli.classes.music;
 
-import lethimonnier.antoine.jmusichub.cli.MusicHub;
+import lethimonnier.antoine.jmusichub.cli.Utils;
 import lethimonnier.antoine.jmusichub.cli.enums.Genre;
 import org.jetbrains.annotations.NotNull;
 
@@ -158,6 +158,6 @@ public class Album implements Serializable {
 				printableSongs.append(";").append(song.toString().replace(";", "-"));
 			}
 		}
-		return title + ";" + author + ";" + MusicHub.getFormattedDate(releaseDate) + printableSongs;
+		return title + ";" + author + ";" + Utils.getFormattedDate(releaseDate) + printableSongs;
 	}
 }
