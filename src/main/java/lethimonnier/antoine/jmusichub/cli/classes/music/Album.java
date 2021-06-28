@@ -21,15 +21,15 @@ public class Album implements Serializable {
 	/**
 	 * The Title.
 	 */
-	public final String title;
+	private final String title;
 	/**
 	 * The Author.
 	 */
-	public final String author;
+	private final String author;
 	/**
 	 * The Release date.
 	 */
-	public final Date releaseDate;
+	private final Date releaseDate;
 	private final UUID id;
 	/**
 	 * The Songs.
@@ -59,7 +59,7 @@ public class Album implements Serializable {
 	 *
 	 * @param songs the songs
 	 */
-	public void setSongs(Song[] songs) {
+	protected void setSongs(Song[] songs) {
 		if (songs == null)
 			return;
 		if (this.songs != null)

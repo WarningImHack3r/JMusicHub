@@ -16,11 +16,11 @@ public class AudioBook extends AudioContent {
 	/**
 	 * The Language.
 	 */
-	public final Language language;
+	protected final Language language;
 	/**
 	 * The Category.
 	 */
-	public final Category category;
+	protected final Category category;
 
 	/**
 	 * Instantiates a new Audio book.

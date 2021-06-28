@@ -49,16 +49,16 @@ public class Playlist implements Serializable {
 	 *
 	 * @param content the content
 	 */
-	public void setContent(List<AudioContent> content) {
-        if (content == null)
-            return;
-        this.content = new ArrayList<>(content);
-        totalDuration = 0;
-        for (AudioContent audioContent : this.content) {
-            if (audioContent != null)
-                totalDuration += audioContent.getDuration();
-        }
-        lastModifiedDate = new Date();
+	protected void setContent(List<AudioContent> content) {
+		if (content == null)
+			return;
+		this.content = new ArrayList<>(content);
+		totalDuration = 0;
+		for (AudioContent audioContent : this.content) {
+			if (audioContent != null)
+				totalDuration += audioContent.getDuration();
+		}
+		lastModifiedDate = new Date();
 	}
 
 	/**
@@ -66,7 +66,7 @@ public class Playlist implements Serializable {
 	 *
 	 * @param name the name
 	 */
-	public void setName(@NotNull String name) {
+	protected void setName(@NotNull String name) {
 		this.name = name.trim();
     }
 
@@ -94,16 +94,16 @@ public class Playlist implements Serializable {
 	 * @return the total duration
 	 */
 	public long getTotalDuration() {
-        return totalDuration;
-    }
+		return totalDuration;
+	}
 
 	/**
 	 * Gets creation date.
 	 *
 	 * @return the creation date
 	 */
-	public Date getCreationDate() {
-        return creationDate;
+	protected Date getCreationDate() {
+		return creationDate;
     }
 
 	/**
@@ -112,15 +112,15 @@ public class Playlist implements Serializable {
 	 * @return the last modified date
 	 */
 	public Date getLastModifiedDate() {
-        return lastModifiedDate;
-    }
+		return lastModifiedDate;
+	}
 
 	/**
 	 * Gets id.
 	 *
 	 * @return the id
 	 */
-	public UUID getId() {
+	protected UUID getId() {
         return id;
     }
 

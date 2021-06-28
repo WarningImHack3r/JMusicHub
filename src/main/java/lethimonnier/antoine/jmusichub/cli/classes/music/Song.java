@@ -15,7 +15,7 @@ public class Song extends AudioContent {
 	/**
 	 * The Genre.
 	 */
-	public final Genre genre;
+	protected final Genre genre;
 
 	/**
 	 * Instantiates a new Song.
@@ -26,17 +26,17 @@ public class Song extends AudioContent {
 	 * @param genre    the genre
 	 */
 	public Song(String title, String[] authors, int duration, Genre genre) {
-        super(title, authors, duration);
-        this.genre = genre;
-    }
+		super(title, authors, duration);
+		this.genre = genre;
+	}
 
 	/**
 	 * Gets genre.
 	 *
 	 * @return the genre
 	 */
-	public Genre getGenre() {
-        return genre;
+	protected Genre getGenre() {
+		return genre;
     }
 
     @Override

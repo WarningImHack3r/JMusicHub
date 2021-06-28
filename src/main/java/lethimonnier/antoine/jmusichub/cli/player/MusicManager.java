@@ -42,7 +42,7 @@ public class MusicManager {
 	 * @param index the index
 	 * @return the song at index
 	 */
-	public static String getSongAtIndex(int index) {
+	protected static String getSongAtIndex(int index) {
 		return songs.get(index);
 	}
 

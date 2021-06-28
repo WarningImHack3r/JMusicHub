@@ -76,12 +76,12 @@ public class DynamicGraphics {
 
 	/**
 	 * Fetchs the <code>type</code>'s fields to create adapted user inputs.
-	 * <strong>Requires fields to be public</strong>.
+	 * <strong>Requires fields to be protected</strong>.
 	 *
 	 * @param type the class to look into
 	 * @return the generated panel
 	 */
-	public JPanel addPanelForType(@NotNull Class<?> type) {
+	protected JPanel addPanelForType(@NotNull Class<?> type) {
 		var panel = new JPanel();
 		ArrayList<JComboBox<String>> combos = new ArrayList<>();
 
@@ -146,22 +146,21 @@ public class DynamicGraphics {
 	 * @param comps   the comps
 	 * @param library the library
 	 */
-	public void addToLibraryFromComponents(List<Component> comps, Library library) {
-        List<Component> filteredComps = new ArrayList<>(comps);
-        for (Component component : comps) { // remove JButtons
-            if (!(component instanceof JButton))
-                filteredComps.add(component);
-        }
-        comps = filteredComps;
+	protected void addToLibraryFromComponents(List<Component> comps, Library library) {
+		List<Component> filteredComps = new ArrayList<>(comps);
+		for (Component component : comps) { // remove JButtons
+			if (!(component instanceof JButton))
+				filteredComps.add(component);
+		}
+		comps = filteredComps;
 
-        ArrayList<Integer> objStarts = new ArrayList<>();
-        for (Component component : comps) { // list indexes of new objects starts
-            int index = comps.indexOf(component);
-            if (index == 0 || (component instanceof JTextField && !(comps.get(index - 1) instanceof JTextField))
-                    || index == objStarts.size() - 1) // new object
-                objStarts.add(index);
-        }
-        // NOT FINISHED, MISS SOME TIME
+		ArrayList<Integer> objStarts = new ArrayList<>();
+		for (Component component : comps) { // list indexes of new objects starts
+			int index = comps.indexOf(component);
+			if (index == 0 || (component instanceof JTextField && !(comps.get(index - 1) instanceof JTextField)) || index == objStarts.size() - 1) // new object
+				objStarts.add(index);
+		}
+		// NOT FINISHED, MISS SOME TIME
 		for (var i = 0; i < objStarts.size(); i++) {
 			if (objStarts.get(i) == objStarts.size() - 1) // don't use last element
 				continue;
@@ -174,7 +173,7 @@ public class DynamicGraphics {
 				library.addToSongsLibrary(new Song("", new String[] {}, 0, null)); // titre auteurs durée genre
 			else if (objStarts.get(i + 1) - objStarts.get(i) == 5) // audiobook
 				library.addToAudioBooksLibrary(new AudioBook("", "", 0, null, null)); // titre auteur durée langue
-                                                                                          // catégorie
+			// catégorie
 		}
 	}
 
@@ -185,13 +184,13 @@ public class DynamicGraphics {
 	 * @param panel     the panel
 	 * @param btnCenter the btn center
 	 */
-	public void addElementToPanel(Class<?> type, @NotNull Container panel, Component btnCenter) {
+	protected void addElementToPanel(Class<?> type, @NotNull Container panel, Component btnCenter) {
 		panel.remove(btnCenter);
 		panel.add(addPanelForType(type));
 		panel.add(btnCenter);
 		panel.revalidate();
 		panel.repaint();
-    }
+	}
 
 	/**
 	 * Creates a panel to remove instances of class <code>type</code>.
@@ -200,7 +199,7 @@ public class DynamicGraphics {
 	 * @param library the library
 	 * @return the generated panel
 	 */
-	public JPanel removePanelForType(Class<?> type, Library library) {
+	protected JPanel removePanelForType(Class<?> type, Library library) {
 		var tableRemovePanel = new JPanel();
 		var removeBtn = new JButton("Delete row(s)");
 		removeBtn.setEnabled(false);
@@ -224,20 +223,20 @@ public class DynamicGraphics {
                     library.getStoredSongs().remove(consoleParser.getSongFromString(line[1], library));
                 } else if (type.equals(AudioBook.class)) {
                     library.getStoredAudioBooks().remove(consoleParser.getAudioBookFromString(line[2], library));
-                } else if (type.equals(Album.class)) {
-                    library.getStoredAlbums().remove(consoleParser.getAlbumFromString(line[0], library));
-                } else if (type.equals(Playlist.class)) {
-                    library.getStoredPlaylists().remove(consoleParser.getPlaylistFromString(line[0], library));
-                }
-            }
-            JOptionPane.showMessageDialog(tableRemovePanel, "Please use the File > Refresh tables to see the changes",
-                    "Refresh required", JOptionPane.INFORMATION_MESSAGE);
-        });
-        tableRemovePanel.add(new JScrollPane(removeTable));
-        tableRemovePanel.add(removeBtn);
-        formatTable(removeTable);
-        return tableRemovePanel;
-    }
+				} else if (type.equals(Album.class)) {
+					library.getStoredAlbums().remove(consoleParser.getAlbumFromString(line[0], library));
+				} else if (type.equals(Playlist.class)) {
+					library.getStoredPlaylists().remove(consoleParser.getPlaylistFromString(line[0], library));
+				}
+			}
+			JOptionPane.showMessageDialog(tableRemovePanel, "Please use the File > Refresh tables to see the changes",
+					"Refresh required", JOptionPane.INFORMATION_MESSAGE);
+		});
+		tableRemovePanel.add(new JScrollPane(removeTable));
+		tableRemovePanel.add(removeBtn);
+		formatTable(removeTable);
+		return tableRemovePanel;
+	}
 
 	/**
 	 * Creates a panel to view existing instances of class <code>type</code>
@@ -245,7 +244,7 @@ public class DynamicGraphics {
 	 * @param type the class to fetch
 	 * @return the generated panel
 	 */
-	public JPanel viewPanelForType(Class<?> type) {
+	protected JPanel viewPanelForType(Class<?> type) {
 		var tablePanel = new JPanel();
 		var table = new JTable(getTableModelForType(type));
 		tablePanel.add(new JScrollPane(table));
@@ -311,17 +310,18 @@ public class DynamicGraphics {
 			if (renderer == null) {
 				renderer = table.getTableHeader().getDefaultRenderer();
 			}
-			int width = renderer.getTableCellRendererComponent(table, table.getColumnModel().getColumn(column).getHeaderValue(), false, false, 0, 0).getPreferredSize().width;
+			int width = renderer.getTableCellRendererComponent(table,
+					table.getColumnModel().getColumn(column).getHeaderValue(), false, false, 0, 0).getPreferredSize().width;
 			for (var row = 0; row < table.getRowCount(); row++) {
 				width =
 						Math.max(table.prepareRenderer(table.getCellRenderer(row, column), row, column).getPreferredSize().width + 1, width);
-            }
-            table.getColumnModel().getColumn(column).setPreferredWidth(width + 5);
-            table.getColumnModel().getColumn(column).setCellRenderer(centerRenderer);
-            ((JLabel) table.getTableHeader().getDefaultRenderer()).setHorizontalAlignment(SwingConstants.CENTER);
-        }
-        table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
-    }
+			}
+			table.getColumnModel().getColumn(column).setPreferredWidth(width + 5);
+			table.getColumnModel().getColumn(column).setCellRenderer(centerRenderer);
+			((JLabel) table.getTableHeader().getDefaultRenderer()).setHorizontalAlignment(SwingConstants.CENTER);
+		}
+		table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+	}
 
 	/**
 	 * Gets add button center song.
@@ -329,70 +329,70 @@ public class DynamicGraphics {
 	 * @return the add button center song
 	 */
 	// GETTERS
-    public JPanel getAddButtonCenterSong() {
-        return addButtonCenterSong;
-    }
+	protected JPanel getAddButtonCenterSong() {
+		return addButtonCenterSong;
+	}
 
 	/**
 	 * Gets add button center audio.
 	 *
 	 * @return the add button center audio
 	 */
-	public JPanel getAddButtonCenterAudio() {
-        return addButtonCenterAudio;
-    }
+	protected JPanel getAddButtonCenterAudio() {
+		return addButtonCenterAudio;
+	}
 
 	/**
 	 * Gets add button center album.
 	 *
 	 * @return the add button center album
 	 */
-	public JPanel getAddButtonCenterAlbum() {
-        return addButtonCenterAlbum;
-    }
+	protected JPanel getAddButtonCenterAlbum() {
+		return addButtonCenterAlbum;
+	}
 
 	/**
 	 * Gets add button center playlist.
 	 *
 	 * @return the add button center playlist
 	 */
-	public JPanel getAddButtonCenterPlaylist() {
-        return addButtonCenterPlaylist;
-    }
+	protected JPanel getAddButtonCenterPlaylist() {
+		return addButtonCenterPlaylist;
+	}
 
 	/**
 	 * Gets song add panel.
 	 *
 	 * @return the song add panel
 	 */
-	public JPanel getSongAddPanel() {
-        return songAddPanel;
-    }
+	protected JPanel getSongAddPanel() {
+		return songAddPanel;
+	}
 
 	/**
 	 * Gets audio add panel.
 	 *
 	 * @return the audio add panel
 	 */
-	public JPanel getAudioAddPanel() {
-        return audioAddPanel;
-    }
+	protected JPanel getAudioAddPanel() {
+		return audioAddPanel;
+	}
 
 	/**
 	 * Gets album add panel.
 	 *
 	 * @return the album add panel
 	 */
-	public JPanel getAlbumAddPanel() {
-        return albumAddPanel;
-    }
+	protected JPanel getAlbumAddPanel() {
+		return albumAddPanel;
+	}
 
 	/**
 	 * Gets playlist add panel.
 	 *
 	 * @return the playlist add panel
 	 */
-	public JPanel getPlaylistAddPanel() {
+	protected JPanel getPlaylistAddPanel() {
 		return playlistAddPanel;
 	}
 
@@ -402,7 +402,7 @@ public class DynamicGraphics {
 	 * @param tabs    the tabs
 	 * @param library the library
 	 */
-	public void refreshTables(@NotNull JTabbedPane[] tabs, Library library) {
+	protected void refreshTables(@NotNull JTabbedPane[] tabs, Library library) {
 		var classes = new Class[] { Song.class, AudioBook.class, Album.class, Playlist.class };
 		for (var i = 0; i < tabs.length * 2; i++) {
 			if (i > 3) { // view panels

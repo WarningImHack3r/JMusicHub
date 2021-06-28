@@ -69,18 +69,18 @@ public abstract class AudioContent implements Serializable {
 	 *
 	 * @param title the title
 	 */
-	public void setTitle(@NotNull String title) {
-        this.title = title.trim();
-    }
+	protected void setTitle(@NotNull String title) {
+		this.title = title.trim();
+	}
 
 	/**
-	 * Sets duration.
+	 * Gets duration.
 	 *
-	 * @param duration the duration
+	 * @return the duration
 	 */
-	public void setDuration(int duration) {
-        this.duration = duration;
-    }
+	public int getDuration() {
+		return duration;
+	}
 
 	/**
 	 * Gets title.
@@ -97,25 +97,16 @@ public abstract class AudioContent implements Serializable {
 	 * @return the string [ ]
 	 */
 	public String[] getAuthors() {
-        return authors;
-    }
+		return authors;
+	}
 
 	/**
-	 * Gets duration.
+	 * Sets duration.
 	 *
-	 * @return the duration
+	 * @param duration the duration
 	 */
-	public int getDuration() {
-        return duration;
-    }
-
-	/**
-	 * Gets id.
-	 *
-	 * @return the id
-	 */
-	public UUID getId() {
-		return id;
+	protected void setDuration(int duration) {
+		this.duration = duration;
 	}
 
 	/**
@@ -123,10 +114,10 @@ public abstract class AudioContent implements Serializable {
 	 *
 	 * @param authors the authors
 	 */
-	public void setAuthors(@NotNull String[] authors) {
+	protected void setAuthors(@NotNull String[] authors) {
 		for (var i = 0; i < authors.length; i++) {
 			authors[i] = authors[i].trim();
-        }
-        this.authors = authors;
+		}
+		this.authors = authors;
     }
 }

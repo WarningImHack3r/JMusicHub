@@ -31,7 +31,7 @@ public class ConsoleParser implements Parser {
 	 * @return the matched <code>Song</code>, or <code>null</code> if not found
 	 */
 	@Override
-	public Song getSongFromString(String match, Library library) {
+	public Song getSongFromString(String match, @NotNull Library library) {
 		Song toReturn = null;
 		List<Song> librarySongs = library.getStoredSongs();
 		for (Song s : librarySongs) {

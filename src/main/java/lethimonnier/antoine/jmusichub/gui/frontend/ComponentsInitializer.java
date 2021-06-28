@@ -38,26 +38,26 @@ public class ComponentsInitializer {
 	 * @return the menubar
 	 */
 	public JMenuBar initMenuBar() {
-        // Menubar
-        var menubar = new JMenuBar();
-        var fileMenu = new JMenu("File");
-        var importItem = new JMenuItem("Import");
-        importItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_I,
-		        Toolkit.getDefaultToolkit().getMenuShortcutKeyMaskEx()));
-        var exportItem = new JMenuItem("Export");
-        exportItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S,
-		        Toolkit.getDefaultToolkit().getMenuShortcutKeyMaskEx()));
-        menubar.add(fileMenu);
-        var refreshItem = new JMenuItem("Refresh tables");
-        refreshItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_R,
-		        Toolkit.getDefaultToolkit().getMenuShortcutKeyMaskEx()));
-        var quitItem = new JMenuItem("Quit");
-        quitItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Q,
-		        Toolkit.getDefaultToolkit().getMenuShortcutKeyMaskEx()));
-        fileMenu.add(importItem);
-        fileMenu.add(exportItem);
-        fileMenu.addSeparator();
-        fileMenu.add(refreshItem);
+		// Menubar
+		var menubar = new JMenuBar();
+		var fileMenu = new JMenu("File");
+		var importItem = new JMenuItem("Import");
+		importItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_I,
+				Toolkit.getDefaultToolkit().getMenuShortcutKeyMaskEx()));
+		var exportItem = new JMenuItem("Export");
+		exportItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S,
+				Toolkit.getDefaultToolkit().getMenuShortcutKeyMaskEx()));
+		menubar.add(fileMenu);
+		var refreshItem = new JMenuItem("Refresh tables");
+		refreshItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_R,
+				Toolkit.getDefaultToolkit().getMenuShortcutKeyMaskEx()));
+		var quitItem = new JMenuItem("Quit");
+		quitItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Q,
+				Toolkit.getDefaultToolkit().getMenuShortcutKeyMaskEx()));
+		fileMenu.add(importItem);
+		fileMenu.add(exportItem);
+		fileMenu.addSeparator();
+		fileMenu.add(refreshItem);
         fileMenu.addSeparator();
         fileMenu.add(quitItem);
         var helpMenu = new JMenu("Help");
@@ -77,18 +77,24 @@ public class ComponentsInitializer {
                     il.getLibrary());
         });
 
-        refreshItem.addActionListener(e -> dg.refreshTables(
-                new JTabbedPane[] { songActionsPane, audioActionsPane, albumActionsPane, playActionsPane },
-                il.getLibrary()));
+        refreshItem.addActionListener(e -> dg.refreshTables(new JTabbedPane[] { songActionsPane, audioActionsPane, albumActionsPane, playActionsPane }, il.getLibrary()));
 
-        quitItem.addActionListener(e -> System.exit(0));
+		quitItem.addActionListener(e -> System.exit(0));
 
-        aboutItem.addActionListener(e -> JOptionPane.showMessageDialog(null, new JLabel(
-                "<html><center><br />JMusicHub<br/><br />Made by Jérémy RODGRIGUES and<br />Antoine LETHIMONNIER <br/><br /> © Copyright 2020<br /></center></html>",
-                SwingConstants.CENTER), "About", JOptionPane.PLAIN_MESSAGE));
+		aboutItem.addActionListener(e -> JOptionPane.showMessageDialog(null, new JLabel("<html><center><br " +
+				                                                                                "/>JMusicHub<br/><br " +
+				                                                                                "/>Made by Jérémy " +
+				                                                                                "RODGRIGUES and<br " +
+				                                                                                "/>Antoine " +
+				                                                                                "LETHIMONNIER " +
+				                                                                                "<br/><br" +
+				                                                                                " /> © Copyright " +
+				                                                                                "2020<br " +
+				                                                                                "/></center></html>",
+				SwingConstants.CENTER), "About", JOptionPane.PLAIN_MESSAGE));
 
-        return menubar;
-    }
+		return menubar;
+	}
 
 	/**
 	 * Window Initialization
@@ -97,24 +103,23 @@ public class ComponentsInitializer {
 	 */
 	public JTabbedPane initComponents() {
 
-        // Buttons
-        var addItemSong = new JButton(SAVE_LABEL);
-        var addItemAudio = new JButton(SAVE_LABEL);
-        var addItemAlbum = new JButton(SAVE_LABEL);
-        var addItemPlaylist = new JButton(SAVE_LABEL);
+		// Buttons
+		var addItemSong = new JButton(SAVE_LABEL);
+		var addItemAudio = new JButton(SAVE_LABEL);
+		var addItemAlbum = new JButton(SAVE_LABEL);
+		var addItemPlaylist = new JButton(SAVE_LABEL);
 
-        // SONG PANE
-        songActionsPane = new JTabbedPane();
+		// SONG PANE
+		songActionsPane = new JTabbedPane();
 
-        songActionsPane.setFocusable(false);
-        songActionsPane.setTabPlacement(SwingConstants.LEFT);
-        dg.getSongAddPanel().setLayout(new BoxLayout(dg.getSongAddPanel(), BoxLayout.Y_AXIS));
-        songActionsPane.addTab(ADD_LABEL, new JScrollPane(dg.getSongAddPanel(),
-		        ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED, ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER));
-        songActionsPane.addTab(REMOVE_LABEL, dg.removePanelForType(Song.class, il.getLibrary()));
-        songActionsPane.addTab(VIEW_LABEL, dg.viewPanelForType(Song.class));
+		songActionsPane.setFocusable(false);
+		songActionsPane.setTabPlacement(SwingConstants.LEFT);
+		dg.getSongAddPanel().setLayout(new BoxLayout(dg.getSongAddPanel(), BoxLayout.Y_AXIS));
+		songActionsPane.addTab(ADD_LABEL, new JScrollPane(dg.getSongAddPanel(), ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED, ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER));
+		songActionsPane.addTab(REMOVE_LABEL, dg.removePanelForType(Song.class, il.getLibrary()));
+		songActionsPane.addTab(VIEW_LABEL, dg.viewPanelForType(Song.class));
 
-        // AUDIOBOOK PANE
+		// AUDIOBOOK PANE
         audioActionsPane = new JTabbedPane();
 
         audioActionsPane.setFocusable(false);
@@ -217,17 +222,17 @@ public class ComponentsInitializer {
         dg.getAddButtonCenterPlaylist().setLayout(new BorderLayout());
         addItemPlaylist.setPreferredSize(DEF_COMBO_BOX_DIM);
         dg.getAddButtonCenterPlaylist().add(addItemPlaylist, BorderLayout.SOUTH);
-        dg.getAddButtonCenterAlbum().setLayout(new BorderLayout());
-        dg.getAddButtonCenterAlbum().add(addItemAlbum, BorderLayout.SOUTH);
-        dg.getAlbumAddPanel().add(dg.getAddButtonCenterAlbum());
-        dg.getAddButtonCenterAudio().setLayout(new BorderLayout());
-        dg.getAddButtonCenterAudio().add(addItemAudio, BorderLayout.SOUTH);
-        dg.getAudioAddPanel().add(dg.getAddButtonCenterAudio());
-        dg.getAddButtonCenterSong().setLayout(new BorderLayout());
-        dg.getAddButtonCenterSong().add(addItemSong, BorderLayout.SOUTH);
-        dg.getSongAddPanel().add(dg.getAddButtonCenterSong());
-        return tabbedPane;
-    }
+		dg.getAddButtonCenterAlbum().setLayout(new BorderLayout());
+		dg.getAddButtonCenterAlbum().add(addItemAlbum, BorderLayout.SOUTH);
+		dg.getAlbumAddPanel().add(dg.getAddButtonCenterAlbum());
+		dg.getAddButtonCenterAudio().setLayout(new BorderLayout());
+		dg.getAddButtonCenterAudio().add(addItemAudio, BorderLayout.SOUTH);
+		dg.getAudioAddPanel().add(dg.getAddButtonCenterAudio());
+		dg.getAddButtonCenterSong().setLayout(new BorderLayout());
+		dg.getAddButtonCenterSong().add(addItemSong, BorderLayout.SOUTH);
+		dg.getSongAddPanel().add(dg.getAddButtonCenterSong());
+		return tabbedPane;
+	}
 
 	/**
 	 * Info.
@@ -235,9 +240,9 @@ public class ComponentsInitializer {
 	 * @param title   the title
 	 * @param message the message
 	 */
-	public void info(String title, String message) {
-        il.info(title, message);
-    }
+	protected void info(String title, String message) {
+		il.info(title, message);
+	}
 
 	/**
 	 * Error.
@@ -246,6 +251,6 @@ public class ComponentsInitializer {
 	 * @param message the message
 	 */
 	public void error(String title, String message) {
-        il.error(title, message);
+		il.error(title, message);
     }
 }

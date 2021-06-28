@@ -28,7 +28,7 @@ public class MusicPlayer {
      *
      * @return the player
      */
-    public static synchronized MusicPlayer getPlayer() {
+    protected static synchronized MusicPlayer getPlayer() {
         if (instance == null) {
             instance = new MusicPlayer();
         }
@@ -41,7 +41,7 @@ public class MusicPlayer {
      * @param index the index
      * @return the playing song index
      */
-    public MusicPlayer setPlayingSongIndex(int index) {
+    protected MusicPlayer setPlayingSongIndex(int index) {
         currentSong = Utils.getRootPath().resolve("io/musics/" + MusicManager.getSongAtIndex(index - 1)).toFile();
         return this;
     }
@@ -51,14 +51,14 @@ public class MusicPlayer {
      *
      * @return the boolean
      */
-    public boolean isPlaying() {
+    protected boolean isPlaying() {
         return playingThread != null && playingThread.isAlive();
     }
 
     /**
      * Play.
      */
-    public void play() {
+    protected void play() {
         if (currentSong == null) {
             logger.severe("No song to play");
             return;
@@ -93,7 +93,7 @@ public class MusicPlayer {
     /**
      * Stop.
      */
-    public void stop() {
+    protected void stop() {
         if (currentSong == null) {
             logger.severe("No song to stop");
             return;

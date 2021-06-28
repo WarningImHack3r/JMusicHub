@@ -103,20 +103,20 @@ public class InterfacesLinker {
 	 * Import to library.
 	 */
 	// Links
-    public void importToLibrary() {
-        try {
-	        var currentFile = csv.openFileFromChooser(filePath);
-            if (currentFile == null) {
-                error("Warning", "No input file found.");
-            } else {
-                filePath = currentFile.getAbsolutePath();
-                int imported = csv.importSavedContentFromFile(currentFile, library);
-                info("Success", "Successfully imported " + imported + " elements");
-            }
-        } catch (IOException | CsvValidationException ex) {
-            error(ex.getMessage());
-        }
-    }
+	public void importToLibrary() {
+		try {
+			var currentFile = csv.openFileFromChooser(filePath);
+			if (currentFile == null) {
+				error("Warning", "No input file found.");
+			} else {
+				filePath = currentFile.getAbsolutePath();
+				int imported = csv.importSavedContentFromFile(currentFile, library);
+				info("Success", "Successfully imported " + imported + " elements");
+			}
+		} catch (IOException | CsvValidationException ex) {
+			error(ex.getMessage());
+		}
+	}
 
 	/**
 	 * Export from library.
@@ -347,8 +347,8 @@ public class InterfacesLinker {
 	 * @return the library
 	 */
 	public Library getLibrary() {
-        return library;
-    }
+		return library;
+	}
 
 	/**
 	 * Info.
@@ -356,8 +356,8 @@ public class InterfacesLinker {
 	 * @param message the message
 	 */
 	// Popups
-    public void info(String message) {
-        info("Info", message);
+	protected void info(String message) {
+		info("Info", message);
     }
 
 	/**
@@ -367,16 +367,16 @@ public class InterfacesLinker {
 	 * @param message the message
 	 */
 	public void info(String title, String message) {
-        JOptionPane.showMessageDialog(null, message, title, JOptionPane.PLAIN_MESSAGE);
-    }
+		JOptionPane.showMessageDialog(null, message, title, JOptionPane.PLAIN_MESSAGE);
+	}
 
 	/**
 	 * Error.
 	 *
 	 * @param message the message
 	 */
-	public void error(String message) {
-        error("Error", message);
+	protected void error(String message) {
+		error("Error", message);
     }
 
 	/**

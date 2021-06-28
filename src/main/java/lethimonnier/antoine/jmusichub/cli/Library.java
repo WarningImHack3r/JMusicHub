@@ -44,85 +44,85 @@ public class Library {
 	 * @param albums the albums
 	 */
 	// ADDITIONAL OPTIONS
-    public static void printAlbumsByReleaseDate(List<Album> albums) {
-        if (albums == null) {
-            log.info("Null albums parameter");
-            return;
-        }
-        albums.sort(Comparator.comparing(Album::getReleaseDate));
-	    var sb = new StringBuilder();
-        for (Album album : albums) {
-	        sb.append(album.getTitle()).append(" (").append(AudioContent.getFormattedDuration(album.getTotalDuration())).append(" - ").append(album.getReleaseDate()).append(")").append(System.lineSeparator());
-        }
-        if (sb.isEmpty()) {
-            log.info("Album list is empty");
-            return;
-        }
-	    log.log(Level.INFO, "Albums by release date:{0}{1}", new Object[] { System.lineSeparator(), sb });
-    }
+	protected static void printAlbumsByReleaseDate(List<Album> albums) {
+		if (albums == null) {
+			log.info("Null albums parameter");
+			return;
+		}
+		albums.sort(Comparator.comparing(Album::getReleaseDate));
+		var sb = new StringBuilder();
+		for (Album album : albums) {
+			sb.append(album.getTitle()).append(" (").append(AudioContent.getFormattedDuration(album.getTotalDuration())).append(" - ").append(album.getReleaseDate()).append(")").append(System.lineSeparator());
+		}
+		if (sb.isEmpty()) {
+			log.info("Album list is empty");
+			return;
+		}
+		log.log(Level.INFO, "Albums by release date:{0}{1}", new Object[] { System.lineSeparator(), sb });
+	}
 
 	/**
 	 * Print albums by genre.
 	 *
 	 * @param albums the albums
 	 */
-	public static void printAlbumsByGenre(List<Album> albums) {
-        if (albums == null) {
-            log.info("Null albums parameter");
-            return;
-        }
+	protected static void printAlbumsByGenre(List<Album> albums) {
+		if (albums == null) {
+			log.info("Null albums parameter");
+			return;
+		}
 		StringBuilder genreSb;
 		var sbToPrint = new StringBuilder("Albums by genre:" + System.lineSeparator());
-        for (Genre genre : Genre.values()) {
-            genreSb = new StringBuilder();
-            for (Album album : albums) {
-                if (album.getGenres() != null && Arrays.asList(album.getGenres()).contains(genre)) {
-	                genreSb.append(album.getTitle()).append(System.lineSeparator());
-                }
-            }
-            if (!genreSb.isEmpty()) {
-	            sbToPrint.append(genre.getName()).append(":").append(System.lineSeparator()).append(genreSb);
-            }
-        }
-        if (sbToPrint.isEmpty()) {
-            log.info("Album list is empty");
-            return;
-        }
-        log.log(Level.INFO, "{0}", sbToPrint);
-    }
+		for (Genre genre : Genre.values()) {
+			genreSb = new StringBuilder();
+			for (Album album : albums) {
+				if (album.getGenres() != null && Arrays.asList(album.getGenres()).contains(genre)) {
+					genreSb.append(album.getTitle()).append(System.lineSeparator());
+				}
+			}
+			if (!genreSb.isEmpty()) {
+				sbToPrint.append(genre.getName()).append(":").append(System.lineSeparator()).append(genreSb);
+			}
+		}
+		if (sbToPrint.isEmpty()) {
+			log.info("Album list is empty");
+			return;
+		}
+		log.log(Level.INFO, "{0}", sbToPrint);
+	}
 
 	/**
 	 * Print playlists alphabetically.
 	 *
 	 * @param playlists the playlists
 	 */
-	public static void printPlaylistsAlphabetically(List<Playlist> playlists) {
-        if (playlists == null) {
-            log.info("Null playlists parameter");
-            return;
-        }
-        playlists.sort(Comparator.comparing(Playlist::getName));
+	protected static void printPlaylistsAlphabetically(List<Playlist> playlists) {
+		if (playlists == null) {
+			log.info("Null playlists parameter");
+			return;
+		}
+		playlists.sort(Comparator.comparing(Playlist::getName));
 		var sb = new StringBuilder();
-        for (Playlist playlist : playlists) {
-	        sb.append(playlists.indexOf(playlist) + 1).append(" - ").append(playlist.getName()).append(" (").append(AudioContent.getFormattedDuration(playlist.getTotalDuration())).append(" - ").append(Utils.getFormattedDate(playlist.getLastModifiedDate())).append(")").append(System.lineSeparator());
-        }
-        if (sb.isEmpty()) {
-            log.info("Playlists list is empty");
-            return;
-        }
+		for (Playlist playlist : playlists) {
+			sb.append(playlists.indexOf(playlist) + 1).append(" - ").append(playlist.getName()).append(" (").append(AudioContent.getFormattedDuration(playlist.getTotalDuration())).append(" - ").append(Utils.getFormattedDate(playlist.getLastModifiedDate())).append(")").append(System.lineSeparator());
+		}
+		if (sb.isEmpty()) {
+			log.info("Playlists list is empty");
+			return;
+		}
 		log.log(Level.INFO, "Playlists sorted alphabetically:{0}", new Object[] { System.lineSeparator() + sb });
-    }
+	}
 
 	/**
 	 * Print audio books by author.
 	 *
 	 * @param audioBooks the audio books
 	 */
-	public static void printAudioBooksByAuthor(List<AudioBook> audioBooks) {
-        if (audioBooks == null) {
-            log.info("Null audiobooks parameter");
-            return;
-        }
+	protected static void printAudioBooksByAuthor(List<AudioBook> audioBooks) {
+		if (audioBooks == null) {
+			log.info("Null audiobooks parameter");
+			return;
+		}
 		audioBooks.sort(Comparator.comparing(AudioBook::getAuthor));
 		var sb = new StringBuilder();
 		for (AudioBook audioBook : audioBooks) {
@@ -140,7 +140,7 @@ public class Library {
 	 *
 	 * @param storedSongs the stored songs
 	 */
-	public static void printAllSongs(@NotNull List<Song> storedSongs) {
+	protected static void printAllSongs(@NotNull List<Song> storedSongs) {
 		var sb = new StringBuilder();
 		for (Song song : storedSongs) {
 			sb.append(song.toString().replace(";", " - ")).append(System.lineSeparator());
@@ -157,7 +157,7 @@ public class Library {
 	 *
 	 * @param storedAudioBooks the stored audio books
 	 */
-	public static void printAllAudioBooks(List<AudioBook> storedAudioBooks) {
+	protected static void printAllAudioBooks(List<AudioBook> storedAudioBooks) {
 		var sb = new StringBuilder();
 		for (AudioBook audioBook : storedAudioBooks) {
 			sb.append(audioBook.toString().replace(";", " - ")).append(System.lineSeparator());
@@ -174,7 +174,7 @@ public class Library {
 	 *
 	 * @param storedAlbums the stored albums
 	 */
-	public static void printAllAlbums(@NotNull List<Album> storedAlbums) {
+	protected static void printAllAlbums(@NotNull List<Album> storedAlbums) {
 		var sb = new StringBuilder();
 		for (Album album : storedAlbums) {
 			sb.append(album.toString().replace(";", " - ")).append(System.lineSeparator());
@@ -191,7 +191,7 @@ public class Library {
 	 *
 	 * @param storedPlaylists the stored playlists
 	 */
-	public static void printAllPlaylists(@NotNull List<Playlist> storedPlaylists) {
+	protected static void printAllPlaylists(@NotNull List<Playlist> storedPlaylists) {
 		var sb = new StringBuilder();
 		for (Playlist playlist : storedPlaylists) {
 			sb.append(playlist.toString().replace(";", " - ")).append(System.lineSeparator());
@@ -232,19 +232,19 @@ public class Library {
 	 * @param playlist the playlist
 	 */
 	public void addToPlaylistsLibrary(Playlist playlist) {
-        if (playlist == null)
-            throw new NullPointerException("Playlist cannot be null.");
-        storedPlaylists.add(playlist);
-    }
+		if (playlist == null)
+			throw new NullPointerException("Playlist cannot be null.");
+		storedPlaylists.add(playlist);
+	}
 
 	/**
 	 * Remove from playlists libary.
 	 *
 	 * @param playlist the playlist
 	 */
-	public void removeFromPlaylistsLibary(Playlist playlist) {
-        if (playlist == null)
-            throw new NullPointerException("Playlist cannot be null.");
+	protected void removeFromPlaylistsLibary(Playlist playlist) {
+		if (playlist == null)
+			throw new NullPointerException("Playlist cannot be null.");
         storedPlaylists.remove(playlist);
     }
 

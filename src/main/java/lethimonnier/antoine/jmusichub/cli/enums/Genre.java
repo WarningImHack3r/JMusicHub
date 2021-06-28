@@ -1,5 +1,6 @@
 package lethimonnier.antoine.jmusichub.cli.enums;
 
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -43,8 +44,9 @@ public enum Genre {
 	 *
 	 * @return the name
 	 */
+	@Contract(pure = true)
 	public String getName() {
-        return name;
+		return name;
 	}
 
 	/**
