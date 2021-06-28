@@ -12,6 +12,9 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
 import java.util.Date;
 
+/**
+ * The type Utils.
+ */
 public class Utils {
 
 	private Utils() {
@@ -37,8 +40,7 @@ public class Utils {
 	@NotNull
 	@Contract("_ -> new")
 	public static Date getDateFromString(String dateToParse) {
-		return java.sql.Date.valueOf(LocalDate.parse(dateToParse,
-				DateTimeFormatter.ofLocalizedDate(FormatStyle.SHORT)));
+		return java.sql.Date.valueOf(LocalDate.parse(dateToParse, DateTimeFormatter.ofLocalizedDate(FormatStyle.SHORT)));
 	}
 
 	/**

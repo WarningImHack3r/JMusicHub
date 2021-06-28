@@ -11,11 +11,15 @@ import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+/**
+ * The type Music manager.
+ */
 public class MusicManager {
 
 	private final Logger logger = MusicLogger.getLogger("output.log");
 	private static final Scanner scanner = MusicHub.scanner;
 	private static final Map<Integer, String> songs = new HashMap<>();
+
 	static {
 		songs.put(0, "Pool.mp3");
 		songs.put(1, "Kalimba.mp3");
@@ -24,11 +28,20 @@ public class MusicManager {
 		songs.put(4, "Leave The Door Open.mp3");
 	}
 
+	/**
+	 * Instantiates a new Music manager.
+	 */
 	public MusicManager() {
 		logger.info("MusicHub - Music Player");
 		startManager();
 	}
 
+	/**
+	 * Gets song at index.
+	 *
+	 * @param index the index
+	 * @return the song at index
+	 */
 	public static String getSongAtIndex(int index) {
 		return songs.get(index);
 	}
@@ -37,9 +50,7 @@ public class MusicManager {
 	@Contract(pure = true)
 	private String getSongsList() {
 		var builder = new StringBuilder();
-		songs.forEach((key, value) -> builder.append(key + 1).append(": ")
-				                              .append(value.replaceAll(".mp3", ""))
-				                              .append(System.lineSeparator()));
+		songs.forEach((key, value) -> builder.append(key + 1).append(": ").append(value.replaceAll(".mp3", "")).append(System.lineSeparator()));
 		return builder.toString();
 	}
 
@@ -50,9 +61,7 @@ public class MusicManager {
 				case 'm' -> {
 					int index;
 					do {
-						logger.log(Level.INFO, "Choose an index to play:{0}{1}", new Object[] {
-								System.lineSeparator(), getSongsList()
-						});
+						logger.log(Level.INFO, "Choose an index to play:{0}{1}", new Object[] { System.lineSeparator(), getSongsList() });
 						index = scanner.nextInt();
 						scanner.nextLine();
 					} while (index < 0 || index > songs.size());
