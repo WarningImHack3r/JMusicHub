@@ -4,9 +4,10 @@ import javazoom.jl.decoder.JavaLayerException;
 import javazoom.jl.player.advanced.AdvancedPlayer;
 import javazoom.jl.player.advanced.PlaybackEvent;
 import javazoom.jl.player.advanced.PlaybackListener;
-import lethimonnier.antoine.jmusichub.cli.interfaces.AudioContent;
+import lethimonnier.antoine.jmusichub.cli.Utils;
 import lethimonnier.antoine.jmusichub.cli.logging.MusicLogger;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.util.logging.Logger;
@@ -15,7 +16,7 @@ public class MusicPlayer {
 
     private final Logger logger = MusicLogger.getLogger("output.log");
     private static MusicPlayer instance;
-    private AudioContent currentSong;
+    private File currentSong;
     private Thread playingThread;
     private AdvancedPlayer player;
 
@@ -26,27 +27,32 @@ public class MusicPlayer {
         return instance;
     }
 
-    public MusicPlayer setPlayingSong(AudioContent audioContent) {
-        currentSong = audioContent;
+    public MusicPlayer setPlayingSongIndex(int index) {
+        currentSong = Utils.getRootPath().resolve("io/musics/" + MusicManager.getSongAtIndex(index - 1)).toFile();
         return this;
     }
 
+    public boolean isPlaying() {
+        return playingThread != null && playingThread.isAlive();
+    }
+
     public void play() {
-        /*if (currentSong == null) {
+        if (currentSong == null) {
             logger.severe("No song to play");
             return;
-        }*/
+        }
         try {
-            player = new AdvancedPlayer(new FileInputStream("sample.mp3"));
+            player = new AdvancedPlayer(new FileInputStream(currentSong));
             player.setPlayBackListener(new PlaybackListener() {
+
                 @Override
                 public void playbackStarted(PlaybackEvent evt) {
-                    logger.info("started");
+                    logger.info("▶ Reading music \"" + currentSong.getName().replace(".mp3", "") + "\"");
                 }
 
                 @Override
                 public void playbackFinished(PlaybackEvent evt) {
-                    logger.info("finished");
+                    logger.info("⏹ Music playback finished");
                 }
             });
             playingThread = new Thread(() -> {
@@ -57,19 +63,17 @@ public class MusicPlayer {
                 }
             });
             playingThread.start();
-            logger.info("Player: Started");
         } catch (FileNotFoundException | JavaLayerException e) {
             e.printStackTrace();
         }
     }
 
     public void stop() {
-        /*if (currentSong == null) {
+        if (currentSong == null) {
             logger.severe("No song to stop");
             return;
-        }*/
+        }
         if (playingThread.isAlive())
             player.stop();
-        logger.info("Player: Stopped");
     }
 }
