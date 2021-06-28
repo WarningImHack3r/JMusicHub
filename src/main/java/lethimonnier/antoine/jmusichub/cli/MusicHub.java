@@ -11,7 +11,7 @@ import lethimonnier.antoine.jmusichub.cli.enums.Genre;
 import lethimonnier.antoine.jmusichub.cli.enums.Language;
 import lethimonnier.antoine.jmusichub.cli.interfaces.AudioContent;
 import lethimonnier.antoine.jmusichub.cli.logging.MusicLogger;
-import lethimonnier.antoine.jmusichub.cli.player.MusicPlayer;
+import lethimonnier.antoine.jmusichub.cli.player.MusicManager;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
@@ -30,27 +30,29 @@ import java.util.logging.Logger;
  */
 public final class MusicHub {
 
+    // Static final
+    public static final Scanner scanner = new Scanner(System.in);
+
     // Final
-    private final Logger log = MusicLogger.getLogger("output.log");
-    private final Scanner sc = new Scanner(System.in);
+    private final Logger logger = MusicLogger.getLogger("output.log");
     private final Library library = new Library();
-    private final ConsoleParser console = new ConsoleParser();
-    private final CSVManager csv = new CSVManager();
+    private final ConsoleParser parser = new ConsoleParser();
+    private final CSVManager csvManager = new CSVManager();
 
     // Other variables
     private String filePath;
 
     private MusicHub() {
-        log.info("Welcome to the MusicHub!");
+        logger.info("Welcome to the MusicHub!");
         try {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-            var currentFile = csv.openFileFromChooser(null);
+            var currentFile = csvManager.openFileFromChooser(null);
             if (currentFile == null) {
-                log.warning("No input file found.");
+                logger.warning("No input file found.");
             } else {
                 filePath = currentFile.getAbsolutePath();
-                int imported = csv.importSavedContentFromFile(currentFile, library);
-                log.log(Level.INFO, "Successfully imported {0} elements", imported);
+                int imported = csvManager.importSavedContentFromFile(currentFile, library);
+                logger.log(Level.INFO, "Successfully imported {0} elements", imported);
             }
         } catch (IOException | CsvValidationException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException | ClassNotFoundException e) {
             e.printStackTrace();
@@ -88,137 +90,134 @@ public final class MusicHub {
 
     private void startCli() throws IOException, CsvValidationException {
         while (true) {
-            log.info("What do you want to do? (Press 'h' to show help)");
-            switch (sc.nextLine().toLowerCase().charAt(0)) {
-                case 'c':
+            logger.info("What do you want to do? (Press 'h' to show help)");
+            switch (scanner.nextLine().toLowerCase().charAt(0)) {
+                case 'c' -> {
                     // add a new song
-                    log.info("New song adding.");
+                    logger.info("New song adding.");
                     createNewSongFromUserInput();
-                    break;
+                }
 
-                case 'a':
+                case 'a' -> {
                     // creates a new album
-                    log.info("Album creation.");
+                    logger.info("Album creation.");
                     var createdAlbum = createBlankAlbumFromUserInput();
-                    log.log(Level.INFO, "Add songs to newly created album {0}? [yes/no]", createdAlbum.getTitle());
-                    if (sc.nextLine().contains("y"))
+                    logger.log(Level.INFO, "Add songs to newly created album {0}? [yes/no]", createdAlbum.getTitle());
+                    if (scanner.nextLine().contains("y"))
                         addSongToAlbum(createdAlbum);
-                    break;
+                }
 
-                case '+':
+                case '+' -> {
                     // adds (an) existing song(s) to an album
-                    log.info("Song add.");
+                    logger.info("Song add.");
                     addSongToAlbum(null);
-                    break;
+                }
 
-                case 'l':
+                case 'l' -> {
                     // creates a new audio book
-                    log.info("Audio book creation.");
+                    logger.info("Audio book creation.");
                     createAudioBookFromUserInput();
-                    break;
+                }
 
-                case 'p':
+                case 'p' -> {
                     // creates a new playlist from existing songs/audio books
-                    log.info("Playlist creation.");
+                    logger.info("Playlist creation.");
                     createPlaylistFromUserInput();
-                    break;
+                }
 
-                case '-':
+                case '-' -> {
                     // deletes a playlist
-                    log.info("Playlist deletion.");
+                    logger.info("Playlist deletion.");
                     deletePlaylistFromUserInput();
-                    break;
+                }
 
-                case 'i':
+                case 'i' -> {
                     // imports from a csv file
-                    var currentFile = csv.openFileFromChooser(filePath);
+                    var currentFile = csvManager.openFileFromChooser(filePath);
                     if (currentFile == null) {
-                        log.warning("No input file found.");
+                        logger.warning("No input file found.");
                         break;
                     }
                     filePath = currentFile.getAbsolutePath();
-                    int imported = csv.importSavedContentFromFile(currentFile, library);
-                    log.log(Level.INFO, "Successfully imported {0} elements", imported);
-                    break;
+                    int imported = csvManager.importSavedContentFromFile(currentFile, library);
+                    logger.log(Level.INFO, "Successfully imported {0} elements", imported);
+                }
 
-                case 's':
+                case 's' -> {
                     // saves everything in a csv file
-                    log.info("Saving library.");
-                    csv.saveLibaryToFile(library, filePath);
-                    break;
+                    logger.info("Saving library.");
+                    csvManager.saveLibaryToFile(library, filePath);
+                }
 
-                case 't':
+                case 't' -> {
                     // additional option 1: calls 4 print functions of Library
-                    log.info("Printing stored albums by genre");
+                    logger.info("Printing stored albums by genre");
                     Library.printAlbumsByGenre(library.getStoredAlbums());
-                    log.info("Printing stored albums by release date");
+                    logger.info("Printing stored albums by release date");
                     Library.printAlbumsByReleaseDate(library.getStoredAlbums());
-                    log.info("Printing stored audiobooks by author");
+                    logger.info("Printing stored audiobooks by author");
                     Library.printAudioBooksByAuthor(library.getStoredAudioBooks());
-                    log.info("Printing stored playlists alphabetically");
+                    logger.info("Printing stored playlists alphabetically");
                     Library.printPlaylistsAlphabetically(library.getStoredPlaylists());
-                    break;
+                }
 
-                case 'o':
+                case 'o' -> {
                     // additional option 2: shows the content of all the Library
-                    log.info("Printing stored Songs");
+                    logger.info("Printing stored Songs");
                     Library.printAllSongs(library.getStoredSongs());
-                    log.info("Printing stored AudioBooks");
+                    logger.info("Printing stored AudioBooks");
                     Library.printAllAudioBooks(library.getStoredAudioBooks());
-                    log.info("Printing stored Albums");
+                    logger.info("Printing stored Albums");
                     Library.printAllAlbums(library.getStoredAlbums());
-                    log.info("Printing stored Playlists");
+                    logger.info("Printing stored Playlists");
                     Library.printAllPlaylists(library.getStoredPlaylists());
-                    break;
+                }
 
-                case 'x':
+                case 'x' -> {
                     // additional option 3: clears the whole library
-                    log.info("Are you sure to want to clear the library? [yes/no] ");
-                    if (!sc.nextLine().contains("y")) {
-                        log.info("Cancelling.");
+                    logger.info("Are you sure to want to clear the library? [yes/no] ");
+                    if (!scanner.nextLine().contains("y")) {
+                        logger.info("Cancelling.");
                         break;
                     }
                     library.getStoredAlbums().clear();
                     library.getStoredAudioBooks().clear();
                     library.getStoredPlaylists().clear();
                     library.getStoredSongs().clear();
-                    log.info("Library cleaned successfully");
-                    break;
+                    logger.info("Library cleaned successfully");
+                }
 
-                case 'y':
-                    log.info("Starting Music Player");
-                    var player = MusicPlayer.getPlayer().setPlayingSong(null);
-                    player.play();
-                    break;
+                case 'm' -> {
+                    logger.info("Starting Music Player");
+                    new MusicManager();
+                }
 
-                case 'h':
-                    // shows help
-                    log.info("""
-                            MusicHub help - available options
-                            c: add a song from user input
-                            a: creates an album without songs
-                            +: add (an) existing song(s) to an album
-                            l: creates a new audiobook
-                            p: creates a playlist with existing audio contents
-                            -: deletes a playlist
-                            i: imports a csv file into the database
-                            s: exports the whole database
-                            t: additional option that shows stats of the database
-                            o: additional option that shows all the content of the library
-                            x: additional option that clears the library
-                            y: starts the music player
-                            h: shows this help menu
-                            q: quit the application
-                            """);
-                    break;
-
-                case 'q':
-                    log.info("Bye!");
-                    sc.close();
+                case 'h' ->
+                        // shows help
+                        logger.info("""
+                                MusicHub help - available options
+                                c: add a song from user input
+                                a: creates an album without songs
+                                +: add (an) existing song(s) to an album
+                                l: creates a new audiobook
+                                p: creates a playlist with existing audio contents
+                                -: deletes a playlist
+                                i: imports a csv file into the database
+                                s: exports the whole database
+                                t: additional option that shows stats of the database
+                                o: additional option that shows all the content of the library
+                                x: additional option that clears the library
+                                m: starts the music player
+                                h: shows this help menu
+                                q: quit the application
+                                """);
+                case 'q' -> {
+                    logger.info("Bye!");
+                    scanner.close();
                     return;
+                }
 
-                default:
-                    break;
+                default -> logger.info("Unknown option");
             }
         }
     }
@@ -228,16 +227,16 @@ public final class MusicHub {
      * <code>Library</code>.
      */
     private void createNewSongFromUserInput() {
-        log.info("Song title?");
-        String songTitle = sc.nextLine();
-        log.info("Song author(s)? (separated with commas)");
-        String[] songAuthors = sc.nextLine().split(",");
-        log.info("Song duration? (in seconds)");
-        var songDuration = sc.nextInt();
-        sc.nextLine();
-        log.log(Level.INFO, "Song genre? {0}",
+        logger.info("Song title?");
+        String songTitle = scanner.nextLine();
+        logger.info("Song author(s)? (separated with commas)");
+        String[] songAuthors = scanner.nextLine().split(",");
+        logger.info("Song duration? (in seconds)");
+        var songDuration = scanner.nextInt();
+        scanner.nextLine();
+        logger.log(Level.INFO, "Song genre? {0}",
                 Arrays.toString(Genre.getStringValues()).replace("[", "(").replace("]", ")"));
-        String songGenre = sc.nextLine();
+        String songGenre = scanner.nextLine();
         for (Genre genreItem : Genre.values()) {
             if (genreItem.getName().toLowerCase().contains(songGenre.toLowerCase())) {
                 library.addToSongsLibrary(new Song(songTitle, songAuthors, songDuration, genreItem));
@@ -254,18 +253,18 @@ public final class MusicHub {
      */
     @NotNull
     private Album createBlankAlbumFromUserInput() {
-        log.info("Album title?");
-        String albumTitle = sc.nextLine();
-        log.info("Album author?");
-        String albumAuthor = sc.nextLine();
-        log.info("Album creation date?");
+        logger.info("Album title?");
+        String albumTitle = scanner.nextLine();
+        logger.info("Album author?");
+        String albumAuthor = scanner.nextLine();
+        logger.info("Album creation date?");
         var toPrint = new String[] { "Year (yyyy)", "Month (MM)", "Day (dd)" };
         var fields = new int[] { 0 /* year */, 0 /* month */, 0 /* day */ };
         for (var i = 0; i < fields.length; i++) {
-            log.log(Level.INFO, "{0}: ", toPrint[i]);
-            fields[i] = sc.nextInt();
+            logger.log(Level.INFO, "{0}: ", toPrint[i]);
+            fields[i] = scanner.nextInt();
         }
-        sc.nextLine();
+        scanner.nextLine();
         var c = Calendar.getInstance();
         c.set(fields[0], fields[1] - 1 /* Calendar.JANUARY = 0 */, fields[2]);
         var albumParsedDate = c.getTime();
@@ -291,14 +290,14 @@ public final class MusicHub {
             for (Album a : library.getStoredAlbums()) {
                 albumSb.append(library.getStoredAlbums().indexOf(a) + 1).append(") ").append(a.getTitle()).append(" - ").append(a.getAuthor()).append(System.lineSeparator());
             }
-            log.log(Level.INFO, "Choose your album to add songs in:{0}{1}", new Object[] { System.lineSeparator(), albumSb});
-            String line = sc.nextLine();
+            logger.log(Level.INFO, "Choose your album to add songs in:{0}{1}", new Object[] { System.lineSeparator(), albumSb});
+            String line = scanner.nextLine();
             try {
                 // Number input
                 albumToAddIn = library.getStoredAlbums().get(Integer.parseInt(line) - 1);
             } catch (NumberFormatException e) {
                 // Text input
-                var functionResult = console.getAlbumFromString(line, library);
+                var functionResult = parser.getAlbumFromString(line, library);
                 if (functionResult == null)
                     return;
                 albumToAddIn = functionResult;
@@ -311,18 +310,18 @@ public final class MusicHub {
             for (Song s : library.getStoredSongs()) {
                 songSb.append(++i).append(" - ").append(s.getTitle()).append(" (").append(s.getDuration() / 60).append(":").append(String.format("%02d", s.getDuration() % 60)).append(")").append(System.lineSeparator());
             }
-            log.log(Level.INFO, "Choose the song to add in the album \"{0}\":{1}{2}",
+            logger.log(Level.INFO, "Choose the song to add in the album \"{0}\":{1}{2}",
                     new Object[] { albumToAddIn.getTitle(), System.lineSeparator(), songSb });
-            String songLine = sc.nextLine();
+            String songLine = scanner.nextLine();
             try {
                 // Number input
                 albumToAddIn.addSong(library.getStoredSongs().get(Integer.parseInt(songLine) - 1));
             } catch (NumberFormatException e) {
                 // Text input
-                albumToAddIn.addSong(console.getSongFromString(songLine, library));
+                albumToAddIn.addSong(parser.getSongFromString(songLine, library));
             }
-            log.info("Add another song? [yes/no]");
-        } while (sc.nextLine().contains("y"));
+            logger.info("Add another song? [yes/no]");
+        } while (scanner.nextLine().contains("y"));
     }
 
     /**
@@ -343,7 +342,7 @@ public final class MusicHub {
                 return library.getStoredSongs().get(Integer.parseInt(input) - 1);
             } catch (NumberFormatException e) {
                 // Text input
-                return console.getSongFromString(input, library);
+                return parser.getSongFromString(input, library);
             }
         } else if (listToParse.equals("audiobook")) {
             try {
@@ -351,7 +350,7 @@ public final class MusicHub {
                 return library.getStoredAudioBooks().get(Integer.parseInt(input) - 1);
             } catch (NumberFormatException e) {
                 // Text input
-                return console.getAudioBookFromString(input, library);
+                return parser.getAudioBookFromString(input, library);
             }
         }
         return null;
@@ -361,17 +360,17 @@ public final class MusicHub {
      * Creates an <code>AudioBook</code> from user inputs in console, and adds it to the <code>Library</code>.
      */
     private void createAudioBookFromUserInput() {
-        log.info("Audiobook title?");
-        String audiobookTitle = sc.nextLine();
-        log.info("Audiobook author?");
-        String audiobookAuthor = sc.nextLine();
-        log.info("Audiobook duration? (in seconds)");
-        var audiobookDuration = sc.nextInt();
-        sc.nextLine();
-        log.log(Level.INFO, "Audiobook language? {0}",
+        logger.info("Audiobook title?");
+        String audiobookTitle = scanner.nextLine();
+        logger.info("Audiobook author?");
+        String audiobookAuthor = scanner.nextLine();
+        logger.info("Audiobook duration? (in seconds)");
+        var audiobookDuration = scanner.nextInt();
+        scanner.nextLine();
+        logger.log(Level.INFO, "Audiobook language? {0}",
                 Arrays.toString(Language.getStringValues()).replace("[", "(").replace("]", ")"));
         Language language = null;
-        String audiobookLanguage = sc.nextLine();
+        String audiobookLanguage = scanner.nextLine();
         for (Language languageItem : Language.values()) {
             if (languageItem.getName().toLowerCase().contains(audiobookLanguage.toLowerCase())) {
                 language = languageItem;
@@ -379,11 +378,11 @@ public final class MusicHub {
             }
         }
         if (language == null)
-            log.warning("Error: language not found. Please try again.");
-        log.log(Level.INFO, "Audiobook category? {0}",
+            logger.warning("Error: language not found. Please try again.");
+        logger.log(Level.INFO, "Audiobook category? {0}",
                 Arrays.toString(Category.getStringValues()).replace("[", "(").replace("]", ")"));
         Category category = null;
-        String audiobookCategory = sc.nextLine();
+        String audiobookCategory = scanner.nextLine();
         for (Category categoryItem : Category.values()) {
             if (categoryItem.getName().toLowerCase().contains(audiobookCategory.toLowerCase())) {
                 category = categoryItem;
@@ -391,7 +390,7 @@ public final class MusicHub {
             }
         }
         if (category == null)
-            log.warning("Error: category not found. Please try again.");
+            logger.warning("Error: category not found. Please try again.");
         library.addToAudioBooksLibrary(
                 new AudioBook(audiobookTitle, audiobookAuthor, audiobookDuration, language, category));
     }
@@ -403,37 +402,37 @@ public final class MusicHub {
      */
     private void createPlaylistFromUserInput() {
         // From existing sources
-        log.info("Playlist title?");
-        String playlistTitle = sc.nextLine();
+        logger.info("Playlist title?");
+        String playlistTitle = scanner.nextLine();
         List<AudioContent> toAddIn = new ArrayList<>();
         do {
             String inputContent = null;
-            log.info("Which type of content to add? [song/audiobook]");
-            String contentType = sc.nextLine();
+            logger.info("Which type of content to add? [song/audiobook]");
+            String contentType = scanner.nextLine();
             if (contentType.toLowerCase().startsWith("a") || contentType.toLowerCase().startsWith("b")) {
                 var audiobookSb = new StringBuilder();
                 for (AudioBook ab : library.getStoredAudioBooks()) {
                     audiobookSb.append(library.getStoredAudioBooks().indexOf(ab) + 1).append(") ").append(ab.getAuthor()).append(" - ").append(ab.getTitle()).append(System.lineSeparator());
                 }
-                log.log(Level.INFO, "Which audiobook to add?{0}{1}", new Object[] { System.lineSeparator(),
+                logger.log(Level.INFO, "Which audiobook to add?{0}{1}", new Object[] { System.lineSeparator(),
                         audiobookSb });
-                inputContent = sc.nextLine();
+                inputContent = scanner.nextLine();
                 contentType = "audiobook";
             } else if (contentType.toLowerCase().startsWith("s")) {
                 var songSb = new StringBuilder();
                 for (Song s : library.getStoredSongs()) {
                     songSb.append(library.getStoredSongs().indexOf(s) + 1).append(" - ").append(s.getTitle()).append(System.lineSeparator());
                 }
-                log.log(Level.INFO, "Which song to add?{0}{1}", new Object[] { System.lineSeparator(), songSb });
-                inputContent = sc.nextLine();
+                logger.log(Level.INFO, "Which song to add?{0}{1}", new Object[] { System.lineSeparator(), songSb });
+                inputContent = scanner.nextLine();
                 contentType = "song";
             } else {
-                log.warning("Error parsing content. Please try again.");
+                logger.warning("Error parsing content. Please try again.");
             }
             if (inputContent != null)
                 toAddIn.add(getAudioContentFromInput(inputContent, contentType));
-            log.info("Add another content? [yes/no]");
-        } while (sc.nextLine().contains("y"));
+            logger.info("Add another content? [yes/no]");
+        } while (scanner.nextLine().contains("y"));
         library.addToPlaylistsLibrary(new Playlist(playlistTitle, toAddIn));
     }
 
@@ -446,25 +445,25 @@ public final class MusicHub {
         for (Playlist playlist : library.getStoredPlaylists()) {
             sb.append(library.getStoredPlaylists().indexOf(playlist) + 1).append(") ").append(playlist.getName()).append(System.lineSeparator());
         }
-        log.log(Level.INFO, "Which playlist do you want to delete?{0}{1}", new Object[] { System.lineSeparator(), sb });
-        String albumToParse = sc.nextLine();
+        logger.log(Level.INFO, "Which playlist do you want to delete?{0}{1}", new Object[] { System.lineSeparator(), sb });
+        String albumToParse = scanner.nextLine();
         try {
             library.removeFromPlaylistsLibary(library.getStoredPlaylists().get(Integer.parseInt(albumToParse) - 1));
         } catch (Exception e) {
             List<Playlist> libraryPlaylists = library.getStoredPlaylists();
             for (Playlist ab : libraryPlaylists) {
                 if (ab.getName().toLowerCase().contains(albumToParse.toLowerCase())) {
-                    log.log(Level.INFO, "Remove the playlist \"{0}\"? [yes/no]", ab.getName());
-                    if (sc.nextLine().toLowerCase().contains("y")) {
-                        log.log(Level.INFO, "Playlist removed: {0}", ab.getName());
+                    logger.log(Level.INFO, "Remove the playlist \"{0}\"? [yes/no]", ab.getName());
+                    if (scanner.nextLine().toLowerCase().contains("y")) {
+                        logger.log(Level.INFO, "Playlist removed: {0}", ab.getName());
                         library.removeFromPlaylistsLibary(ab);
                     } else {
-                        log.info("No playlist deleted, aborting.");
+                        logger.info("No playlist deleted, aborting.");
                     }
                     break;
                 }
                 if (libraryPlaylists.indexOf(ab) == libraryPlaylists.size() - 1) {
-                    log.warning("No playlist match found. Please try again.");
+                    logger.warning("No playlist match found. Please try again.");
                 }
             }
         }
