@@ -1,0 +1,443 @@
+@startuml
+
+title __JMUSICHUB's Class Diagram__\n
+
+  namespace lethimonnier.antoine.jmusichub.cli {
+    class lethimonnier.antoine.jmusichub.cli.CSVManager {
+            - log : Logger
+            + importSavedContentFromFile()
+            + openFileFromChooser()
+            + saveLibaryToFile()
+        }
+  }
+
+
+  namespace lethimonnier.antoine.jmusichub.cli {
+    class lethimonnier.antoine.jmusichub.cli.Library {
+            {static} - log : Logger
+            - storedAlbums : ArrayList<Album>
+            - storedAudioBooks : ArrayList<AudioBook>
+            - storedPlaylists : ArrayList<Playlist>
+            - storedSongs : ArrayList<Song>
+            + Library()
+            + addToAlbumsLibrary()
+            + addToAudioBooksLibrary()
+            + addToPlaylistsLibrary()
+            + addToSongsLibrary()
+            + getStoredAlbums()
+            + getStoredAudioBooks()
+            + getStoredPlaylists()
+            + getStoredSongs()
+            {static} # printAlbumsByGenre()
+            {static} # printAlbumsByReleaseDate()
+            {static} # printAllAlbums()
+            {static} # printAllAudioBooks()
+            {static} # printAllPlaylists()
+            {static} # printAllSongs()
+            {static} # printAudioBooksByAuthor()
+            {static} # printPlaylistsAlphabetically()
+            # removeFromPlaylistsLibary()
+        }
+  }
+
+
+  namespace lethimonnier.antoine.jmusichub.cli {
+    class lethimonnier.antoine.jmusichub.cli.MusicHub {
+            {static} + scanner : Scanner
+            - filePath : String
+            - logger : Logger
+            {static} + main()
+            - MusicHub()
+            - addSongToAlbum()
+            - createAudioBookFromUserInput()
+            - createBlankAlbumFromUserInput()
+            - createNewSongFromUserInput()
+            - createPlaylistFromUserInput()
+            - deletePlaylistFromUserInput()
+            - getAudioContentFromInput()
+            - startCli()
+        }
+  }
+
+
+  namespace lethimonnier.antoine.jmusichub.cli {
+    class lethimonnier.antoine.jmusichub.cli.Utils {
+            {static} + getDateFromString()
+            {static} + getFormattedDate()
+            {static} + getRootPath()
+            - Utils()
+        }
+  }
+
+
+  namespace lethimonnier.antoine.jmusichub.cli {
+    namespace classes.music {
+      class lethimonnier.antoine.jmusichub.cli.classes.music.Album {
+                - author : String
+                - genres : Genre[]
+                - id : UUID
+                - releaseDate : Date
+                {static} - serialVersionUID : long
+                - songs : Song[]
+                - title : String
+                - totalDuration : long
+                + Album()
+                + addSong()
+                + getAuthor()
+                + getGenres()
+                + getId()
+                + getReleaseDate()
+                + getSongs()
+                + getTitle()
+                + getTotalDuration()
+                + toString()
+                # setSongs()
+            }
+    }
+  }
+
+
+  namespace lethimonnier.antoine.jmusichub.cli {
+    namespace classes.music {
+      class lethimonnier.antoine.jmusichub.cli.classes.music.AudioBook {
+                {static} - serialVersionUID : long
+                + AudioBook()
+                + getAuthor()
+                + toString()
+            }
+    }
+  }
+
+
+  namespace lethimonnier.antoine.jmusichub.cli {
+    namespace classes.music {
+      class lethimonnier.antoine.jmusichub.cli.classes.music.Playlist {
+                - content : List<AudioContent>
+                - creationDate : Date
+                - id : UUID
+                - lastModifiedDate : Date
+                - name : String
+                {static} - serialVersionUID : long
+                - totalDuration : long
+                + Playlist()
+                + getContent()
+                + getLastModifiedDate()
+                + getName()
+                + getTotalDuration()
+                + toString()
+                # getCreationDate()
+                # getId()
+                # setContent()
+                # setName()
+            }
+    }
+  }
+
+
+  namespace lethimonnier.antoine.jmusichub.cli {
+    namespace classes.music {
+      class lethimonnier.antoine.jmusichub.cli.classes.music.Song {
+                {static} - serialVersionUID : long
+                + Song()
+                + toString()
+                # getGenre()
+            }
+    }
+  }
+
+
+  namespace lethimonnier.antoine.jmusichub.cli {
+    namespace classes.parsing {
+      class lethimonnier.antoine.jmusichub.cli.classes.parsing.CSVParser {
+                ~ log : Logger
+                + getAlbumFromString()
+                + getAudioBookFromString()
+                + getPlaylistFromString()
+                + getSongFromString()
+                - isSong()
+            }
+    }
+  }
+
+
+  namespace lethimonnier.antoine.jmusichub.cli {
+    namespace classes.parsing {
+      class lethimonnier.antoine.jmusichub.cli.classes.parsing.ConsoleParser {
+                ~ log : Logger
+                + getAlbumFromString()
+                + getAudioBookFromString()
+                + getPlaylistFromString()
+                + getSongFromString()
+            }
+    }
+  }
+
+
+  namespace lethimonnier.antoine.jmusichub.cli {
+    namespace enums {
+      enum Category {
+              DOCUMENTARY
+              NOVEL
+              SPEECH
+              THEATER
+              YOUTH
+              name
+            }
+    }
+  }
+
+
+  namespace lethimonnier.antoine.jmusichub.cli {
+    namespace enums {
+      enum Genre {
+              CLASSICAL
+              HIPHOP
+              JAZZ
+              POP
+              RAP
+              ROCK
+              name
+            }
+    }
+  }
+
+
+  namespace lethimonnier.antoine.jmusichub.cli {
+    namespace enums {
+      enum Language {
+              DEUTSCH
+              ENGLISH
+              FRENCH
+              ITALIAN
+              SPANISH
+              name
+            }
+    }
+  }
+
+
+  namespace lethimonnier.antoine.jmusichub.cli {
+    namespace interfaces {
+      abstract class lethimonnier.antoine.jmusichub.cli.interfaces.AudioContent {
+                - authors : String[]
+                - duration : int
+                - id : UUID
+                {static} - serialVersionUID : long
+                - title : String
+                + getAuthors()
+                + getDuration()
+                {static} + getFormattedDuration()
+                + getTitle()
+                # AudioContent()
+                # setAuthors()
+                # setDuration()
+                # setTitle()
+            }
+    }
+  }
+
+
+  namespace lethimonnier.antoine.jmusichub.cli {
+    namespace interfaces {
+      interface lethimonnier.antoine.jmusichub.cli.interfaces.Parser {
+                {abstract} + getAlbumFromString()
+                {abstract} + getAudioBookFromString()
+                {abstract} + getPlaylistFromString()
+                {abstract} + getSongFromString()
+            }
+    }
+  }
+
+
+  namespace lethimonnier.antoine.jmusichub.cli {
+    namespace logging {
+      class lethimonnier.antoine.jmusichub.cli.logging.MusicLogger {
+                - casualLogger : Logger
+                - path : String
+                + fine()
+                + fine()
+                {static} + getLogger()
+                + info()
+                + info()
+                + log()
+                + log()
+                + log()
+                + severe()
+                + severe()
+                + warning()
+                + warning()
+                - MusicLogger()
+                - logToFile()
+            }
+    }
+  }
+
+
+  namespace lethimonnier.antoine.jmusichub.cli {
+      namespace player {
+        class lethimonnier.antoine.jmusichub.cli.player.MusicManager {
+            - logger : Logger
+            {static} - scanner : Scanner
+            {static} - songs : Map<Integer, String>
+            + MusicManager()
+            {static} # getSongAtIndex()
+            - getSongsList()
+            - startManager()
+        }
+      }
+    }
+
+
+    namespace lethimonnier.antoine.jmusichub.cli {
+      namespace player {
+        class lethimonnier.antoine.jmusichub.cli.player.MusicPlayer {
+            - currentSong : File
+            {static} - instance : MusicPlayer
+            - logger : Logger
+            - player : AdvancedPlayer
+            - playingThread : Thread
+            {static} # getPlayer()
+            # isPlaying()
+            # play()
+            # setPlayingSongIndex()
+            # stop()
+        }
+      }
+    }
+
+
+  namespace lethimonnier.antoine.jmusichub.gui {
+    class lethimonnier.antoine.jmusichub.gui.MusicHubGUI {
+            {static} - serialVersionUID : long
+            {static} + main()
+            - MusicHubGUI()
+            - changeLook()
+            - initLayout()
+            - setWindowIcon()
+        }
+  }
+
+
+  namespace lethimonnier.antoine.jmusichub.gui {
+    namespace backend {
+      class lethimonnier.antoine.jmusichub.gui.backend.InterfacesLinker {
+                - baos : ByteArrayOutputStream
+                - filePath : String
+                {static} - singleton : InterfacesLinker
+                + error()
+                + exportFromLibrary()
+                {static} + getInstance()
+                + getLibrary()
+                + getLibraryContentForType()
+                + importToLibrary()
+                + info()
+                # error()
+                # info()
+                - InterfacesLinker()
+                - getAlbums()
+                - getAudioBooks()
+                - getPlaylists()
+                - getSongs()
+                - startLogCapture()
+                - stopLogCapture()
+            }
+    }
+  }
+
+
+  namespace lethimonnier.antoine.jmusichub.gui {
+    namespace frontend {
+          class lethimonnier.antoine.jmusichub.gui.frontend.ComponentsInitializer {
+              {static} - ADD_LABEL : String
+              {static} - DEF_COMBO_BOX_DIM : Dimension
+              {static} - REMOVE_LABEL : String
+              {static} - SAVE_LABEL : String
+              {static} - VIEW_LABEL : String
+              - albumActionsPane : JTabbedPane
+              - audioActionsPane : JTabbedPane
+              - playActionsPane : JTabbedPane
+              - songActionsPane : JTabbedPane
+              + error()
+              + initComponents()
+              + initMenuBar()
+              # info()
+          }
+        }
+  }
+
+
+  namespace lethimonnier.antoine.jmusichub.gui {
+    namespace frontend {
+      class lethimonnier.antoine.jmusichub.gui.frontend.DynamicGraphics {
+                ~ addContent : ActionListener
+                {static} - DEF_COMBO_BOX_DIM : Dimension
+                {static} - DEF_TEXT_FIELD_DIM : Dimension
+                - addButtonCenterAlbum : JPanel
+                - addButtonCenterAudio : JPanel
+                - addButtonCenterPlaylist : JPanel
+                - addButtonCenterSong : JPanel
+                - albumAddPanel : JPanel
+                - audioAddPanel : JPanel
+                - playlistAddPanel : JPanel
+                - songAddPanel : JPanel
+                - theField : Field
+                # addElementToPanel()
+                # addPanelForType()
+                # addToLibraryFromComponents()
+                # getAddButtonCenterAlbum()
+                # getAddButtonCenterAudio()
+                # getAddButtonCenterPlaylist()
+                # getAddButtonCenterSong()
+                # getAlbumAddPanel()
+                # getAudioAddPanel()
+                # getPlaylistAddPanel()
+                # getSongAddPanel()
+                # refreshTables()
+                # removePanelForType()
+                # viewPanelForType()
+                - formatTable()
+                - getTableModelForType()
+                - manageFieldForPanel()
+                - toFirstLetterCap()
+            }
+    }
+  }
+
+
+  namespace lethimonnier.antoine.jmusichub.gui {
+    namespace frontend {
+      class lethimonnier.antoine.jmusichub.gui.frontend.FieldFocusListener {
+                - fieldName : String
+                + fieldName()
+                + focusGained()
+                + focusLost()
+                ~ FieldFocusListener()
+            }
+    }
+  }
+
+
+  lethimonnier.antoine.jmusichub.cli.CSVManager o-- lethimonnier.antoine.jmusichub.cli.classes.parsing.CSVParser : csv
+  lethimonnier.antoine.jmusichub.cli.MusicHub o-- lethimonnier.antoine.jmusichub.cli.CSVManager : csvManager
+  lethimonnier.antoine.jmusichub.cli.MusicHub o-- lethimonnier.antoine.jmusichub.cli.Library : library
+  lethimonnier.antoine.jmusichub.cli.MusicHub o-- lethimonnier.antoine.jmusichub.cli.classes.parsing.ConsoleParser : parser
+  lethimonnier.antoine.jmusichub.cli.classes.music.Album .up.|> java.io.Serializable
+  lethimonnier.antoine.jmusichub.cli.classes.music.AudioBook -up-|> lethimonnier.antoine.jmusichub.cli.interfaces.AudioContent
+  lethimonnier.antoine.jmusichub.cli.classes.music.AudioBook o-- lethimonnier.antoine.jmusichub.cli.enums.Category : category
+  lethimonnier.antoine.jmusichub.cli.classes.music.AudioBook o-- lethimonnier.antoine.jmusichub.cli.enums.Language : language
+  lethimonnier.antoine.jmusichub.cli.classes.music.Playlist .up.|> java.io.Serializable
+  lethimonnier.antoine.jmusichub.cli.classes.music.Song -up-|> lethimonnier.antoine.jmusichub.cli.interfaces.AudioContent
+  lethimonnier.antoine.jmusichub.cli.classes.music.Song o-- lethimonnier.antoine.jmusichub.cli.enums.Genre : genre
+  lethimonnier.antoine.jmusichub.cli.classes.parsing.CSVParser .up.|> lethimonnier.antoine.jmusichub.cli.interfaces.Parser
+  lethimonnier.antoine.jmusichub.cli.classes.parsing.ConsoleParser .up.|> lethimonnier.antoine.jmusichub.cli.interfaces.Parser
+  lethimonnier.antoine.jmusichub.cli.interfaces.AudioContent .up.|> java.io.Serializable
+  lethimonnier.antoine.jmusichub.cli.logging.MusicLogger -up-|> java.util.logging.Logger
+  lethimonnier.antoine.jmusichub.gui.MusicHubGUI -up-|> javax.swing.JFrame
+  lethimonnier.antoine.jmusichub.gui.MusicHubGUI o-- lethimonnier.antoine.jmusichub.gui.frontend.ComponentsInitializer : ci
+  lethimonnier.antoine.jmusichub.gui.backend.InterfacesLinker o-- lethimonnier.antoine.jmusichub.cli.CSVManager : csv
+  lethimonnier.antoine.jmusichub.gui.backend.InterfacesLinker o-- lethimonnier.antoine.jmusichub.cli.Library : library
+  lethimonnier.antoine.jmusichub.gui.frontend.ComponentsInitializer o-- lethimonnier.antoine.jmusichub.gui.frontend.DynamicGraphics : dg
+  lethimonnier.antoine.jmusichub.gui.frontend.ComponentsInitializer o-- lethimonnier.antoine.jmusichub.gui.backend.InterfacesLinker : il
+  lethimonnier.antoine.jmusichub.gui.frontend.FieldFocusListener .up.|> java.awt.event.FocusListener
+
+@enduml
