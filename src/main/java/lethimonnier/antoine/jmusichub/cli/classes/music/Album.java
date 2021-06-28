@@ -41,10 +41,10 @@ public class Album implements Serializable {
 	/**
 	 * Instantiates a new Album.
 	 *
-	 * @param songs       the songs
 	 * @param title       the title
 	 * @param author      the author
 	 * @param releaseDate the release date
+	 * @param songs       the songs
 	 */
 	public Album(@NotNull String title, @NotNull String author, Date releaseDate, Song[] songs) {
 		setSongs(songs);

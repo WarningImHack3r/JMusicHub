@@ -25,6 +25,9 @@ import java.util.logging.Logger;
  */
 public final class MusicHub {
 
+    /**
+     * The constant scanner.
+     */
     // Static final
     public static final Scanner scanner = new Scanner(System.in);
 
@@ -440,12 +443,12 @@ public final class MusicHub {
         }
     }
 
-	/**
-	 * Starts the MusicHub.
-	 *
-	 * @param args The arguments of the program.
-	 */
-	public static void main(String[] args) {
+    /**
+     * Starts the MusicHub.
+     *
+     * @param args The arguments of the program.
+     */
+    public static void main(String[] args) {
         SwingUtilities.invokeLater(MusicHub::new);
     }
 }

@@ -12,6 +12,9 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.util.logging.Logger;
 
+/**
+ * The type Music player.
+ */
 public class MusicPlayer {
 
     private final Logger logger = MusicLogger.getLogger("output.log");
@@ -20,6 +23,11 @@ public class MusicPlayer {
     private Thread playingThread;
     private AdvancedPlayer player;
 
+    /**
+     * Gets player.
+     *
+     * @return the player
+     */
     public static synchronized MusicPlayer getPlayer() {
         if (instance == null) {
             instance = new MusicPlayer();
@@ -27,15 +35,29 @@ public class MusicPlayer {
         return instance;
     }
 
+    /**
+     * Sets playing song index.
+     *
+     * @param index the index
+     * @return the playing song index
+     */
     public MusicPlayer setPlayingSongIndex(int index) {
         currentSong = Utils.getRootPath().resolve("io/musics/" + MusicManager.getSongAtIndex(index - 1)).toFile();
         return this;
     }
 
+    /**
+     * Is playing boolean.
+     *
+     * @return the boolean
+     */
     public boolean isPlaying() {
         return playingThread != null && playingThread.isAlive();
     }
 
+    /**
+     * Play.
+     */
     public void play() {
         if (currentSong == null) {
             logger.severe("No song to play");
@@ -68,6 +90,9 @@ public class MusicPlayer {
         }
     }
 
+    /**
+     * Stop.
+     */
     public void stop() {
         if (currentSong == null) {
             logger.severe("No song to stop");
