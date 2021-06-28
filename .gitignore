@@ -1,5 +1,7 @@
 .idea/
-target/
+target/*/
+target/*.xml
+target/*.exec
 pom.xml.*
 .mvn/
 .vscode/
