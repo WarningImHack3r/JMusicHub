@@ -15,14 +15,13 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class LibraryTest {
 
-
     @Test
     void addToAlbumsLibrary() {
         Library libraryTest = new Library();
-        Date d1 = new Date(19/02/2001);
-        Album a1 = new Album(null,"Album1","Test",d1);
+        Date d1 = new Date(19/2/2001);
+        Album a1 = new Album("Album1","Test", d1, null);
         libraryTest.addToAlbumsLibrary(a1);
-        assertEquals("["+a1.toString()+"]",libraryTest.getStoredAlbums().toString());
+        assertEquals("[" + a1 + "]",libraryTest.getStoredAlbums().toString());
     }
 
     @Test
@@ -30,7 +29,7 @@ class LibraryTest {
         Library libraryTest = new Library();
         AudioBook ab = new AudioBook("AudioBookTest","Test",75, Language.ENGLISH, Category.NOVEL);
         libraryTest.addToAudioBooksLibrary(ab);
-        assertEquals("["+ab.toString()+"]",libraryTest.getStoredAudioBooks().toString());
+        assertEquals("[" + ab + "]",libraryTest.getStoredAudioBooks().toString());
     }
 
     @Test
@@ -38,7 +37,7 @@ class LibraryTest {
         Library libraryTest = new Library();
         Playlist p = new Playlist("PlayTest",null);
         libraryTest.addToPlaylistsLibrary(p);
-        assertEquals("["+p.toString()+"]",libraryTest.getStoredPlaylists().toString());
+        assertEquals("[" + p + "]",libraryTest.getStoredPlaylists().toString());
     }
 
     @Test
@@ -60,16 +59,16 @@ class LibraryTest {
         String[] authors = new String[]{"author1"};
         Song s = new Song("Song1",authors,75, Genre.POP);
         libraryTest.addToSongsLibrary(s);
-        assertEquals("["+s.toString()+"]",libraryTest.getStoredSongs().toString());
+        assertEquals("[" + s + "]",libraryTest.getStoredSongs().toString());
     }
 
     @Test
     void getStoredAlbums() {
         Library libraryTest = new Library();
         Date d1 = new Date(19/02/2001);
-        Album a1 = new Album(null,"Album1","Test",d1);
+        Album a1 = new Album("Album1","Test", d1, null);
         libraryTest.addToAlbumsLibrary(a1);
-        assertEquals("["+a1.toString()+"]",libraryTest.getStoredAlbums().toString());
+        assertEquals("[" + a1 + "]",libraryTest.getStoredAlbums().toString());
     }
 
     @Test
@@ -77,7 +76,7 @@ class LibraryTest {
         Library libraryTest = new Library();
         AudioBook ab = new AudioBook("AudioBookTest","Test",75, Language.ENGLISH, Category.NOVEL);
         libraryTest.addToAudioBooksLibrary(ab);
-        assertEquals("["+ab.toString()+"]",libraryTest.getStoredAudioBooks().toString());
+        assertEquals("[" + ab + "]",libraryTest.getStoredAudioBooks().toString());
     }
 
     @Test
@@ -85,7 +84,7 @@ class LibraryTest {
         Library libraryTest = new Library();
         Playlist p = new Playlist("PlayTest",null);
         libraryTest.addToPlaylistsLibrary(p);
-        assertEquals("["+p.toString()+"]",libraryTest.getStoredPlaylists().toString());
+        assertEquals("[" + p + "]",libraryTest.getStoredPlaylists().toString());
     }
 
     @Test
@@ -94,6 +93,6 @@ class LibraryTest {
         String[] authors = new String[]{"author1"};
         Song s = new Song("Song1",authors,75, Genre.POP);
         libraryTest.addToSongsLibrary(s);
-        assertEquals("["+s.toString()+"]",libraryTest.getStoredSongs().toString());
+        assertEquals("[" + s + "]",libraryTest.getStoredSongs().toString());
     }
 }
